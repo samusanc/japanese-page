@@ -1,0 +1,4927 @@
+{
+ "voice_suggestion": "ja-JP-NanamiNeural",
+ "format": "audio-24khz-48kbitrate-mono-mp3",
+ "count": 1230,
+ "items": [
+  {
+   "text": "あ(う)",
+   "file": "737ec45c9f9d4cfa.mp3"
+  },
+  {
+   "text": "あ(ける)",
+   "file": "fe13186f54e0c25f.mp3"
+  },
+  {
+   "text": "あ(る)",
+   "file": "7c02cd5ca4656db2.mp3"
+  },
+  {
+   "text": "あいたい",
+   "file": "0d140e4fd1005678.mp3"
+  },
+  {
+   "text": "あいだ",
+   "file": "c8b7cadf868d50e9.mp3"
+  },
+  {
+   "text": "あいます",
+   "file": "78714062d081ee5a.mp3"
+  },
+  {
+   "text": "あう",
+   "file": "d6474c4d77b7e029.mp3"
+  },
+  {
+   "text": "あえ",
+   "file": "d647564d77b7f127.mp3"
+  },
+  {
+   "text": "あえば",
+   "file": "1c508b49b30eaf45.mp3"
+  },
+  {
+   "text": "あえる",
+   "file": "1c54d849b3131af3.mp3"
+  },
+  {
+   "text": "あお(い)",
+   "file": "bee338dc532da008.mp3"
+  },
+  {
+   "text": "あおう",
+   "file": "fc698556c237e8d5.mp3"
+  },
+  {
+   "text": "あか(い)",
+   "file": "62d45acaaa7ba759.mp3"
+  },
+  {
+   "text": "あか(るい)",
+   "file": "36e9eb9345dde7f3.mp3"
+  },
+  {
+   "text": "あき",
+   "file": "d647514d77b7e8a8.mp3"
+  },
+  {
+   "text": "あけさせる",
+   "file": "3969f3d626f08846.mp3"
+  },
+  {
+   "text": "あけた",
+   "file": "074dbb747d3c5451.mp3"
+  },
+  {
+   "text": "あけたい",
+   "file": "70e525d4b966c643.mp3"
+  },
+  {
+   "text": "あけたら",
+   "file": "70daf0d4b95e17af.mp3"
+  },
+  {
+   "text": "あけて",
+   "file": "074da2747d3c29d6.mp3"
+  },
+  {
+   "text": "あけない",
+   "file": "66c9676985f2f0fe.mp3"
+  },
+  {
+   "text": "あけます",
+   "file": "e734f3c2c9c1e391.mp3"
+  },
+  {
+   "text": "あけよう",
+   "file": "ef3cc50504303b2b.mp3"
+  },
+  {
+   "text": "あけられる",
+   "file": "431b2fe5759db7c7.mp3"
+  },
+  {
+   "text": "あける",
+   "file": "0756ef747d434e32.mp3"
+  },
+  {
+   "text": "あければ",
+   "file": "172ecae134772629.mp3"
+  },
+  {
+   "text": "あけろ",
+   "file": "0756e9747d434400.mp3"
+  },
+  {
+   "text": "あさ",
+   "file": "d647394d77b7bfe0.mp3"
+  },
+  {
+   "text": "あし",
+   "file": "d6473b4d77b7c346.mp3"
+  },
+  {
+   "text": "あじ",
+   "file": "d647464d77b7d5f7.mp3"
+  },
+  {
+   "text": "あそばせる",
+   "file": "080d0665b01a9f5d.mp3"
+  },
+  {
+   "text": "あそばない",
+   "file": "2d2bc4e4e42d6caa.mp3"
+  },
+  {
+   "text": "あそばれる",
+   "file": "d6f6b4f20f619473.mp3"
+  },
+  {
+   "text": "あそびたい",
+   "file": "910e9465fb4305ea.mp3"
+  },
+  {
+   "text": "あそびます",
+   "file": "c758445fe97cd4dc.mp3"
+  },
+  {
+   "text": "あそぶ",
+   "file": "dbf4ea984a10e762.mp3"
+  },
+  {
+   "text": "あそべ",
+   "file": "dbf4ed984a10ec7b.mp3"
+  },
+  {
+   "text": "あそべば",
+   "file": "c9a6052e22a8c941.mp3"
+  },
+  {
+   "text": "あそべる",
+   "file": "c9aa322e22acfe8f.mp3"
+  },
+  {
+   "text": "あそぼう",
+   "file": "b3292d4608b430ee.mp3"
+  },
+  {
+   "text": "あそんだ",
+   "file": "2b89286c2cb49d76.mp3"
+  },
+  {
+   "text": "あそんだら",
+   "file": "cdc7d00d97dd191a.mp3"
+  },
+  {
+   "text": "あそんで",
+   "file": "2b892b6c2cb4a28f.mp3"
+  },
+  {
+   "text": "あたら(しい)",
+   "file": "0310e990a1c94048.mp3"
+  },
+  {
+   "text": "あたらしい",
+   "file": "12772baf6747ad45.mp3"
+  },
+  {
+   "text": "あたらしかった",
+   "file": "8faab5aef1288fc6.mp3"
+  },
+  {
+   "text": "あたらしく",
+   "file": "127730af6747b5c4.mp3"
+  },
+  {
+   "text": "あたらしくて",
+   "file": "8847d32c364370de.mp3"
+  },
+  {
+   "text": "あたらしくない",
+   "file": "6d0825e06526e806.mp3"
+  },
+  {
+   "text": "あたらしくなかった",
+   "file": "bd1ddaa6060700f1.mp3"
+  },
+  {
+   "text": "あった",
+   "file": "cccde2fd3bc7d16b.mp3"
+  },
+  {
+   "text": "あったら",
+   "file": "725b8e0b638c5b45.mp3"
+  },
+  {
+   "text": "あって",
+   "file": "cccdc9fd3bc7a6f0.mp3"
+  },
+  {
+   "text": "あつ(まる)",
+   "file": "1156306a70ee7334.mp3"
+  },
+  {
+   "text": "あつい",
+   "file": "45176dd86aefb375.mp3"
+  },
+  {
+   "text": "あつかった",
+   "file": "a09f4c63c0c19756.mp3"
+  },
+  {
+   "text": "あつく",
+   "file": "451772d86aefbbf4.mp3"
+  },
+  {
+   "text": "あつくて",
+   "file": "d853b2e778f31b6e.mp3"
+  },
+  {
+   "text": "あつくない",
+   "file": "2b85bf47448d8976.mp3"
+  },
+  {
+   "text": "あつくなかった",
+   "file": "708dadcf85cc3481.mp3"
+  },
+  {
+   "text": "あと",
+   "file": "d647364d77b7bac7.mp3"
+  },
+  {
+   "text": "あに",
+   "file": "d647374d77b7bc7a.mp3"
+  },
+  {
+   "text": "あね",
+   "file": "d647314d77b7b248.mp3"
+  },
+  {
+   "text": "あびさせる",
+   "file": "57e04ceb47d20238.mp3"
+  },
+  {
+   "text": "あびた",
+   "file": "21e0c27a4c6b943b.mp3"
+  },
+  {
+   "text": "あびたい",
+   "file": "bc7594ea79e6613d.mp3"
+  },
+  {
+   "text": "あびたら",
+   "file": "bc79efea79eae4b5.mp3"
+  },
+  {
+   "text": "あびて",
+   "file": "21e0c97a4c6ba020.mp3"
+  },
+  {
+   "text": "あびない",
+   "file": "50e727854f5036d8.mp3"
+  },
+  {
+   "text": "あびます",
+   "file": "4e23f4e5a8f12c4b.mp3"
+  },
+  {
+   "text": "あびよう",
+   "file": "9530bbb81ac39299.mp3"
+  },
+  {
+   "text": "あびられる",
+   "file": "63a2210fc7f3fe7d.mp3"
+  },
+  {
+   "text": "あびる",
+   "file": "21de4e7a4c6a4c48.mp3"
+  },
+  {
+   "text": "あびれば",
+   "file": "6d3ebddbea7cb533.mp3"
+  },
+  {
+   "text": "あびろ",
+   "file": "21de547a4c6a567a.mp3"
+  },
+  {
+   "text": "あめ",
+   "file": "d63d1d4d77af3bc7.mp3"
+  },
+  {
+   "text": "あらいたい",
+   "file": "4ec6fc82331f4852.mp3"
+  },
+  {
+   "text": "あらいます",
+   "file": "28093e9defe1d934.mp3"
+  },
+  {
+   "text": "あらう",
+   "file": "932db74d2b17153b.mp3"
+  },
+  {
+   "text": "あらえ",
+   "file": "932db54d2b1711d5.mp3"
+  },
+  {
+   "text": "あらえば",
+   "file": "96f3d16209c6a36b.mp3"
+  },
+  {
+   "text": "あらえる",
+   "file": "96e99a6209bdf171.mp3"
+  },
+  {
+   "text": "あらおう",
+   "file": "b374b754f7ba0a7b.mp3"
+  },
+  {
+   "text": "あらった",
+   "file": "f1d96f97c3548079.mp3"
+  },
+  {
+   "text": "あらったら",
+   "file": "a7ae6c6fc2888dd7.mp3"
+  },
+  {
+   "text": "あらって",
+   "file": "f1d96697c354712e.mp3"
+  },
+  {
+   "text": "あらわせる",
+   "file": "905d55e38d6349ea.mp3"
+  },
+  {
+   "text": "あらわない",
+   "file": "5336ec617acd5429.mp3"
+  },
+  {
+   "text": "あらわれる",
+   "file": "da336548527f4e28.mp3"
+  },
+  {
+   "text": "ある(く)",
+   "file": "48604bfecc18f053.mp3"
+  },
+  {
+   "text": "あるいた",
+   "file": "7e5340ca1f6518b8.mp3"
+  },
+  {
+   "text": "あるいたら",
+   "file": "17dfb6c3ab638ad0.mp3"
+  },
+  {
+   "text": "あるいて",
+   "file": "7e5329ca1f64f1a3.mp3"
+  },
+  {
+   "text": "あるかせる",
+   "file": "f9b53557e821c6b7.mp3"
+  },
+  {
+   "text": "あるかない",
+   "file": "e73ef6d02d939aa4.mp3"
+  },
+  {
+   "text": "あるかれる",
+   "file": "846c1616efc4d5c5.mp3"
+  },
+  {
+   "text": "あるきたい",
+   "file": "fcf3528db933fdf3.mp3"
+  },
+  {
+   "text": "あるきます",
+   "file": "7a80c28a00c51461.mp3"
+  },
+  {
+   "text": "あるく",
+   "file": "76adbe5a3d2540e2.mp3"
+  },
+  {
+   "text": "あるけ",
+   "file": "76adb05a3d252918.mp3"
+  },
+  {
+   "text": "あるけば",
+   "file": "8d88f9228383c810.mp3"
+  },
+  {
+   "text": "あるける",
+   "file": "8d92f422838c1416.mp3"
+  },
+  {
+   "text": "あるこう",
+   "file": "2bbaf72f6e4e451c.mp3"
+  },
+  {
+   "text": "あわせる",
+   "file": "54940f7d22d0d3f8.mp3"
+  },
+  {
+   "text": "あわない",
+   "file": "dc8de0f41ecde2b7.mp3"
+  },
+  {
+   "text": "あわれる",
+   "file": "315681d40f830be6.mp3"
+  },
+  {
+   "text": "い(う)",
+   "file": "de18ffd3d55e5f54.mp3"
+  },
+  {
+   "text": "い(きる)",
+   "file": "5e3e0c4d6b4b3289.mp3"
+  },
+  {
+   "text": "い(く)",
+   "file": "de30fbd3d572ea69.mp3"
+  },
+  {
+   "text": "いい",
+   "file": "cad676643564d9f9.mp3"
+  },
+  {
+   "text": "いえ",
+   "file": "cad682643564ee5d.mp3"
+  },
+  {
+   "text": "いかせる",
+   "file": "24d32f55472441b1.mp3"
+  },
+  {
+   "text": "いかない",
+   "file": "c9b8a4cd627e6f86.mp3"
+  },
+  {
+   "text": "いかれる",
+   "file": "f493fc942e09261f.mp3"
+  },
+  {
+   "text": "いきたい",
+   "file": "6bc4eb01801aa059.mp3"
+  },
+  {
+   "text": "いきます",
+   "file": "043f62fcb4ebe62f.mp3"
+  },
+  {
+   "text": "いく",
+   "file": "cad67b643564e278.mp3"
+  },
+  {
+   "text": "いけ",
+   "file": "cad689643564fa42.mp3"
+  },
+  {
+   "text": "いけば",
+   "file": "e2de79f284f0f192.mp3"
+  },
+  {
+   "text": "いける",
+   "file": "e2db08f284edfbb8.mp3"
+  },
+  {
+   "text": "いこう",
+   "file": "1f79fbdd0709d286.mp3"
+  },
+  {
+   "text": "いそ(ぐ)",
+   "file": "65353ac2b22a1991.mp3"
+  },
+  {
+   "text": "いそいだ",
+   "file": "2b070a4e03afda92.mp3"
+  },
+  {
+   "text": "いそいだら",
+   "file": "7a9b62dcd296bb0e.mp3"
+  },
+  {
+   "text": "いそいで",
+   "file": "2b07054e03afd213.mp3"
+  },
+  {
+   "text": "いそがしい",
+   "file": "e96cab27b70c522d.mp3"
+  },
+  {
+   "text": "いそがしかった",
+   "file": "5f3f5ca71382008e.mp3"
+  },
+  {
+   "text": "いそがしく",
+   "file": "e96ca027b70c3f7c.mp3"
+  },
+  {
+   "text": "いそがしくて",
+   "file": "b1615c315236ff06.mp3"
+  },
+  {
+   "text": "いそがしくない",
+   "file": "8d587d855355a28e.mp3"
+  },
+  {
+   "text": "いそがしくなかった",
+   "file": "f6719b5b3d1f4599.mp3"
+  },
+  {
+   "text": "いそがせる",
+   "file": "3f25a4052436ea6b.mp3"
+  },
+  {
+   "text": "いそがない",
+   "file": "f9139e8e4c99f9a0.mp3"
+  },
+  {
+   "text": "いそがれる",
+   "file": "f055758d78004401.mp3"
+  },
+  {
+   "text": "いそぎたい",
+   "file": "617adff7111ed3cb.mp3"
+  },
+  {
+   "text": "いそぎます",
+   "file": "db2ebde52459cf49.mp3"
+  },
+  {
+   "text": "いそぐ",
+   "file": "b786aa1651c73956.mp3"
+  },
+  {
+   "text": "いそげ",
+   "file": "b786a81651c735f0.mp3"
+  },
+  {
+   "text": "いそげば",
+   "file": "90dd9ea1784c40b8.mp3"
+  },
+  {
+   "text": "いそげる",
+   "file": "90e7c9a17854de4e.mp3"
+  },
+  {
+   "text": "いそごう",
+   "file": "28ea24dac3096390.mp3"
+  },
+  {
+   "text": "いち",
+   "file": "cad659643564a8b2.mp3"
+  },
+  {
+   "text": "いった",
+   "file": "c9f4b351c4f51671.mp3"
+  },
+  {
+   "text": "いったら",
+   "file": "0022498b63458b4f.mp3"
+  },
+  {
+   "text": "いって",
+   "file": "c9f4da51c4f558b6.mp3"
+  },
+  {
+   "text": "いぬ",
+   "file": "cad65e643564b131.mp3"
+  },
+  {
+   "text": "いま",
+   "file": "cad66c643564c8fb.mp3"
+  },
+  {
+   "text": "いもうと",
+   "file": "62ca229ea4d9179a.mp3"
+  },
+  {
+   "text": "いろ",
+   "file": "cad8dd6435660bd5.mp3"
+  },
+  {
+   "text": "う(る)",
+   "file": "82e3c3256c8c6cb6.mp3"
+  },
+  {
+   "text": "うえ",
+   "file": "ae558671477161eb.mp3"
+  },
+  {
+   "text": "うご(く)",
+   "file": "4e14a36ec83c9861.mp3"
+  },
+  {
+   "text": "うし",
+   "file": "ae55937147717802.mp3"
+  },
+  {
+   "text": "うた",
+   "file": "ae559b714771859a.mp3"
+  },
+  {
+   "text": "うたいたい",
+   "file": "cc196928695ab359.mp3"
+  },
+  {
+   "text": "うたいます",
+   "file": "6493e1239e2bf92f.mp3"
+  },
+  {
+   "text": "うたう",
+   "file": "da0aae12adfd8d78.mp3"
+  },
+  {
+   "text": "うたえ",
+   "file": "da0aac12adfd8a12.mp3"
+  },
+  {
+   "text": "うたえば",
+   "file": "dc93440fea3a33a2.mp3"
+  },
+  {
+   "text": "うたえる",
+   "file": "dc8ef30fea35c128.mp3"
+  },
+  {
+   "text": "うたおう",
+   "file": "eed025f93253a036.mp3"
+  },
+  {
+   "text": "うたった",
+   "file": "85b66e3a90139588.mp3"
+  },
+  {
+   "text": "うたったら",
+   "file": "1613b8132976f480.mp3"
+  },
+  {
+   "text": "うたって",
+   "file": "85b6773a9013a4d3.mp3"
+  },
+  {
+   "text": "うたわせる",
+   "file": "8dd41c1f41a53aa9.mp3"
+  },
+  {
+   "text": "うたわない",
+   "file": "35ad1f892e7188ee.mp3"
+  },
+  {
+   "text": "うたわれる",
+   "file": "e0c1c85712b4ec97.mp3"
+  },
+  {
+   "text": "うった",
+   "file": "34508d1d42470d3f.mp3"
+  },
+  {
+   "text": "うったら",
+   "file": "d07a3da2b54fa491.mp3"
+  },
+  {
+   "text": "うって",
+   "file": "3450c41d42476ab4.mp3"
+  },
+  {
+   "text": "うつ(す)",
+   "file": "cb3282eca1112b2b.mp3"
+  },
+  {
+   "text": "うつ(る)",
+   "file": "b1b027ec92c0b0c8.mp3"
+  },
+  {
+   "text": "うま",
+   "file": "ae557c71477150ed.mp3"
+  },
+  {
+   "text": "うみ",
+   "file": "ae557b7147714f3a.mp3"
+  },
+  {
+   "text": "うらせる",
+   "file": "fc412d51fa7782e6.mp3"
+  },
+  {
+   "text": "うらない",
+   "file": "95ae1ce0d37760cd.mp3"
+  },
+  {
+   "text": "うられる",
+   "file": "efeba4426f2a3e0c.mp3"
+  },
+  {
+   "text": "うりたい",
+   "file": "b8948609922e6451.mp3"
+  },
+  {
+   "text": "うります",
+   "file": "510eee04c6ff8ef7.mp3"
+  },
+  {
+   "text": "うる",
+   "file": "ae4b47714768a259.mp3"
+  },
+  {
+   "text": "うれ",
+   "file": "ae4b48714768a40c.mp3"
+  },
+  {
+   "text": "うれば",
+   "file": "e434d98517a3f3ac.mp3"
+  },
+  {
+   "text": "うれる",
+   "file": "e43ef48517ac7612.mp3"
+  },
+  {
+   "text": "うろう",
+   "file": "7c6299872e6f506b.mp3"
+  },
+  {
+   "text": "えん",
+   "file": "73d8fefa05ff9e7f.mp3"
+  },
+  {
+   "text": "お(きる)",
+   "file": "e8ebae1d39e454db.mp3"
+  },
+  {
+   "text": "お(わる)",
+   "file": "35f522b3e2937d02.mp3"
+  },
+  {
+   "text": "おいしい",
+   "file": "867a6dcdd2a90f08.mp3"
+  },
+  {
+   "text": "おいしかった",
+   "file": "ca1786ca56ed93c7.mp3"
+  },
+  {
+   "text": "おいしく",
+   "file": "867a68cdd2a90689.mp3"
+  },
+  {
+   "text": "おいしくて",
+   "file": "d489a51dde5f8c31.mp3"
+  },
+  {
+   "text": "おいしくない",
+   "file": "9824b3dde2c3a077.mp3"
+  },
+  {
+   "text": "おいしくなかった",
+   "file": "c7baf42110755efc.mp3"
+  },
+  {
+   "text": "おお(い)",
+   "file": "2c52051dadac0320.mp3"
+  },
+  {
+   "text": "おお(きい)",
+   "file": "665e0400a64980c1.mp3"
+  },
+  {
+   "text": "おおきい",
+   "file": "a3b924fc48632140.mp3"
+  },
+  {
+   "text": "おおきかった",
+   "file": "f26d7d262aa6c11f.mp3"
+  },
+  {
+   "text": "おおきく",
+   "file": "a3b92ffc486333f1.mp3"
+  },
+  {
+   "text": "おおきくて",
+   "file": "46d2e5a622bf5429.mp3"
+  },
+  {
+   "text": "おおきくない",
+   "file": "96395ccc114a616f.mp3"
+  },
+  {
+   "text": "おおきくなかった",
+   "file": "a458cd7dd482cdd4.mp3"
+  },
+  {
+   "text": "おきさせる",
+   "file": "75e8af2b1402d9da.mp3"
+  },
+  {
+   "text": "おきた",
+   "file": "c784f16a0516cc65.mp3"
+  },
+  {
+   "text": "おきたい",
+   "file": "d31db1a2a8a20d77.mp3"
+  },
+  {
+   "text": "おきたら",
+   "file": "d31384a2a8996c7b.mp3"
+  },
+  {
+   "text": "おきて",
+   "file": "c785286a051729da.mp3"
+  },
+  {
+   "text": "おきない",
+   "file": "a444d5091cb61f2a.mp3"
+  },
+  {
+   "text": "おきます",
+   "file": "a03c19a8bd4ef64d.mp3"
+  },
+  {
+   "text": "おきよう",
+   "file": "a05df9f3b22f6377.mp3"
+  },
+  {
+   "text": "おきられる",
+   "file": "9d0fb2cd8d8d9f0b.mp3"
+  },
+  {
+   "text": "おきる",
+   "file": "c78f3d6a051fa20e.mp3"
+  },
+  {
+   "text": "おきれば",
+   "file": "4e0d781647e94145.mp3"
+  },
+  {
+   "text": "おきろ",
+   "file": "c78f3f6a051fa574.mp3"
+  },
+  {
+   "text": "おく(る)",
+   "file": "04983d1a1823655b.mp3"
+  },
+  {
+   "text": "おくった",
+   "file": "d87f12278d2e9cac.mp3"
+  },
+  {
+   "text": "おくったら",
+   "file": "bfc3b5ffd5f83ccc.mp3"
+  },
+  {
+   "text": "おくって",
+   "file": "d87f0b278d2e90c7.mp3"
+  },
+  {
+   "text": "おくらせる",
+   "file": "5198aab3c79343fb.mp3"
+  },
+  {
+   "text": "おくらない",
+   "file": "8b4b6435d73a5b50.mp3"
+  },
+  {
+   "text": "おくられる",
+   "file": "59f6fb2c6ca4ad71.mp3"
+  },
+  {
+   "text": "おくりたい",
+   "file": "3f7873877da9572c.mp3"
+  },
+  {
+   "text": "おくります",
+   "file": "29a92b813edaf566.mp3"
+  },
+  {
+   "text": "おくる",
+   "file": "b8aacd80bfdde2d4.mp3"
+  },
+  {
+   "text": "おくれ",
+   "file": "b8aacc80bfdde121.mp3"
+  },
+  {
+   "text": "おくれば",
+   "file": "0f063d1c0bd4c24f.mp3"
+  },
+  {
+   "text": "おくれる",
+   "file": "0efbd61c0bcbbec5.mp3"
+  },
+  {
+   "text": "おくろう",
+   "file": "08f4211137c99e6c.mp3"
+  },
+  {
+   "text": "おし(える)",
+   "file": "ae906fec65ac595b.mp3"
+  },
+  {
+   "text": "おしえさせる",
+   "file": "271021739e878504.mp3"
+  },
+  {
+   "text": "おしえた",
+   "file": "1af8040e1509a447.mp3"
+  },
+  {
+   "text": "おしえたい",
+   "file": "69697e8dbd59d2e9.mp3"
+  },
+  {
+   "text": "おしえたら",
+   "file": "696ce18dbd5cb0f9.mp3"
+  },
+  {
+   "text": "おしえて",
+   "file": "1af80b0e1509b02c.mp3"
+  },
+  {
+   "text": "おしえない",
+   "file": "a94740e36d14d6ac.mp3"
+  },
+  {
+   "text": "おしえます",
+   "file": "2c42968a2c2a8d1f.mp3"
+  },
+  {
+   "text": "おしえよう",
+   "file": "20fecc3bdc52ac1d.mp3"
+  },
+  {
+   "text": "おしえられる",
+   "file": "471c5bd5c8789d09.mp3"
+  },
+  {
+   "text": "おしえる",
+   "file": "1af4780e1506808c.mp3"
+  },
+  {
+   "text": "おしえれば",
+   "file": "76b52619497bb357.mp3"
+  },
+  {
+   "text": "おしえろ",
+   "file": "1af4760e15067d26.mp3"
+  },
+  {
+   "text": "おと",
+   "file": "adb1c610eaeba68f.mp3"
+  },
+  {
+   "text": "おとうと",
+   "file": "fc38686161cbdfd9.mp3"
+  },
+  {
+   "text": "おとこ",
+   "file": "d9c6769f948d5a04.mp3"
+  },
+  {
+   "text": "おな(じ)",
+   "file": "f14222968a95b61c.mp3"
+  },
+  {
+   "text": "おぼえさせる",
+   "file": "eccb0f5802e461ed.mp3"
+  },
+  {
+   "text": "おぼえた",
+   "file": "76255d802c5a249e.mp3"
+  },
+  {
+   "text": "おぼえたい",
+   "file": "acd03b87f2a34422.mp3"
+  },
+  {
+   "text": "おぼえたら",
+   "file": "accdc887f2a1fde2.mp3"
+  },
+  {
+   "text": "おぼえて",
+   "file": "762546802c59fd89.mp3"
+  },
+  {
+   "text": "おぼえない",
+   "file": "5be359289749774f.mp3"
+  },
+  {
+   "text": "おぼえます",
+   "file": "dc4ddb81db16a5e4.mp3"
+  },
+  {
+   "text": "おぼえよう",
+   "file": "050fbc253c120266.mp3"
+  },
+  {
+   "text": "おぼえられる",
+   "file": "cb863d2637c0ae70.mp3"
+  },
+  {
+   "text": "おぼえる",
+   "file": "761b31802c518555.mp3"
+  },
+  {
+   "text": "おぼえれば",
+   "file": "30689e016f3d8c38.mp3"
+  },
+  {
+   "text": "おぼえろ",
+   "file": "761b2b802c517b23.mp3"
+  },
+  {
+   "text": "おも",
+   "file": "ada77e10eae2d7b2.mp3"
+  },
+  {
+   "text": "おも(い)",
+   "file": "2351852c5bbec441.mp3"
+  },
+  {
+   "text": "おも(う)",
+   "file": "234a692c5bb875ff.mp3"
+  },
+  {
+   "text": "おもしろい",
+   "file": "7cb438475ae35583.mp3"
+  },
+  {
+   "text": "おもしろかった",
+   "file": "d0c57e168253cb88.mp3"
+  },
+  {
+   "text": "おもしろく",
+   "file": "7cb441475ae364ce.mp3"
+  },
+  {
+   "text": "おもしろくて",
+   "file": "f681d2976d5354ac.mp3"
+  },
+  {
+   "text": "おもしろくない",
+   "file": "dc032044d1dcd92c.mp3"
+  },
+  {
+   "text": "おもしろくなかった",
+   "file": "7ce58cfbbb20a1ab.mp3"
+  },
+  {
+   "text": "おや",
+   "file": "ada77810eae2cd80.mp3"
+  },
+  {
+   "text": "およいだ",
+   "file": "8d7a74ffb6b15540.mp3"
+  },
+  {
+   "text": "およいだら",
+   "file": "658f216dcc160518.mp3"
+  },
+  {
+   "text": "およいで",
+   "file": "8d7a7bffb6b16125.mp3"
+  },
+  {
+   "text": "およがせる",
+   "file": "a7e6fde80ab5fe6d.mp3"
+  },
+  {
+   "text": "およがない",
+   "file": "9fc37b69f60f42da.mp3"
+  },
+  {
+   "text": "およがれる",
+   "file": "1d922b6e88644963.mp3"
+  },
+  {
+   "text": "およぎたい",
+   "file": "d53f412292e9cf31.mp3"
+  },
+  {
+   "text": "およぎます",
+   "file": "69e0270f9364fa17.mp3"
+  },
+  {
+   "text": "およぐ",
+   "file": "68e4059728ad0bb4.mp3"
+  },
+  {
+   "text": "およげ",
+   "file": "68e4079728ad0f1a.mp3"
+  },
+  {
+   "text": "およげば",
+   "file": "019e21bd308f75fa.mp3"
+  },
+  {
+   "text": "およげる",
+   "file": "019ac0bd308c9b50.mp3"
+  },
+  {
+   "text": "およごう",
+   "file": "3866db82a60c5662.mp3"
+  },
+  {
+   "text": "おりさせる",
+   "file": "2bf1ff4106be6c60.mp3"
+  },
+  {
+   "text": "おりた",
+   "file": "5d7304ade659bc73.mp3"
+  },
+  {
+   "text": "おりたい",
+   "file": "91f706a14b8a0325.mp3"
+  },
+  {
+   "text": "おりたら",
+   "file": "91f971a14b8b3bcd.mp3"
+  },
+  {
+   "text": "おりて",
+   "file": "5d733bade65a19e8.mp3"
+  },
+  {
+   "text": "おりない",
+   "file": "275a9a4e46892e60.mp3"
+  },
+  {
+   "text": "おります",
+   "file": "7d6776a650589163.mp3"
+  },
+  {
+   "text": "おりよう",
+   "file": "1c152e7744e41021.mp3"
+  },
+  {
+   "text": "おりられる",
+   "file": "79e95124258ba4f5.mp3"
+  },
+  {
+   "text": "おりる",
+   "file": "5d70b0ade658aae0.mp3"
+  },
+  {
+   "text": "おりれば",
+   "file": "c2f8d099d4d7d91b.mp3"
+  },
+  {
+   "text": "おりろ",
+   "file": "5d70b6ade658b512.mp3"
+  },
+  {
+   "text": "おんな",
+   "file": "b67a89f68132b329.mp3"
+  },
+  {
+   "text": "か(う)",
+   "file": "eacb583724591373.mp3"
+  },
+  {
+   "text": "か(く)",
+   "file": "eab3dc37244561de.mp3"
+  },
+  {
+   "text": "か(す)",
+   "file": "ea91e03724288244.mp3"
+  },
+  {
+   "text": "か(りる)",
+   "file": "c44bd26e49b07a8a.mp3"
+  },
+  {
+   "text": "か(わる)",
+   "file": "ab5e300a394a04c1.mp3"
+  },
+  {
+   "text": "かいた",
+   "file": "6625e2b2aa334943.mp3"
+  },
+  {
+   "text": "かいたい",
+   "file": "696bdda4813f69d5.mp3"
+  },
+  {
+   "text": "かいたら",
+   "file": "696f48a48142557d.mp3"
+  },
+  {
+   "text": "かいて",
+   "file": "6625b9b2aa330398.mp3"
+  },
+  {
+   "text": "かいます",
+   "file": "286c6b92bbbbc9b3.mp3"
+  },
+  {
+   "text": "かう",
+   "file": "79da0204d9fc24b4.mp3"
+  },
+  {
+   "text": "かえ",
+   "file": "79d9f804d9fc13b6.mp3"
+  },
+  {
+   "text": "かえ(る)",
+   "file": "45827e6cd17e067b.mp3"
+  },
+  {
+   "text": "かえった",
+   "file": "943f0fa6df48498c.mp3"
+  },
+  {
+   "text": "かえったら",
+   "file": "fe9a3960dbe1782c.mp3"
+  },
+  {
+   "text": "かえって",
+   "file": "943f48a6df48aa67.mp3"
+  },
+  {
+   "text": "かえば",
+   "file": "128cff487db1af6e.mp3"
+  },
+  {
+   "text": "かえらせる",
+   "file": "da235afa99477b1b.mp3"
+  },
+  {
+   "text": "かえらない",
+   "file": "c3d49264aa64f4b0.mp3"
+  },
+  {
+   "text": "かえられる",
+   "file": "e7d6a31d089e0691.mp3"
+  },
+  {
+   "text": "かえりたい",
+   "file": "1b0ef0fac755244c.mp3"
+  },
+  {
+   "text": "かえります",
+   "file": "5c0e2b0c8cd86546.mp3"
+  },
+  {
+   "text": "かえる",
+   "file": "1288ae487dad3cf4.mp3"
+  },
+  {
+   "text": "かえれ",
+   "file": "1288ad487dad3b41.mp3"
+  },
+  {
+   "text": "かえれば",
+   "file": "26e9745d2c84c72f.mp3"
+  },
+  {
+   "text": "かえれる",
+   "file": "26df4d5d2c7c3065.mp3"
+  },
+  {
+   "text": "かえろう",
+   "file": "20d79852587a100c.mp3"
+  },
+  {
+   "text": "かおう",
+   "file": "7459e93b92e5569a.mp3"
+  },
+  {
+   "text": "かかせる",
+   "file": "d93ac7f4390eac16.mp3"
+  },
+  {
+   "text": "かかない",
+   "file": "ef7af88a27e3f2dd.mp3"
+  },
+  {
+   "text": "かかれる",
+   "file": "57c56f3f5aff241c.mp3"
+  },
+  {
+   "text": "かきたい",
+   "file": "a89135f840e819c6.mp3"
+  },
+  {
+   "text": "かきます",
+   "file": "2e69edfbfc3a7050.mp3"
+  },
+  {
+   "text": "かく",
+   "file": "79d9fb04d9fc18cf.mp3"
+  },
+  {
+   "text": "かけ",
+   "file": "79d9f104d9fc07d1.mp3"
+  },
+  {
+   "text": "かけば",
+   "file": "96472d0cef2c40ff.mp3"
+  },
+  {
+   "text": "かける",
+   "file": "963d260cef23e095.mp3"
+  },
+  {
+   "text": "かこう",
+   "file": "b62d5affe0019867.mp3"
+  },
+  {
+   "text": "かさせる",
+   "file": "3b28825f5d9a680c.mp3"
+  },
+  {
+   "text": "かさない",
+   "file": "bfbb5bd656b2a863.mp3"
+  },
+  {
+   "text": "かされる",
+   "file": "16a263f5913f5b12.mp3"
+  },
+  {
+   "text": "かした",
+   "file": "8ad69a23acd9aca8.mp3"
+  },
+  {
+   "text": "かしたい",
+   "file": "fc26e17013735ebc.mp3"
+  },
+  {
+   "text": "かしたら",
+   "file": "fc310670137bf220.mp3"
+  },
+  {
+   "text": "かして",
+   "file": "8ad66323acd94f33.mp3"
+  },
+  {
+   "text": "かします",
+   "file": "10b7796b0ea69116.mp3"
+  },
+  {
+   "text": "かす",
+   "file": "79d9e904d9fbfa39.mp3"
+  },
+  {
+   "text": "かせ",
+   "file": "79d9e704d9fbf6d3.mp3"
+  },
+  {
+   "text": "かせば",
+   "file": "33d5a8b97d716c09.mp3"
+  },
+  {
+   "text": "かせる",
+   "file": "33d925b97d747647.mp3"
+  },
+  {
+   "text": "かぜ",
+   "file": "79d9ec04d9fbff52.mp3"
+  },
+  {
+   "text": "かそう",
+   "file": "149532f2f253aafd.mp3"
+  },
+  {
+   "text": "かた",
+   "file": "79d9eb04d9fbfd9f.mp3"
+  },
+  {
+   "text": "かた(る)",
+   "file": "61b9518d9a086a28.mp3"
+  },
+  {
+   "text": "かった",
+   "file": "0b40217cf0a530bc.mp3"
+  },
+  {
+   "text": "かったら",
+   "file": "973ef708c786b67c.mp3"
+  },
+  {
+   "text": "かって",
+   "file": "0b403a7cf0a55b37.mp3"
+  },
+  {
+   "text": "かね",
+   "file": "79d9dd04d9fbe5d5.mp3"
+  },
+  {
+   "text": "かみ",
+   "file": "79d9cb04d9fbc73f.mp3"
+  },
+  {
+   "text": "からだ",
+   "file": "30ae28f7626060da.mp3"
+  },
+  {
+   "text": "かりさせる",
+   "file": "f7da442c4a4a30b7.mp3"
+  },
+  {
+   "text": "かりた",
+   "file": "2aa9c3ec8e60fe48.mp3"
+  },
+  {
+   "text": "かりたい",
+   "file": "7c01d8c7ce512edc.mp3"
+  },
+  {
+   "text": "かりたら",
+   "file": "7c0bfdc7ce59c240.mp3"
+  },
+  {
+   "text": "かりて",
+   "file": "2aa9ccec8e610d93.mp3"
+  },
+  {
+   "text": "かりない",
+   "file": "93c61770a15111b9.mp3"
+  },
+  {
+   "text": "かります",
+   "file": "e75ef2dacdd29df6.mp3"
+  },
+  {
+   "text": "かりよう",
+   "file": "f80a38c575064a44.mp3"
+  },
+  {
+   "text": "かりられる",
+   "file": "d60b13ca5e857fc6.mp3"
+  },
+  {
+   "text": "かりる",
+   "file": "2aac0fec8e620243.mp3"
+  },
+  {
+   "text": "かりれば",
+   "file": "a5b9b6e80ac02812.mp3"
+  },
+  {
+   "text": "かりろ",
+   "file": "2aac15ec8e620c75.mp3"
+  },
+  {
+   "text": "かわ",
+   "file": "79d79b04d9faf2d8.mp3"
+  },
+  {
+   "text": "かわせる",
+   "file": "24e00cd4ba2423c5.mp3"
+  },
+  {
+   "text": "かわない",
+   "file": "f7895a4e125f9b22.mp3"
+  },
+  {
+   "text": "かわれる",
+   "file": "ce26194a54dfa93b.mp3"
+  },
+  {
+   "text": "かんが(える)",
+   "file": "16451fddd07825a5.mp3"
+  },
+  {
+   "text": "かんたん",
+   "file": "fc6ecbfdc731384d.mp3"
+  },
+  {
+   "text": "かんたんじゃない",
+   "file": "3b738744c8d2d0b9.mp3"
+  },
+  {
+   "text": "かんたんじゃなかった",
+   "file": "7460eb0c58314c9a.mp3"
+  },
+  {
+   "text": "かんたんだった",
+   "file": "6967e6e1fcc3d905.mp3"
+  },
+  {
+   "text": "かんたんで",
+   "file": "14ee3573bfb1e742.mp3"
+  },
+  {
+   "text": "き",
+   "file": "4d994e1b8369eeec.mp3"
+  },
+  {
+   "text": "き(く)",
+   "file": "26bf19e2f393a958.mp3"
+  },
+  {
+   "text": "き(る)",
+   "file": "408c38e30223a941.mp3"
+  },
+  {
+   "text": "きいた",
+   "file": "bb52eef174831c45.mp3"
+  },
+  {
+   "text": "きいたら",
+   "file": "e530daa45d35dadb.mp3"
+  },
+  {
+   "text": "きいて",
+   "file": "bb52e5f174830cfa.mp3"
+  },
+  {
+   "text": "きかせる",
+   "file": "ee2e510ffbde831c.mp3"
+  },
+  {
+   "text": "きかない",
+   "file": "72612daea8005653.mp3"
+  },
+  {
+   "text": "きかれる",
+   "file": "467c73ad455a9202.mp3"
+  },
+  {
+   "text": "ききたい",
+   "file": "c5234e06741fd2a0.mp3"
+  },
+  {
+   "text": "ききます",
+   "file": "b6200e003b17d072.mp3"
+  },
+  {
+   "text": "きく",
+   "file": "60c00b11eeed7cc1.mp3"
+  },
+  {
+   "text": "きけ",
+   "file": "60bff511eeed575f.mp3"
+  },
+  {
+   "text": "きけば",
+   "file": "5645359331afc54d.mp3"
+  },
+  {
+   "text": "きける",
+   "file": "5648729331b262cb.mp3"
+  },
+  {
+   "text": "きこう",
+   "file": "0bff4f9f06d91dbd.mp3"
+  },
+  {
+   "text": "きさせる",
+   "file": "a7d7d1cbb3f7d686.mp3"
+  },
+  {
+   "text": "きた",
+   "file": "60bffb11eeed6191.mp3"
+  },
+  {
+   "text": "きたい",
+   "file": "e0a775c2d3af5483.mp3"
+  },
+  {
+   "text": "きたら",
+   "file": "e09d40c2d3a6a5ef.mp3"
+  },
+  {
+   "text": "きった",
+   "file": "6111f61c177c7fb2.mp3"
+  },
+  {
+   "text": "きったら",
+   "file": "90d20d655b1bf3ae.mp3"
+  },
+  {
+   "text": "きって",
+   "file": "61122f1c177ce08d.mp3"
+  },
+  {
+   "text": "きて",
+   "file": "60bfe211eeed3716.mp3"
+  },
+  {
+   "text": "きない",
+   "file": "d9f1b757a31ea83e.mp3"
+  },
+  {
+   "text": "きのう映画を見た。",
+   "file": "6f18891358545bde.mp3"
+  },
+  {
+   "text": "きます",
+   "file": "5a5b43b0e6ea34d1.mp3"
+  },
+  {
+   "text": "きゅう",
+   "file": "469383613d22a172.mp3"
+  },
+  {
+   "text": "きよう",
+   "file": "5d0f1d4957151d6b.mp3"
+  },
+  {
+   "text": "きらせる",
+   "file": "b9943b3d4faacf39.mp3"
+  },
+  {
+   "text": "きらない",
+   "file": "31a901c653bb001e.mp3"
+  },
+  {
+   "text": "きられる",
+   "file": "dfb02886096eb607.mp3"
+  },
+  {
+   "text": "きりたい",
+   "file": "f6e5605365ae4dd6.mp3"
+  },
+  {
+   "text": "きります",
+   "file": "5425b84e8b010fc0.mp3"
+  },
+  {
+   "text": "きる",
+   "file": "60ca2f11eef60e72.mp3"
+  },
+  {
+   "text": "きれ",
+   "file": "60ca2a11eef605f3.mp3"
+  },
+  {
+   "text": "きれい",
+   "file": "8866f7258a3ee6a5.mp3"
+  },
+  {
+   "text": "きれいじゃない",
+   "file": "4cc79ce544e4a051.mp3"
+  },
+  {
+   "text": "きれいじゃなかった",
+   "file": "a0430079accbbf32.mp3"
+  },
+  {
+   "text": "きれいだった",
+   "file": "eb2b6b20adcfad7d.mp3"
+  },
+  {
+   "text": "きれいで",
+   "file": "4a317c98a0393f0a.mp3"
+  },
+  {
+   "text": "きれば",
+   "file": "886723258a3f3169.mp3"
+  },
+  {
+   "text": "きれる",
+   "file": "886b60258a4381e7.mp3"
+  },
+  {
+   "text": "きろ",
+   "file": "60ca2911eef60440.mp3"
+  },
+  {
+   "text": "きろう",
+   "file": "ecd22323708e8bea.mp3"
+  },
+  {
+   "text": "く(る)",
+   "file": "a38ab63e9495c35f.mp3"
+  },
+  {
+   "text": "くち",
+   "file": "4e831128a6d3e765.mp3"
+  },
+  {
+   "text": "くに",
+   "file": "4e831728a6d3f197.mp3"
+  },
+  {
+   "text": "くる",
+   "file": "4e7fcf28a6d14168.mp3"
+  },
+  {
+   "text": "くるま",
+   "file": "f82482835eab6faa.mp3"
+  },
+  {
+   "text": "くれば",
+   "file": "6dabbebee775ca93.mp3"
+  },
+  {
+   "text": "くろ(い)",
+   "file": "53ec7c905068dc19.mp3"
+  },
+  {
+   "text": "けさせる",
+   "file": "6d9f3b3ca0d23982.mp3"
+  },
+  {
+   "text": "けさない",
+   "file": "acd8a0b3729ef111.mp3"
+  },
+  {
+   "text": "けされる",
+   "file": "926a8249f6320200.mp3"
+  },
+  {
+   "text": "けした",
+   "file": "25d3baba07f91f42.mp3"
+  },
+  {
+   "text": "けしたい",
+   "file": "5773d5768d9b8696.mp3"
+  },
+  {
+   "text": "けしたら",
+   "file": "57707a768d98b61e.mp3"
+  },
+  {
+   "text": "けして",
+   "file": "25d393ba07f8dcfd.mp3"
+  },
+  {
+   "text": "けします",
+   "file": "b4b62d71b2f1ae80.mp3"
+  },
+  {
+   "text": "けす",
+   "file": "dcee6db8a83b444b.mp3"
+  },
+  {
+   "text": "けせ",
+   "file": "dcee6fb8a83b47b1.mp3"
+  },
+  {
+   "text": "けせば",
+   "file": "fa7bedddd4cf6c1f.mp3"
+  },
+  {
+   "text": "けせる",
+   "file": "fa71a6ddd4c69ef5.mp3"
+  },
+  {
+   "text": "けそう",
+   "file": "e83f03f48cb5f1f3.mp3"
+  },
+  {
+   "text": "げんき",
+   "file": "dcb2dca5fb80ec34.mp3"
+  },
+  {
+   "text": "げんきじゃない",
+   "file": "a311df1a324ad7e0.mp3"
+  },
+  {
+   "text": "げんきじゃなかった",
+   "file": "fe20cef08464f6ff.mp3"
+  },
+  {
+   "text": "げんきだった",
+   "file": "5ac29b0106b1e14a.mp3"
+  },
+  {
+   "text": "げんきで",
+   "file": "99844d71fd8bd861.mp3"
+  },
+  {
+   "text": "こ",
+   "file": "4d99641b836a144e.mp3"
+  },
+  {
+   "text": "こい",
+   "file": "ce17a4cf63052b32.mp3"
+  },
+  {
+   "text": "こえ",
+   "file": "ce17a8cf630531fe.mp3"
+  },
+  {
+   "text": "こころ",
+   "file": "d6f8f374637c48d1.mp3"
+  },
+  {
+   "text": "こさせる",
+   "file": "028bf3d372254304.mp3"
+  },
+  {
+   "text": "こた(える)",
+   "file": "e116a0884f05c782.mp3"
+  },
+  {
+   "text": "こと",
+   "file": "ce17c8cf6305685e.mp3"
+  },
+  {
+   "text": "こない",
+   "file": "670817343cd610ac.mp3"
+  },
+  {
+   "text": "この店は高くない。",
+   "file": "07ea3ebc842a4ad5.mp3"
+  },
+  {
+   "text": "この部屋は広くて、明るい。",
+   "file": "189d0fcc46212a78.mp3"
+  },
+  {
+   "text": "こよう",
+   "file": "debfa28cac13e61d.mp3"
+  },
+  {
+   "text": "こられる",
+   "file": "22982e359c165b09.mp3"
+  },
+  {
+   "text": "ころ(ぶ)",
+   "file": "90f155ee9fd7b8e3.mp3"
+  },
+  {
+   "text": "こんにちは",
+   "file": "350b421dd8fc91ad.mp3"
+  },
+  {
+   "text": "ご",
+   "file": "4d99671b836a1967.mp3"
+  },
+  {
+   "text": "さ(る)",
+   "file": "104f204c3df45129.mp3"
+  },
+  {
+   "text": "さかな",
+   "file": "ac4f3f80861da4c9.mp3"
+  },
+  {
+   "text": "さき",
+   "file": "b19699dc75118543.mp3"
+  },
+  {
+   "text": "させる",
+   "file": "da5e3dfc5f9aa641.mp3"
+  },
+  {
+   "text": "さむい",
+   "file": "cf9a7b2999771ee1.mp3"
+  },
+  {
+   "text": "さむかった",
+   "file": "650d7b75dda4f8e2.mp3"
+  },
+  {
+   "text": "さむく",
+   "file": "cf9a702999770c30.mp3"
+  },
+  {
+   "text": "さむくて",
+   "file": "041f29ad7e2eda5a.mp3"
+  },
+  {
+   "text": "さむくない",
+   "file": "5798c25dd947e3aa.mp3"
+  },
+  {
+   "text": "さむくなかった",
+   "file": "e15b0f0bea019275.mp3"
+  },
+  {
+   "text": "される",
+   "file": "a7ad0c4d69351d4f.mp3"
+  },
+  {
+   "text": "さん",
+   "file": "b1a0c7dc751a27f2.mp3"
+  },
+  {
+   "text": "し(ぬ)",
+   "file": "991932f152a0a461.mp3"
+  },
+  {
+   "text": "し(る)",
+   "file": "90fb0df14e2f0747.mp3"
+  },
+  {
+   "text": "しずか",
+   "file": "4aeb8f4d27b9ab1d.mp3"
+  },
+  {
+   "text": "しずかじゃない",
+   "file": "324b8f7ee578aaa9.mp3"
+  },
+  {
+   "text": "しずかじゃなかった",
+   "file": "816afd843a58ff6a.mp3"
+  },
+  {
+   "text": "しずかだった",
+   "file": "d60f8428faf5df15.mp3"
+  },
+  {
+   "text": "しずかで",
+   "file": "f565da2dea6e2df2.mp3"
+  },
+  {
+   "text": "した",
+   "file": "a625d3f332be9a43.mp3"
+  },
+  {
+   "text": "したい",
+   "file": "37086e3407ac84d5.mp3"
+  },
+  {
+   "text": "したら",
+   "file": "370bd93407af707d.mp3"
+  },
+  {
+   "text": "しった",
+   "file": "0c86ca0a5c1f1f08.mp3"
+  },
+  {
+   "text": "しったら",
+   "file": "f37b04e7e4f8ee00.mp3"
+  },
+  {
+   "text": "しって",
+   "file": "0c86d30a5c1f2e53.mp3"
+  },
+  {
+   "text": "して",
+   "file": "a625aaf332be5498.mp3"
+  },
+  {
+   "text": "しな",
+   "file": "a625a6f332be4dcc.mp3"
+  },
+  {
+   "text": "しない",
+   "file": "a2703eb815a78b70.mp3"
+  },
+  {
+   "text": "しなせる",
+   "file": "8bfce0c51b8f7bf9.mp3"
+  },
+  {
+   "text": "しなない",
+   "file": "0411a74e1f9facde.mp3"
+  },
+  {
+   "text": "しなれる",
+   "file": "b218ce0dd55362c7.mp3"
+  },
+  {
+   "text": "しにたい",
+   "file": "03e4475aca2889f4.mp3"
+  },
+  {
+   "text": "しにます",
+   "file": "f17b0f548e3d6c5e.mp3"
+  },
+  {
+   "text": "しぬ",
+   "file": "a625a4f332be4a66.mp3"
+  },
+  {
+   "text": "しね",
+   "file": "a625a5f332be4c19.mp3"
+  },
+  {
+   "text": "しねば",
+   "file": "ef61bcb711a54d97.mp3"
+  },
+  {
+   "text": "しねる",
+   "file": "ef57c5b7119d085d.mp3"
+  },
+  {
+   "text": "しのう",
+   "file": "20be189e18ceaaaa.mp3"
+  },
+  {
+   "text": "します",
+   "file": "f608fc224228e4b3.mp3"
+  },
+  {
+   "text": "しめさせる",
+   "file": "d6e0f695b91bd704.mp3"
+  },
+  {
+   "text": "しめた",
+   "file": "bbbb1be83b508647.mp3"
+  },
+  {
+   "text": "しめたい",
+   "file": "8c6c84bd90eec8e9.mp3"
+  },
+  {
+   "text": "しめたら",
+   "file": "8c6fe7bd90f1a6f9.mp3"
+  },
+  {
+   "text": "しめて",
+   "file": "bbbb22e83b50922c.mp3"
+  },
+  {
+   "text": "しめない",
+   "file": "cc4a471340a9ccac.mp3"
+  },
+  {
+   "text": "しめます",
+   "file": "4f459cb9ffbf831f.mp3"
+  },
+  {
+   "text": "しめよう",
+   "file": "4401d26bafe7a21d.mp3"
+  },
+  {
+   "text": "しめられる",
+   "file": "f6ed30f7e30cef09.mp3"
+  },
+  {
+   "text": "しめる",
+   "file": "bbb78fe83b4d628c.mp3"
+  },
+  {
+   "text": "しめれば",
+   "file": "99b82c491d10a957.mp3"
+  },
+  {
+   "text": "しめろ",
+   "file": "bbb78de83b4d5f26.mp3"
+  },
+  {
+   "text": "しよう",
+   "file": "46424cacb29321f1.mp3"
+  },
+  {
+   "text": "しらせる",
+   "file": "c9b33562e4d68957.mp3"
+  },
+  {
+   "text": "しらない",
+   "file": "affd74ccf30f3484.mp3"
+  },
+  {
+   "text": "しられる",
+   "file": "59be0dcbb6bd0765.mp3"
+  },
+  {
+   "text": "しりたい",
+   "file": "6361c97b861e72b8.mp3"
+  },
+  {
+   "text": "しります",
+   "file": "cec0fb8e85a3709a.mp3"
+  },
+  {
+   "text": "しる",
+   "file": "a6225ff332bb9f50.mp3"
+  },
+  {
+   "text": "しれ",
+   "file": "a62266f332bbab35.mp3"
+  },
+  {
+   "text": "しれば",
+   "file": "17844ed07c85f28b.mp3"
+  },
+  {
+   "text": "しれる",
+   "file": "177a57d07c7dad51.mp3"
+  },
+  {
+   "text": "しろ",
+   "file": "a62265f332bba982.mp3"
+  },
+  {
+   "text": "しろ(い)",
+   "file": "bb6b5272fe2fe671.mp3"
+  },
+  {
+   "text": "しろう",
+   "file": "e713cac46e7bb970.mp3"
+  },
+  {
+   "text": "しんせつ",
+   "file": "76c193f0e7d7b073.mp3"
+  },
+  {
+   "text": "しんせつじゃない",
+   "file": "3f62f44623abcf23.mp3"
+  },
+  {
+   "text": "しんせつじゃなかった",
+   "file": "136427a2ebaf88e8.mp3"
+  },
+  {
+   "text": "しんせつだった",
+   "file": "65381ab405723e83.mp3"
+  },
+  {
+   "text": "しんせつで",
+   "file": "554da1556ec4306c.mp3"
+  },
+  {
+   "text": "しんだ",
+   "file": "1fa5744e912b8d40.mp3"
+  },
+  {
+   "text": "しんだら",
+   "file": "fe10f50787496d18.mp3"
+  },
+  {
+   "text": "しんで",
+   "file": "1fa57b4e912b9925.mp3"
+  },
+  {
+   "text": "じゅう",
+   "file": "a920bc9352ebac81.mp3"
+  },
+  {
+   "text": "す(む)",
+   "file": "eac951f189720be6.mp3"
+  },
+  {
+   "text": "すき",
+   "file": "b459d17c1b70984f.mp3"
+  },
+  {
+   "text": "すきじゃない",
+   "file": "410bf7eebf1dfb57.mp3"
+  },
+  {
+   "text": "すきじゃなかった",
+   "file": "ab85f68e0c26cf9c.mp3"
+  },
+  {
+   "text": "すきだった",
+   "file": "724ca0023bdda7af.mp3"
+  },
+  {
+   "text": "すきで",
+   "file": "d1def91c8057fec8.mp3"
+  },
+  {
+   "text": "すく(ない)",
+   "file": "b80094e5cf0fc980.mp3"
+  },
+  {
+   "text": "すませる",
+   "file": "d688e00b67789a13.mp3"
+  },
+  {
+   "text": "すまない",
+   "file": "103ca98d77217f98.mp3"
+  },
+  {
+   "text": "すまれる",
+   "file": "dee930840c8d6989.mp3"
+  },
+  {
+   "text": "すみたい",
+   "file": "e1c28c206fc137d6.mp3"
+  },
+  {
+   "text": "すみます",
+   "file": "3f02e41b9513f9c0.mp3"
+  },
+  {
+   "text": "すむ",
+   "file": "b463067c1b7793e3.mp3"
+  },
+  {
+   "text": "すめ",
+   "file": "b463057c1b779230.mp3"
+  },
+  {
+   "text": "すめば",
+   "file": "981fff57c37c36f8.mp3"
+  },
+  {
+   "text": "すめる",
+   "file": "982a2a57c384d48e.mp3"
+  },
+  {
+   "text": "すもう",
+   "file": "3c66076f82551f51.mp3"
+  },
+  {
+   "text": "する",
+   "file": "b4630f7c1b77a32e.mp3"
+  },
+  {
+   "text": "すれば",
+   "file": "598aa5c2ccce3425.mp3"
+  },
+  {
+   "text": "すわった",
+   "file": "b2e6aae383bceda8.mp3"
+  },
+  {
+   "text": "すわったら",
+   "file": "e53c01ddbec65d20.mp3"
+  },
+  {
+   "text": "すわって",
+   "file": "b2e673e383bc9033.mp3"
+  },
+  {
+   "text": "すわらせる",
+   "file": "e6d67c0511dbe6b7.mp3"
+  },
+  {
+   "text": "すわらない",
+   "file": "d4603d7d574dbaa4.mp3"
+  },
+  {
+   "text": "すわられる",
+   "file": "718d5cc4197ef5c5.mp3"
+  },
+  {
+   "text": "すわりたい",
+   "file": "5fdda1eb9fa2d218.mp3"
+  },
+  {
+   "text": "すわります",
+   "file": "c76351f06ad1d03a.mp3"
+  },
+  {
+   "text": "すわる",
+   "file": "3a5a7ac50db056b0.mp3"
+  },
+  {
+   "text": "すわれ",
+   "file": "3a5a81c50db06295.mp3"
+  },
+  {
+   "text": "すわれば",
+   "file": "61c1f5e7d58f1c2b.mp3"
+  },
+  {
+   "text": "すわれる",
+   "file": "61b7bee7d5866a31.mp3"
+  },
+  {
+   "text": "すわろう",
+   "file": "315031dbc782c350.mp3"
+  },
+  {
+   "text": "すんだ",
+   "file": "61083ae084ee650e.mp3"
+  },
+  {
+   "text": "すんだら",
+   "file": "d84a4e92ffc3aab2.mp3"
+  },
+  {
+   "text": "すんで",
+   "file": "61083de084ee6a27.mp3"
+  },
+  {
+   "text": "せん",
+   "file": "528887890638652c.mp3"
+  },
+  {
+   "text": "そうじさせる",
+   "file": "39189f87f05f374c.mp3"
+  },
+  {
+   "text": "そうじされる",
+   "file": "c501811456e84a52.mp3"
+  },
+  {
+   "text": "そうじした",
+   "file": "d9a3a3160f72e0e8.mp3"
+  },
+  {
+   "text": "そうじしたい",
+   "file": "ac74f638a07e46fc.mp3"
+  },
+  {
+   "text": "そうじしたら",
+   "file": "ac7f1b38a086da60.mp3"
+  },
+  {
+   "text": "そうじして",
+   "file": "d9a36c160f728373.mp3"
+  },
+  {
+   "text": "そうじしない",
+   "file": "c72cb2d344f02f19.mp3"
+  },
+  {
+   "text": "そうじします",
+   "file": "1ac68e3d71736e56.mp3"
+  },
+  {
+   "text": "そうじしよう",
+   "file": "761f5e964ced4964.mp3"
+  },
+  {
+   "text": "そうじしろ",
+   "file": "d9a6f5160f75a215.mp3"
+  },
+  {
+   "text": "そうじする",
+   "file": "b90e9ec2c20da13d.mp3"
+  },
+  {
+   "text": "そうじすれば",
+   "file": "48c50f3a1fea8e50.mp3"
+  },
+  {
+   "text": "そうじできる",
+   "file": "14161eb45856150c.mp3"
+  },
+  {
+   "text": "そそ(ぐ)",
+   "file": "299fe0f92c3a222a.mp3"
+  },
+  {
+   "text": "そと",
+   "file": "8900ec9fe8450964.mp3"
+  },
+  {
+   "text": "そら",
+   "file": "890b2d9fe84dcc5c.mp3"
+  },
+  {
+   "text": "た",
+   "file": "4d99601b836a0d82.mp3"
+  },
+  {
+   "text": "た(つ)",
+   "file": "7b8e361743656451.mp3"
+  },
+  {
+   "text": "た(てる)",
+   "file": "29fe90038c159011.mp3"
+  },
+  {
+   "text": "た(べる)",
+   "file": "f8af1da4643eec34.mp3"
+  },
+  {
+   "text": "たいへん",
+   "file": "f23326110d5662ac.mp3"
+  },
+  {
+   "text": "たいへんじゃない",
+   "file": "2cebb39a104115b8.mp3"
+  },
+  {
+   "text": "たいへんじゃなかった",
+   "file": "6deda0908536d817.mp3"
+  },
+  {
+   "text": "たいへんだった",
+   "file": "13e992eed34e5b22.mp3"
+  },
+  {
+   "text": "たいへんで",
+   "file": "069aa91b90f65f89.mp3"
+  },
+  {
+   "text": "たか(い)",
+   "file": "d18df96bed22e602.mp3"
+  },
+  {
+   "text": "たかい",
+   "file": "ed0764eb52732529.mp3"
+  },
+  {
+   "text": "たかかった",
+   "file": "29c0c74762dcabea.mp3"
+  },
+  {
+   "text": "たかく",
+   "file": "ed0769eb52732da8.mp3"
+  },
+  {
+   "text": "たかくて",
+   "file": "86a1b7a165fac382.mp3"
+  },
+  {
+   "text": "たかくない",
+   "file": "ec4ca5758842bd32.mp3"
+  },
+  {
+   "text": "たかくなかった",
+   "file": "c9a486f1feb2da3d.mp3"
+  },
+  {
+   "text": "たたせる",
+   "file": "77c48c9223d9e6fe.mp3"
+  },
+  {
+   "text": "たたない",
+   "file": "dd96ad31dfcca595.mp3"
+  },
+  {
+   "text": "たたれる",
+   "file": "3d273c3d45c15a04.mp3"
+  },
+  {
+   "text": "ただ(しい)",
+   "file": "49d59490ebc6a528.mp3"
+  },
+  {
+   "text": "たちたい",
+   "file": "6b75a341e5cc1746.mp3"
+  },
+  {
+   "text": "たちます",
+   "file": "9e585b3bd12117d0.mp3"
+  },
+  {
+   "text": "たった",
+   "file": "44a9eab5de5d7060.mp3"
+  },
+  {
+   "text": "たったら",
+   "file": "57d29a2eced485b8.mp3"
+  },
+  {
+   "text": "たって",
+   "file": "44a9e3b5de5d647b.mp3"
+  },
+  {
+   "text": "たつ",
+   "file": "f9708cab9630bf36.mp3"
+  },
+  {
+   "text": "たて",
+   "file": "f9708aab9630bbd0.mp3"
+  },
+  {
+   "text": "たてば",
+   "file": "abd5938761d90258.mp3"
+  },
+  {
+   "text": "たてる",
+   "file": "abe0fe8761e3bfae.mp3"
+  },
+  {
+   "text": "たとう",
+   "file": "9da3b9fe792aa778.mp3"
+  },
+  {
+   "text": "たの(しい)",
+   "file": "ca74fcd6dbd92f32.mp3"
+  },
+  {
+   "text": "たのしい",
+   "file": "3d3a04fc75722077.mp3"
+  },
+  {
+   "text": "たのしかった",
+   "file": "81e04c29304fdefc.mp3"
+  },
+  {
+   "text": "たのしく",
+   "file": "3d39fdfc75721492.mp3"
+  },
+  {
+   "text": "たのしくて",
+   "file": "687b256bdae05cc0.mp3"
+  },
+  {
+   "text": "たのしくない",
+   "file": "79c9bb83acce42f8.mp3"
+  },
+  {
+   "text": "たのしくなかった",
+   "file": "a25585ace7afd457.mp3"
+  },
+  {
+   "text": "たび",
+   "file": "f9707fab9630a91f.mp3"
+  },
+  {
+   "text": "たべさせる",
+   "file": "b2fa0256801c0129.mp3"
+  },
+  {
+   "text": "たべた",
+   "file": "f8c78a865dd7921a.mp3"
+  },
+  {
+   "text": "たべたい",
+   "file": "a51e9dae16ef0b5e.mp3"
+  },
+  {
+   "text": "たべたら",
+   "file": "a51b32ae16ec1fb6.mp3"
+  },
+  {
+   "text": "たべて",
+   "file": "f8c753865dd734a5.mp3"
+  },
+  {
+   "text": "たべない",
+   "file": "586bda0146113de3.mp3"
+  },
+  {
+   "text": "たべます",
+   "file": "d80145a80243f0b8.mp3"
+  },
+  {
+   "text": "たべよう",
+   "file": "84458cf2e0e0496a.mp3"
+  },
+  {
+   "text": "たべられる",
+   "file": "5d84300aefc71a8c.mp3"
+  },
+  {
+   "text": "たべる",
+   "file": "f8bd36865dceaed9.mp3"
+  },
+  {
+   "text": "たべれば",
+   "file": "5586c716aad1c62c.mp3"
+  },
+  {
+   "text": "たべろ",
+   "file": "f8bd38865dceb23f.mp3"
+  },
+  {
+   "text": "ため(す)",
+   "file": "40d52735f6023384.mp3"
+  },
+  {
+   "text": "ちい(さい)",
+   "file": "4f4e7b2dd05e2f44.mp3"
+  },
+  {
+   "text": "ちいさい",
+   "file": "d9e6b22f2afdcb65.mp3"
+  },
+  {
+   "text": "ちいさかった",
+   "file": "2ad2cf48a2aebfa6.mp3"
+  },
+  {
+   "text": "ちいさく",
+   "file": "d9e6b72f2afdd3e4.mp3"
+  },
+  {
+   "text": "ちいさくて",
+   "file": "f965407f14c85cbe.mp3"
+  },
+  {
+   "text": "ちいさくない",
+   "file": "8b05a29aab195866.mp3"
+  },
+  {
+   "text": "ちいさくなかった",
+   "file": "4112fa56a5ad1011.mp3"
+  },
+  {
+   "text": "ちか(い)",
+   "file": "2638e87c6b699efc.mp3"
+  },
+  {
+   "text": "ちかい",
+   "file": "0b69301fc2a8f3e3.mp3"
+  },
+  {
+   "text": "ちかかった",
+   "file": "bd785eff4dfb4da8.mp3"
+  },
+  {
+   "text": "ちかく",
+   "file": "0b69391fc2a9032e.mp3"
+  },
+  {
+   "text": "ちかくて",
+   "file": "318170ec5c1394cc.mp3"
+  },
+  {
+   "text": "ちかくない",
+   "file": "9fc9385c2ec7c3cc.mp3"
+  },
+  {
+   "text": "ちかくなかった",
+   "file": "e80dce6daf5d610b.mp3"
+  },
+  {
+   "text": "ちから",
+   "file": "0b5ffb1fc2a1f84f.mp3"
+  },
+  {
+   "text": "ちち",
+   "file": "b1c8142ea02682d3.mp3"
+  },
+  {
+   "text": "つか(う)",
+   "file": "b2b7f87600bbf635.mp3"
+  },
+  {
+   "text": "つか(える)",
+   "file": "23661a7e19f21261.mp3"
+  },
+  {
+   "text": "つかいたい",
+   "file": "e9f1c061892f79af.mp3"
+  },
+  {
+   "text": "つかいます",
+   "file": "63a7964f9c6dcd95.mp3"
+  },
+  {
+   "text": "つかう",
+   "file": "3dc9225424eded9e.mp3"
+  },
+  {
+   "text": "つかえ",
+   "file": "3dc91c5424ede36c.mp3"
+  },
+  {
+   "text": "つかえば",
+   "file": "abf8120f43423fcc.mp3"
+  },
+  {
+   "text": "つかえる",
+   "file": "ac026d0f434b2ef2.mp3"
+  },
+  {
+   "text": "つかおう",
+   "file": "4d91681c30f22e60.mp3"
+  },
+  {
+   "text": "つかった",
+   "file": "265f985db312713a.mp3"
+  },
+  {
+   "text": "つかったら",
+   "file": "399a8baf079e1656.mp3"
+  },
+  {
+   "text": "つかって",
+   "file": "265fa15db3128085.mp3"
+  },
+  {
+   "text": "つかわせる",
+   "file": "3b77d9de8105445f.mp3"
+  },
+  {
+   "text": "つかわない",
+   "file": "fbbe6a597dbbf79c.mp3"
+  },
+  {
+   "text": "つかわれる",
+   "file": "cb81d24752ea45cd.mp3"
+  },
+  {
+   "text": "つき",
+   "file": "f7a63c534cad4afe.mp3"
+  },
+  {
+   "text": "つく(る)",
+   "file": "107a94b27c209b25.mp3"
+  },
+  {
+   "text": "つくった",
+   "file": "4437df3abb016e26.mp3"
+  },
+  {
+   "text": "つくったら",
+   "file": "504487cc5c274b2a.mp3"
+  },
+  {
+   "text": "つくって",
+   "file": "4438183abb01cf01.mp3"
+  },
+  {
+   "text": "つくらせる",
+   "file": "a99b7edc8fc88d5d.mp3"
+  },
+  {
+   "text": "つくらない",
+   "file": "ceba3d5bc3db5aaa.mp3"
+  },
+  {
+   "text": "つくられる",
+   "file": "78852d68ef0f8273.mp3"
+  },
+  {
+   "text": "つくりたい",
+   "file": "329d0cdcdaf0f3ea.mp3"
+  },
+  {
+   "text": "つくります",
+   "file": "68e6bcd6c92ac2dc.mp3"
+  },
+  {
+   "text": "つくる",
+   "file": "9388df31921e3e96.mp3"
+  },
+  {
+   "text": "つくれ",
+   "file": "9388e231921e43af.mp3"
+  },
+  {
+   "text": "つくれば",
+   "file": "971812728c05c81d.mp3"
+  },
+  {
+   "text": "つくれる",
+   "file": "971b6f728c089bfb.mp3"
+  },
+  {
+   "text": "つくろう",
+   "file": "d2eaea67dc55ed26.mp3"
+  },
+  {
+   "text": "つち",
+   "file": "f7a658534cad7a92.mp3"
+  },
+  {
+   "text": "つよ(い)",
+   "file": "6393cbe0a35863d5.mp3"
+  },
+  {
+   "text": "て",
+   "file": "4d99391b8369cb3d.mp3"
+  },
+  {
+   "text": "で(る)",
+   "file": "d4344ed5592113d7.mp3"
+  },
+  {
+   "text": "できる",
+   "file": "041469e21ad782ed.mp3"
+  },
+  {
+   "text": "でさせる",
+   "file": "f4590d1291f4fba0.mp3"
+  },
+  {
+   "text": "でた",
+   "file": "fdaa725e20ac5db3.mp3"
+  },
+  {
+   "text": "でたい",
+   "file": "22bc50484979e365.mp3"
+  },
+  {
+   "text": "でたら",
+   "file": "22bebb48497b1c0d.mp3"
+  },
+  {
+   "text": "でて",
+   "file": "fdaaa95e20acbb28.mp3"
+  },
+  {
+   "text": "でない",
+   "file": "b4bae3f5419798a0.mp3"
+  },
+  {
+   "text": "でます",
+   "file": "0ac5c04d4b6395a3.mp3"
+  },
+  {
+   "text": "でよう",
+   "file": "05246fd1dd14b561.mp3"
+  },
+  {
+   "text": "でられる",
+   "file": "ea93aa1cbaa11135.mp3"
+  },
+  {
+   "text": "でる",
+   "file": "fda71e5e20a99920.mp3"
+  },
+  {
+   "text": "でれば",
+   "file": "ac0811f46d087e5b.mp3"
+  },
+  {
+   "text": "でろ",
+   "file": "fda7245e20a9a352.mp3"
+  },
+  {
+   "text": "でんわさせる",
+   "file": "6c831e5c03adba98.mp3"
+  },
+  {
+   "text": "でんわされる",
+   "file": "494490b2f05e3f86.mp3"
+  },
+  {
+   "text": "でんわした",
+   "file": "194715941a1184e4.mp3"
+  },
+  {
+   "text": "でんわしたい",
+   "file": "fc479aa9078dcab8.mp3"
+  },
+  {
+   "text": "でんわしたら",
+   "file": "fc52d7a9079839e4.mp3"
+  },
+  {
+   "text": "でんわして",
+   "file": "19473e941a11ca8f.mp3"
+  },
+  {
+   "text": "でんわしない",
+   "file": "bb3f8a26339421dd.mp3"
+  },
+  {
+   "text": "でんわします",
+   "file": "67a6ccbc0712c89a.mp3"
+  },
+  {
+   "text": "でんわしよう",
+   "file": "cdd6dbfdf988dbc8.mp3"
+  },
+  {
+   "text": "でんわしろ",
+   "file": "194987941a12c971.mp3"
+  },
+  {
+   "text": "でんわする",
+   "file": "00c5ba018b7e51e9.mp3"
+  },
+  {
+   "text": "でんわすれば",
+   "file": "3f7159bad65f0e7c.mp3"
+  },
+  {
+   "text": "でんわできる",
+   "file": "d1944a25cca54da0.mp3"
+  },
+  {
+   "text": "と(う)",
+   "file": "9d9fc717d7b830d0.mp3"
+  },
+  {
+   "text": "と(まる)",
+   "file": "5703ffceff7f5d64.mp3"
+  },
+  {
+   "text": "とお(る)",
+   "file": "4a0bf00fc8d30d7c.mp3"
+  },
+  {
+   "text": "とおい",
+   "file": "f8c237eaa68df26d.mp3"
+  },
+  {
+   "text": "とおかった",
+   "file": "fa949e69f5d35dce.mp3"
+  },
+  {
+   "text": "とおく",
+   "file": "f8c22ceaa68ddfbc.mp3"
+  },
+  {
+   "text": "とおくて",
+   "file": "9e553080108d3446.mp3"
+  },
+  {
+   "text": "とおくない",
+   "file": "d063c7949b663ace.mp3"
+  },
+  {
+   "text": "とおくなかった",
+   "file": "a503421848d1afd9.mp3"
+  },
+  {
+   "text": "とき",
+   "file": "f39d73f2ed460c0a.mp3"
+  },
+  {
+   "text": "とし",
+   "file": "f39d79f2ed46163c.mp3"
+  },
+  {
+   "text": "とった",
+   "file": "61db0da948cc7d15.mp3"
+  },
+  {
+   "text": "とったら",
+   "file": "c75ae7cc07f73b4b.mp3"
+  },
+  {
+   "text": "とって",
+   "file": "61db24a948cca42a.mp3"
+  },
+  {
+   "text": "とばせる",
+   "file": "82823554f4947d18.mp3"
+  },
+  {
+   "text": "とばない",
+   "file": "5de388e3f1fe5297.mp3"
+  },
+  {
+   "text": "とばれる",
+   "file": "5f43a7abe1450206.mp3"
+  },
+  {
+   "text": "とびたい",
+   "file": "f4393faadf327397.mp3"
+  },
+  {
+   "text": "とびます",
+   "file": "1af7258f227026ad.mp3"
+  },
+  {
+   "text": "とぶ",
+   "file": "f39d9af2ed464e4f.mp3"
+  },
+  {
+   "text": "とべ",
+   "file": "f39d9ff2ed4656ce.mp3"
+  },
+  {
+   "text": "とべば",
+   "file": "57b2fb80bf871276.mp3"
+  },
+  {
+   "text": "とべる",
+   "file": "57af5a80bf83cb0c.mp3"
+  },
+  {
+   "text": "とぼう",
+   "file": "2f06efaf5d84bf95.mp3"
+  },
+  {
+   "text": "とも",
+   "file": "f39fccf2ed47261c.mp3"
+  },
+  {
+   "text": "とらせる",
+   "file": "196e86a5c3cf4f5c.mp3"
+  },
+  {
+   "text": "とらない",
+   "file": "9da163446ff12293.mp3"
+  },
+  {
+   "text": "とられる",
+   "file": "6c68b1994307ef42.mp3"
+  },
+  {
+   "text": "とり",
+   "file": "f39fd4f2ed4733b4.mp3"
+  },
+  {
+   "text": "とりたい",
+   "file": "57ce0ec4bbccac3b.mp3"
+  },
+  {
+   "text": "とります",
+   "file": "a7250cb1950b2c99.mp3"
+  },
+  {
+   "text": "とる",
+   "file": "f39fd5f2ed473567.mp3"
+  },
+  {
+   "text": "とれ",
+   "file": "f39fd2f2ed47304e.mp3"
+  },
+  {
+   "text": "とれば",
+   "file": "30d990b0bf7f29f6.mp3"
+  },
+  {
+   "text": "とれる",
+   "file": "30d5efb0bf7be28c.mp3"
+  },
+  {
+   "text": "とろう",
+   "file": "3a524cbb966e86b9.mp3"
+  },
+  {
+   "text": "とんだ",
+   "file": "ab40b9ff2f4ebd5d.mp3"
+  },
+  {
+   "text": "とんだら",
+   "file": "74a65068e6d501b3.mp3"
+  },
+  {
+   "text": "とんで",
+   "file": "ab40b2ff2f4eb178.mp3"
+  },
+  {
+   "text": "な",
+   "file": "4d992d1b8369b6d9.mp3"
+  },
+  {
+   "text": "な(い)",
+   "file": "366bed6967294ff4.mp3"
+  },
+  {
+   "text": "なか",
+   "file": "d71c65ffff526102.mp3"
+  },
+  {
+   "text": "なが(い)",
+   "file": "65616475d32135de.mp3"
+  },
+  {
+   "text": "なつ",
+   "file": "d71c48ffff522fbb.mp3"
+  },
+  {
+   "text": "なな",
+   "file": "d71c46ffff522c55.mp3"
+  },
+  {
+   "text": "なに",
+   "file": "d71c45ffff522aa2.mp3"
+  },
+  {
+   "text": "なら(う)",
+   "file": "a7a521aa9f08f1d4.mp3"
+  },
+  {
+   "text": "ならいたい",
+   "file": "892fb97ab510043a.mp3"
+  },
+  {
+   "text": "ならいます",
+   "file": "3d3f8b8ddeb60e4c.mp3"
+  },
+  {
+   "text": "ならう",
+   "file": "147a2a30dd5b4113.mp3"
+  },
+  {
+   "text": "ならえ",
+   "file": "147a3830dd5b58dd.mp3"
+  },
+  {
+   "text": "ならえば",
+   "file": "7efbcf1216f8ab63.mp3"
+  },
+  {
+   "text": "ならえる",
+   "file": "7ef1a81216f01499.mp3"
+  },
+  {
+   "text": "ならおう",
+   "file": "9b7bd50504ea95d3.mp3"
+  },
+  {
+   "text": "ならった",
+   "file": "adc71aaba2d918f1.mp3"
+  },
+  {
+   "text": "ならったら",
+   "file": "2098c57e2baaafcf.mp3"
+  },
+  {
+   "text": "ならって",
+   "file": "adc741aba2d95b36.mp3"
+  },
+  {
+   "text": "ならわせる",
+   "file": "d1db5163fa225552.mp3"
+  },
+  {
+   "text": "ならわない",
+   "file": "e4b779f9e617cb81.mp3"
+  },
+  {
+   "text": "ならわれる",
+   "file": "a13f9979a23c0d70.mp3"
+  },
+  {
+   "text": "に",
+   "file": "4d992c1b8369b526.mp3"
+  },
+  {
+   "text": "にし",
+   "file": "f9a1b1fdc1452c57.mp3"
+  },
+  {
+   "text": "ぬいだ",
+   "file": "943ccf3a132938af.mp3"
+  },
+  {
+   "text": "ぬいだら",
+   "file": "99e0d2e0b0704661.mp3"
+  },
+  {
+   "text": "ぬいで",
+   "file": "943ccc3a13293396.mp3"
+  },
+  {
+   "text": "ぬがせる",
+   "file": "aa2e0c2e56b7a4c8.mp3"
+  },
+  {
+   "text": "ぬがない",
+   "file": "0263a0c469f89627.mp3"
+  },
+  {
+   "text": "ぬがれる",
+   "file": "0728bf8c5c20bb96.mp3"
+  },
+  {
+   "text": "ぬぎたい",
+   "file": "e93467e4337c61a8.mp3"
+  },
+  {
+   "text": "ぬぎます",
+   "file": "d36537ddf4ae28aa.mp3"
+  },
+  {
+   "text": "ぬぐ",
+   "file": "c845a916ba1c5c4d.mp3"
+  },
+  {
+   "text": "ぬげ",
+   "file": "c845a716ba1c58e7.mp3"
+  },
+  {
+   "text": "ぬげば",
+   "file": "d9f76bc9ea6f5305.mp3"
+  },
+  {
+   "text": "ぬげる",
+   "file": "d9fab8c9ea720bb3.mp3"
+  },
+  {
+   "text": "ぬごう",
+   "file": "3bc42dbcffa2b639.mp3"
+  },
+  {
+   "text": "ねさせる",
+   "file": "7cec2cf8da50b8a6.mp3"
+  },
+  {
+   "text": "ねた",
+   "file": "dd1fba0ad34ff3b1.mp3"
+  },
+  {
+   "text": "ねたい",
+   "file": "d69b37d652462e23.mp3"
+  },
+  {
+   "text": "ねたら",
+   "file": "d69102d6523d7f8f.mp3"
+  },
+  {
+   "text": "ねて",
+   "file": "dd1fe10ad35035f6.mp3"
+  },
+  {
+   "text": "ねない",
+   "file": "234dfb832323fb9e.mp3"
+  },
+  {
+   "text": "ねます",
+   "file": "a3b887dc66f13b31.mp3"
+  },
+  {
+   "text": "ねよう",
+   "file": "4c36df5ccfe5a50b.mp3"
+  },
+  {
+   "text": "ねられる",
+   "file": "b82a83b332aac127.mp3"
+  },
+  {
+   "text": "ねる",
+   "file": "dd29ee0ad358a092.mp3"
+  },
+  {
+   "text": "ねれば",
+   "file": "ca84a542d30ca249.mp3"
+  },
+  {
+   "text": "ねろ",
+   "file": "dd29e80ad3589660.mp3"
+  },
+  {
+   "text": "の",
+   "file": "4d99311b8369bda5.mp3"
+  },
+  {
+   "text": "の(む)",
+   "file": "53fcbb3da7cbf985.mp3"
+  },
+  {
+   "text": "のった",
+   "file": "3107184c926f79f7.mp3"
+  },
+  {
+   "text": "のったら",
+   "file": "04eff5eafa38b7c9.mp3"
+  },
+  {
+   "text": "のって",
+   "file": "3106ff4c926f4f7c.mp3"
+  },
+  {
+   "text": "のませる",
+   "file": "8fbdb9da3c556444.mp3"
+  },
+  {
+   "text": "のまない",
+   "file": "e7f146704f92e20b.mp3"
+  },
+  {
+   "text": "のまれる",
+   "file": "68441d7e9e88520a.mp3"
+  },
+  {
+   "text": "のみたい",
+   "file": "5bac7cbad8180f8d.mp3"
+  },
+  {
+   "text": "のみます",
+   "file": "1aad3aa91294c0fb.mp3"
+  },
+  {
+   "text": "のむ",
+   "file": "815bab2292206070.mp3"
+  },
+  {
+   "text": "のめ",
+   "file": "815bac2292206223.mp3"
+  },
+  {
+   "text": "のめば",
+   "file": "fc689ad7da4fc2d9.mp3"
+  },
+  {
+   "text": "のめる",
+   "file": "fc6c37d7da530377.mp3"
+  },
+  {
+   "text": "のもう",
+   "file": "d9d6e2da185368a4.mp3"
+  },
+  {
+   "text": "のらせる",
+   "file": "63ee63c63300f6ce.mp3"
+  },
+  {
+   "text": "のらない",
+   "file": "fd5c43550c026c85.mp3"
+  },
+  {
+   "text": "のられる",
+   "file": "623fca0a3c38dcf4.mp3"
+  },
+  {
+   "text": "のりたい",
+   "file": "f6546e8ac2278309.mp3"
+  },
+  {
+   "text": "のります",
+   "file": "b8bb0478ff87197f.mp3"
+  },
+  {
+   "text": "のる",
+   "file": "815bb62292207321.mp3"
+  },
+  {
+   "text": "のれ",
+   "file": "815bb722922074d4.mp3"
+  },
+  {
+   "text": "のれば",
+   "file": "3c46952d8a0b25c4.mp3"
+  },
+  {
+   "text": "のれる",
+   "file": "3c50c02d8a13c35a.mp3"
+  },
+  {
+   "text": "のろう",
+   "file": "f9a7953833f46ac3.mp3"
+  },
+  {
+   "text": "のんだ",
+   "file": "34fa6e61fcffde07.mp3"
+  },
+  {
+   "text": "のんだら",
+   "file": "35820fd78f4442b9.mp3"
+  },
+  {
+   "text": "のんで",
+   "file": "34fa6b61fcffd8ee.mp3"
+  },
+  {
+   "text": "はい(る)",
+   "file": "06f570236f6a234b.mp3"
+  },
+  {
+   "text": "はいった",
+   "file": "5770ec500082b05c.mp3"
+  },
+  {
+   "text": "はいったら",
+   "file": "5e6ec2a279978d9c.mp3"
+  },
+  {
+   "text": "はいって",
+   "file": "5770c55000826e17.mp3"
+  },
+  {
+   "text": "はいらせる",
+   "file": "1d2eb0d6af0c624b.mp3"
+  },
+  {
+   "text": "はいらない",
+   "file": "87192947d8e26dc0.mp3"
+  },
+  {
+   "text": "はいられる",
+   "file": "cc708ab53b7575e1.mp3"
+  },
+  {
+   "text": "はいりたい",
+   "file": "b3c4c028e748fd3c.mp3"
+  },
+  {
+   "text": "はいります",
+   "file": "cf1f5823e83f1b96.mp3"
+  },
+  {
+   "text": "はいる",
+   "file": "ddfb3518df225404.mp3"
+  },
+  {
+   "text": "はいれ",
+   "file": "ddfb3418df225251.mp3"
+  },
+  {
+   "text": "はいれば",
+   "file": "915d9744820b257f.mp3"
+  },
+  {
+   "text": "はいれる",
+   "file": "915390448202c515.mp3"
+  },
+  {
+   "text": "はいろう",
+   "file": "8b4bdb39ae00a4bc.mp3"
+  },
+  {
+   "text": "はか(る)",
+   "file": "eb403b59e1c4a800.mp3"
+  },
+  {
+   "text": "はこ(ぶ)",
+   "file": "4a55cc64a3fbe64c.mp3"
+  },
+  {
+   "text": "はし(る)",
+   "file": "8e5302ea7cc57194.mp3"
+  },
+  {
+   "text": "はしった",
+   "file": "d99280bf80c0c165.mp3"
+  },
+  {
+   "text": "はしったら",
+   "file": "6821519ef736137b.mp3"
+  },
+  {
+   "text": "はしって",
+   "file": "d992b7bf80c11eda.mp3"
+  },
+  {
+   "text": "はしらせる",
+   "file": "56afc42149ce430c.mp3"
+  },
+  {
+   "text": "はしらない",
+   "file": "db429d9842e68363.mp3"
+  },
+  {
+   "text": "はしられる",
+   "file": "3229a5b77d733612.mp3"
+  },
+  {
+   "text": "はしりたい",
+   "file": "cd01e9ffa3a8482b.mp3"
+  },
+  {
+   "text": "はしります",
+   "file": "96b84a05b56e9469.mp3"
+  },
+  {
+   "text": "はしる",
+   "file": "864fed90fd66be37.mp3"
+  },
+  {
+   "text": "はしれ",
+   "file": "864fea90fd66b91e.mp3"
+  },
+  {
+   "text": "はしれば",
+   "file": "f89385def5febf06.mp3"
+  },
+  {
+   "text": "はしれる",
+   "file": "f88f04def5f9fafc.mp3"
+  },
+  {
+   "text": "はしろう",
+   "file": "abaf61dffa0c2029.mp3"
+  },
+  {
+   "text": "はじ(める)",
+   "file": "92993579e4e82403.mp3"
+  },
+  {
+   "text": "はたらいた",
+   "file": "0e2aa84825b68918.mp3"
+  },
+  {
+   "text": "はたらいたら",
+   "file": "6479bb7ab9e730b0.mp3"
+  },
+  {
+   "text": "はたらいて",
+   "file": "0e2ad14825b6cec3.mp3"
+  },
+  {
+   "text": "はたらかせる",
+   "file": "cf4acbd310423c97.mp3"
+  },
+  {
+   "text": "はたらかない",
+   "file": "b8fb0b3d215e10c4.mp3"
+  },
+  {
+   "text": "はたらかれる",
+   "file": "569aac9215006fa5.mp3"
+  },
+  {
+   "text": "はたらきたい",
+   "file": "fbea4ee4c1fc09d3.mp3"
+  },
+  {
+   "text": "はたらきます",
+   "file": "75a03cd2d53a8681.mp3"
+  },
+  {
+   "text": "はたらく",
+   "file": "c099a8116e8a73c2.mp3"
+  },
+  {
+   "text": "はたらけ",
+   "file": "c0999a116e8a5bf8.mp3"
+  },
+  {
+   "text": "はたらけば",
+   "file": "cdcf2096bcb8ebb0.mp3"
+  },
+  {
+   "text": "はたらける",
+   "file": "cdd95b96bcc1a476.mp3"
+  },
+  {
+   "text": "はたらこう",
+   "file": "c25e5ead7a66077c.mp3"
+  },
+  {
+   "text": "はち",
+   "file": "7b531017be1cb945.mp3"
+  },
+  {
+   "text": "はな",
+   "file": "7b531517be1cc1c4.mp3"
+  },
+  {
+   "text": "はな(す)",
+   "file": "3d63c49078a5b8f2.mp3"
+  },
+  {
+   "text": "はなさせる",
+   "file": "8577c055d4e7e40e.mp3"
+  },
+  {
+   "text": "はなさない",
+   "file": "1b7f9fe4ab0630c5.mp3"
+  },
+  {
+   "text": "はなされる",
+   "file": "7cfe2699d85b2b34.mp3"
+  },
+  {
+   "text": "はなした",
+   "file": "60083d91756667ae.mp3"
+  },
+  {
+   "text": "はなしたい",
+   "file": "f26f18a96eeccf12.mp3"
+  },
+  {
+   "text": "はなしたら",
+   "file": "f26ba5a96ee9d5d2.mp3"
+  },
+  {
+   "text": "はなして",
+   "file": "60084691756676f9.mp3"
+  },
+  {
+   "text": "はなします",
+   "file": "78b95abb5baea3f4.mp3"
+  },
+  {
+   "text": "はなす",
+   "file": "c40e84736c7a512f.mp3"
+  },
+  {
+   "text": "はなせ",
+   "file": "c40e86736c7a5495.mp3"
+  },
+  {
+   "text": "はなせば",
+   "file": "b5bec86ee28fc22b.mp3"
+  },
+  {
+   "text": "はなせる",
+   "file": "b5b4916ee2871031.mp3"
+  },
+  {
+   "text": "はなそう",
+   "file": "fd96863e03ab3c0f.mp3"
+  },
+  {
+   "text": "はは",
+   "file": "7b531217be1cbcab.mp3"
+  },
+  {
+   "text": "はや(い)",
+   "file": "86b1eb79b3140a60.mp3"
+  },
+  {
+   "text": "はやい",
+   "file": "6361992d6f58c007.mp3"
+  },
+  {
+   "text": "はやかった",
+   "file": "2f926f5139d7ecec.mp3"
+  },
+  {
+   "text": "はやく",
+   "file": "6361922d6f58b422.mp3"
+  },
+  {
+   "text": "はやくて",
+   "file": "c67d43b18049a930.mp3"
+  },
+  {
+   "text": "はやくない",
+   "file": "d5388559af0c7188.mp3"
+  },
+  {
+   "text": "はやくなかった",
+   "file": "f9574466efea2447.mp3"
+  },
+  {
+   "text": "はる",
+   "file": "7b4f8e17be19a688.mp3"
+  },
+  {
+   "text": "ば",
+   "file": "4d99431b8369dc3b.mp3"
+  },
+  {
+   "text": "ひ",
+   "file": "4d99451b8369dfa1.mp3"
+  },
+  {
+   "text": "ひがし",
+   "file": "4b6df2670d1b18a4.mp3"
+  },
+  {
+   "text": "ひだり",
+   "file": "1dfa3e4b901b3858.mp3"
+  },
+  {
+   "text": "ひと",
+   "file": "046075c9513d7f37.mp3"
+  },
+  {
+   "text": "ひま",
+   "file": "046083c9513d9701.mp3"
+  },
+  {
+   "text": "ひまじゃない",
+   "file": "d71b15f296b37355.mp3"
+  },
+  {
+   "text": "ひまじゃなかった",
+   "file": "bb5ed2e1d6ef3976.mp3"
+  },
+  {
+   "text": "ひまだった",
+   "file": "b6832ed0ccefcca9.mp3"
+  },
+  {
+   "text": "ひまで",
+   "file": "ad096407f739c5a6.mp3"
+  },
+  {
+   "text": "ひゃく",
+   "file": "a9d424d7f69946aa.mp3"
+  },
+  {
+   "text": "ひる",
+   "file": "045616c951348945.mp3"
+  },
+  {
+   "text": "ひろ(い)",
+   "file": "e59274a65adab30e.mp3"
+  },
+  {
+   "text": "ふゆ",
+   "file": "316893d55c635f29.mp3"
+  },
+  {
+   "text": "ふる(い)",
+   "file": "bda86cf64c63c459.mp3"
+  },
+  {
+   "text": "ふるい",
+   "file": "c2c22eaf6dbcd71e.mp3"
+  },
+  {
+   "text": "ふるかった",
+   "file": "163456193e4af649.mp3"
+  },
+  {
+   "text": "ふるく",
+   "file": "c2c225af6dbcc7d3.mp3"
+  },
+  {
+   "text": "ふるくて",
+   "file": "28ca0b84159aef3f.mp3"
+  },
+  {
+   "text": "ふるくない",
+   "file": "8063b75a9c4a74ed.mp3"
+  },
+  {
+   "text": "ふるくなかった",
+   "file": "0316ff70c1704c4e.mp3"
+  },
+  {
+   "text": "べんきょうさせる",
+   "file": "ba4d70572181c309.mp3"
+  },
+  {
+   "text": "べんきょうされる",
+   "file": "066f1c8eeccb22f7.mp3"
+  },
+  {
+   "text": "べんきょうした",
+   "file": "ed2ef2b834d57deb.mp3"
+  },
+  {
+   "text": "べんきょうしたい",
+   "file": "43e5aa0f0d72a34d.mp3"
+  },
+  {
+   "text": "べんきょうしたら",
+   "file": "43e9050f0d7573c5.mp3"
+  },
+  {
+   "text": "べんきょうして",
+   "file": "ed2ed9b834d55370.mp3"
+  },
+  {
+   "text": "べんきょうしない",
+   "file": "85e0bba4070354c8.mp3"
+  },
+  {
+   "text": "べんきょうします",
+   "file": "064c67fd4ad27dbb.mp3"
+  },
+  {
+   "text": "べんきょうしよう",
+   "file": "2ba0c1426b4f3149.mp3"
+  },
+  {
+   "text": "べんきょうしろ",
+   "file": "ed2aa4b834d1108a.mp3"
+  },
+  {
+   "text": "べんきょうする",
+   "file": "d0b72ec546e8f226.mp3"
+  },
+  {
+   "text": "べんきょうすれば",
+   "file": "99822538999fe4ed.mp3"
+  },
+  {
+   "text": "べんきょうできる",
+   "file": "0562d739d5dfe095.mp3"
+  },
+  {
+   "text": "べんり",
+   "file": "d05949eba2398857.mp3"
+  },
+  {
+   "text": "べんりじゃない",
+   "file": "d4c6d15ddeb099df.mp3"
+  },
+  {
+   "text": "べんりじゃなかった",
+   "file": "49ab363df7a36da4.mp3"
+  },
+  {
+   "text": "べんりだった",
+   "file": "1e7a27e6fb59cdd7.mp3"
+  },
+  {
+   "text": "べんりで",
+   "file": "a6f7ee679b0f3ae0.mp3"
+  },
+  {
+   "text": "ほん",
+   "file": "ceea4681ea9e5d4c.mp3"
+  },
+  {
+   "text": "ま",
+   "file": "4d99411b8369d8d5.mp3"
+  },
+  {
+   "text": "ま(つ)",
+   "file": "97ef2dc642fc1ec0.mp3"
+  },
+  {
+   "text": "まえ",
+   "file": "56b0d5a6bb8367a3.mp3"
+  },
+  {
+   "text": "またせる",
+   "file": "1911291c7a116a93.mp3"
+  },
+  {
+   "text": "またない",
+   "file": "069af294bf834c18.mp3"
+  },
+  {
+   "text": "またれる",
+   "file": "283b799524e92609.mp3"
+  },
+  {
+   "text": "まち",
+   "file": "56b0fca6bb83a9e8.mp3"
+  },
+  {
+   "text": "まちたい",
+   "file": "11af8d22f4acfd7f.mp3"
+  },
+  {
+   "text": "まちます",
+   "file": "b1080527cc750e05.mp3"
+  },
+  {
+   "text": "まった",
+   "file": "3a351df450ec8547.mp3"
+  },
+  {
+   "text": "まったら",
+   "file": "69ba32ffe026fbf9.mp3"
+  },
+  {
+   "text": "まって",
+   "file": "3a3524f450ec912c.mp3"
+  },
+  {
+   "text": "まつ",
+   "file": "56b101a6bb83b267.mp3"
+  },
+  {
+   "text": "まて",
+   "file": "56b103a6bb83b5cd.mp3"
+  },
+  {
+   "text": "まてば",
+   "file": "c55f311924b36313.mp3"
+  },
+  {
+   "text": "まてる",
+   "file": "c555ea1924ac48e9.mp3"
+  },
+  {
+   "text": "まとう",
+   "file": "ddd74eabb33f8b2f.mp3"
+  },
+  {
+   "text": "まな(ぶ)",
+   "file": "9a6f8513dbbc6552.mp3"
+  },
+  {
+   "text": "まん",
+   "file": "56a6bea6bb7aec09.mp3"
+  },
+  {
+   "text": "み(る)",
+   "file": "5e8f9e098671bccf.mp3"
+  },
+  {
+   "text": "みぎ",
+   "file": "793631a47d764e28.mp3"
+  },
+  {
+   "text": "みさせる",
+   "file": "c7db0868abc59788.mp3"
+  },
+  {
+   "text": "みず",
+   "file": "793625a47d7639c4.mp3"
+  },
+  {
+   "text": "みせ",
+   "file": "793626a47d763b77.mp3"
+  },
+  {
+   "text": "みた",
+   "file": "793622a47d7634ab.mp3"
+  },
+  {
+   "text": "みたい",
+   "file": "1247e8d56440010d.mp3"
+  },
+  {
+   "text": "みたら",
+   "file": "124c43d564448485.mp3"
+  },
+  {
+   "text": "みち",
+   "file": "793610a47d761615.mp3"
+  },
+  {
+   "text": "みて",
+   "file": "793609a47d760a30.mp3"
+  },
+  {
+   "text": "みない",
+   "file": "50ddfa6a5aef3c88.mp3"
+  },
+  {
+   "text": "みなみ",
+   "file": "50de056a5aef4f39.mp3"
+  },
+  {
+   "text": "みます",
+   "file": "d148a6c39ebcb27b.mp3"
+  },
+  {
+   "text": "みみ",
+   "file": "793602a47d75fe4b.mp3"
+  },
+  {
+   "text": "みよう",
+   "file": "e89010b527d11209.mp3"
+  },
+  {
+   "text": "みられる",
+   "file": "13e6ce91c319564d.mp3"
+  },
+  {
+   "text": "みる",
+   "file": "7933cea47d752318.mp3"
+  },
+  {
+   "text": "みれば",
+   "file": "6a4372cf24ac0bc3.mp3"
+  },
+  {
+   "text": "みろ",
+   "file": "7933d4a47d752d4a.mp3"
+  },
+  {
+   "text": "むずかしい",
+   "file": "bfb2dde6d8002010.mp3"
+  },
+  {
+   "text": "むずかしかった",
+   "file": "52f9082528373b4f.mp3"
+  },
+  {
+   "text": "むずかしく",
+   "file": "bfb2e8e6d80032c1.mp3"
+  },
+  {
+   "text": "むずかしくて",
+   "file": "921b9f783d1d7419.mp3"
+  },
+  {
+   "text": "むずかしくない",
+   "file": "f9b845bce04caa7f.mp3"
+  },
+  {
+   "text": "むずかしくなかった",
+   "file": "6347d77af5349884.mp3"
+  },
+  {
+   "text": "め",
+   "file": "4d8f221b83614fa3.mp3"
+  },
+  {
+   "text": "めし",
+   "file": "17f8bdc6cff37e6c.mp3"
+  },
+  {
+   "text": "も(つ)",
+   "file": "51a881ce4c4f8055.mp3"
+  },
+  {
+   "text": "もたせる",
+   "file": "db1eb1aebafd97d2.mp3"
+  },
+  {
+   "text": "もたない",
+   "file": "47bada4e7cb35001.mp3"
+  },
+  {
+   "text": "もたれる",
+   "file": "f2cf0a7a9e8a61f0.mp3"
+  },
+  {
+   "text": "もち(いる)",
+   "file": "a52d224db0bd5a50.mp3"
+  },
+  {
+   "text": "もちたい",
+   "file": "a96970068b123a62.mp3"
+  },
+  {
+   "text": "もちます",
+   "file": "2f42100a46646824.mp3"
+  },
+  {
+   "text": "もった",
+   "file": "93559fc8c29c70ec.mp3"
+  },
+  {
+   "text": "もったら",
+   "file": "4d65711a90aee10c.mp3"
+  },
+  {
+   "text": "もって",
+   "file": "935598c8c29c6507.mp3"
+  },
+  {
+   "text": "もつ",
+   "file": "485b06d2ddf115ea.mp3"
+  },
+  {
+   "text": "もて",
+   "file": "485b04d2ddf11284.mp3"
+  },
+  {
+   "text": "もてば",
+   "file": "7cda40e0a8aa5934.mp3"
+  },
+  {
+   "text": "もてる",
+   "file": "7ce44be0a8b2c06a.mp3"
+  },
+  {
+   "text": "もと",
+   "file": "485afad2ddf10186.mp3"
+  },
+  {
+   "text": "もとう",
+   "file": "17026e8d340bd6b4.mp3"
+  },
+  {
+   "text": "もの",
+   "file": "485afcd2ddf104ec.mp3"
+  },
+  {
+   "text": "や",
+   "file": "4d8f251b836154bc.mp3"
+  },
+  {
+   "text": "やす(い)",
+   "file": "e87f8a0a435b8c42.mp3"
+  },
+  {
+   "text": "やす(む)",
+   "file": "ce75830a34980703.mp3"
+  },
+  {
+   "text": "やすい",
+   "file": "8a1bff147a9c2d69.mp3"
+  },
+  {
+   "text": "やすかった",
+   "file": "5ee6bdcba4db672a.mp3"
+  },
+  {
+   "text": "やすく",
+   "file": "8a1c04147a9c35e8.mp3"
+  },
+  {
+   "text": "やすくて",
+   "file": "7530a81cea7047c2.mp3"
+  },
+  {
+   "text": "やすくない",
+   "file": "795c717c809f1a72.mp3"
+  },
+  {
+   "text": "やすくなかった",
+   "file": "dd861411cfb68e7d.mp3"
+  },
+  {
+   "text": "やすませる",
+   "file": "334500f2163a717e.mp3"
+  },
+  {
+   "text": "やすまない",
+   "file": "4ceb218807f2c615.mp3"
+  },
+  {
+   "text": "やすまれる",
+   "file": "ac7bb0936de77a84.mp3"
+  },
+  {
+   "text": "やすみたい",
+   "file": "91d4a4dc26a3f9cf.mp3"
+  },
+  {
+   "text": "やすみます",
+   "file": "5ef1fce23b4f1475.mp3"
+  },
+  {
+   "text": "やすむ",
+   "file": "8a1f69147a9f175e.mp3"
+  },
+  {
+   "text": "やすめ",
+   "file": "8a1f6a147a9f1911.mp3"
+  },
+  {
+   "text": "やすめば",
+   "file": "9c904b4ff6d5bd3f.mp3"
+  },
+  {
+   "text": "やすめる",
+   "file": "9c86444ff6cd5cd5.mp3"
+  },
+  {
+   "text": "やすもう",
+   "file": "a1f0672e651ff912.mp3"
+  },
+  {
+   "text": "やすんだ",
+   "file": "3b6857bd3e29e031.mp3"
+  },
+  {
+   "text": "やすんだら",
+   "file": "6e68b163370f480f.mp3"
+  },
+  {
+   "text": "やすんで",
+   "file": "3b6858bd3e29e1e4.mp3"
+  },
+  {
+   "text": "やま",
+   "file": "2f411cdff2e2840e.mp3"
+  },
+  {
+   "text": "やまい",
+   "file": "b5a02e0da197a5f2.mp3"
+  },
+  {
+   "text": "ゆう",
+   "file": "f2a44cf570c76b90.mp3"
+  },
+  {
+   "text": "ゆうめい",
+   "file": "78814d430905aad4.mp3"
+  },
+  {
+   "text": "ゆうめいじゃない",
+   "file": "fae5202b298ff5c0.mp3"
+  },
+  {
+   "text": "ゆうめいじゃなかった",
+   "file": "db93febda70d959f.mp3"
+  },
+  {
+   "text": "ゆうめいだった",
+   "file": "32c2d45fdb4a106a.mp3"
+  },
+  {
+   "text": "ゆうめいで",
+   "file": "5d6eff801aba5141.mp3"
+  },
+  {
+   "text": "よ",
+   "file": "4d8f291b83615b88.mp3"
+  },
+  {
+   "text": "よ(む)",
+   "file": "595b60e297d40f4e.mp3"
+  },
+  {
+   "text": "よかった",
+   "file": "74179423ca74aafb.mp3"
+  },
+  {
+   "text": "よく",
+   "file": "d623660282d402cd.mp3"
+  },
+  {
+   "text": "よくて",
+   "file": "fe4b24d26ebcf775.mp3"
+  },
+  {
+   "text": "よくない",
+   "file": "8752a6f3ca861c93.mp3"
+  },
+  {
+   "text": "よくなかった",
+   "file": "d8266a3c49afa678.mp3"
+  },
+  {
+   "text": "よばせる",
+   "file": "5bdb924828f8ea0d.mp3"
+  },
+  {
+   "text": "よばない",
+   "file": "03b48db215c52aba.mp3"
+  },
+  {
+   "text": "よばれる",
+   "file": "2d35b78243c97003.mp3"
+  },
+  {
+   "text": "よびたい",
+   "file": "b899f824b0e0ab9a.mp3"
+  },
+  {
+   "text": "よびます",
+   "file": "15da481fd6335fec.mp3"
+  },
+  {
+   "text": "よぶ",
+   "file": "d6232d0282d3a1f2.mp3"
+  },
+  {
+   "text": "よべ",
+   "file": "d623300282d3a70b.mp3"
+  },
+  {
+   "text": "よべば",
+   "file": "1afe591787c6c451.mp3"
+  },
+  {
+   "text": "よべる",
+   "file": "1b01a61787c97cff.mp3"
+  },
+  {
+   "text": "よぼう",
+   "file": "0480a12f6dd0af5e.mp3"
+  },
+  {
+   "text": "よませる",
+   "file": "0f934b0665acbf6b.mp3"
+  },
+  {
+   "text": "よまない",
+   "file": "c981458f8e0fcea0.mp3"
+  },
+  {
+   "text": "よまれる",
+   "file": "c0c31c8eb9761901.mp3"
+  },
+  {
+   "text": "よみたい",
+   "file": "93a7fe3dc877037e.mp3"
+  },
+  {
+   "text": "よみます",
+   "file": "19f2284fb538af98.mp3"
+  },
+  {
+   "text": "よむ",
+   "file": "d62e890282de45cb.mp3"
+  },
+  {
+   "text": "よめ",
+   "file": "d62e880282de4418.mp3"
+  },
+  {
+   "text": "よめば",
+   "file": "2b78ca2a1bf2d110.mp3"
+  },
+  {
+   "text": "よめる",
+   "file": "2b82c52a1bfb1d16.mp3"
+  },
+  {
+   "text": "よもう",
+   "file": "cfbcb241dac81d09.mp3"
+  },
+  {
+   "text": "よる",
+   "file": "d62e820282de39e6.mp3"
+  },
+  {
+   "text": "よん",
+   "file": "d62e9a0282de62ae.mp3"
+  },
+  {
+   "text": "よんだ",
+   "file": "7498e6b9f61b3ae6.mp3"
+  },
+  {
+   "text": "よんだら",
+   "file": "3c8d41dfd7aeb7ea.mp3"
+  },
+  {
+   "text": "よんで",
+   "file": "7498e9b9f61b3fff.mp3"
+  },
+  {
+   "text": "れんしゅうさせる",
+   "file": "5fadb3b60d0b77fd.mp3"
+  },
+  {
+   "text": "れんしゅうされる",
+   "file": "29436a98a20efe13.mp3"
+  },
+  {
+   "text": "れんしゅうした",
+   "file": "9ca48c941379aacf.mp3"
+  },
+  {
+   "text": "れんしゅうしたい",
+   "file": "397051acf56274c1.mp3"
+  },
+  {
+   "text": "れんしゅうしたら",
+   "file": "3972c4acf563bb01.mp3"
+  },
+  {
+   "text": "れんしゅうして",
+   "file": "9ca4639413796524.mp3"
+  },
+  {
+   "text": "れんしゅうしない",
+   "file": "51e2d1f33c8fd304.mp3"
+  },
+  {
+   "text": "れんしゅうします",
+   "file": "fbd7179b32c25cc7.mp3"
+  },
+  {
+   "text": "れんしゅうしよう",
+   "file": "bedfe8c232cc13d5.mp3"
+  },
+  {
+   "text": "れんしゅうしろ",
+   "file": "9ca21e9413786d0e.mp3"
+  },
+  {
+   "text": "れんしゅうする",
+   "file": "028660e78820853a.mp3"
+  },
+  {
+   "text": "れんしゅうすれば",
+   "file": "fb22d1f9bb0cd881.mp3"
+  },
+  {
+   "text": "れんしゅうできる",
+   "file": "b55d7fd857f47d71.mp3"
+  },
+  {
+   "text": "ろく",
+   "file": "6ef79e30ff583c28.mp3"
+  },
+  {
+   "text": "わ(ける)",
+   "file": "4c1bf921bcbc1f1b.mp3"
+  },
+  {
+   "text": "わか(れる)",
+   "file": "7b8ac5ea664580c0.mp3"
+  },
+  {
+   "text": "わすれさせる",
+   "file": "7256b6b2040057bf.mp3"
+  },
+  {
+   "text": "わすれた",
+   "file": "f623e280e3388b60.mp3"
+  },
+  {
+   "text": "わすれたい",
+   "file": "c55a26bdcef0e024.mp3"
+  },
+  {
+   "text": "わすれたら",
+   "file": "c5645bbdcef98eb8.mp3"
+  },
+  {
+   "text": "わすれて",
+   "file": "f623db80e3387f7b.mp3"
+  },
+  {
+   "text": "わすれない",
+   "file": "604c245f8c1d0d21.mp3"
+  },
+  {
+   "text": "わすれます",
+   "file": "dd50ceb8cd0756ae.mp3"
+  },
+  {
+   "text": "わすれよう",
+   "file": "8d8a197fe572734c.mp3"
+  },
+  {
+   "text": "わすれられる",
+   "file": "12a20b1a77cf9afe.mp3"
+  },
+  {
+   "text": "わすれる",
+   "file": "f6286e80e33d621b.mp3"
+  },
+  {
+   "text": "わすれれば",
+   "file": "5ecc37a3af65737a.mp3"
+  },
+  {
+   "text": "わすれろ",
+   "file": "f6287480e33d6c4d.mp3"
+  },
+  {
+   "text": "わたし",
+   "file": "1ce1e52b4283932b.mp3"
+  },
+  {
+   "text": "わる(い)",
+   "file": "fd4fec49b40dd784.mp3"
+  },
+  {
+   "text": "アク",
+   "file": "cbf69ed9f9897bc8.mp3"
+  },
+  {
+   "text": "アン",
+   "file": "cbf48ad9f988d6f5.mp3"
+  },
+  {
+   "text": "イ",
+   "file": "4d8f451b83618b1c.mp3"
+  },
+  {
+   "text": "イン",
+   "file": "027722f0db9e265b.mp3"
+  },
+  {
+   "text": "ウ",
+   "file": "4d8f471b83618e82.mp3"
+  },
+  {
+   "text": "ウン",
+   "file": "72d69afc8979f4d9.mp3"
+  },
+  {
+   "text": "エイ",
+   "file": "5666ae099b94f517.mp3"
+  },
+  {
+   "text": "エキ",
+   "file": "5666a5099b94e5cc.mp3"
+  },
+  {
+   "text": "オク",
+   "file": "47826f2056538920.mp3"
+  },
+  {
+   "text": "オン",
+   "file": "47800b2056525c5d.mp3"
+  },
+  {
+   "text": "カ",
+   "file": "4d8f4c1b83619701.mp3"
+  },
+  {
+   "text": "カイ",
+   "file": "50f49c2b2d3d8738.mp3"
+  },
+  {
+   "text": "カン",
+   "file": "50f6b32b2d3e3124.mp3"
+  },
+  {
+   "text": "ガ",
+   "file": "4d8f4d1b836198b4.mp3"
+  },
+  {
+   "text": "ガイ",
+   "file": "2b0f162d686b9c03.mp3"
+  },
+  {
+   "text": "ガク",
+   "file": "2b0f1f2d686bab4e.mp3"
+  },
+  {
+   "text": "キ",
+   "file": "4d8f4e1b83619a67.mp3"
+  },
+  {
+   "text": "キュウ",
+   "file": "f153d4cff6b1f99d.mp3"
+  },
+  {
+   "text": "キョ",
+   "file": "ef3787381816572e.mp3"
+  },
+  {
+   "text": "キョウ",
+   "file": "e26f1ce6b16fc00b.mp3"
+  },
+  {
+   "text": "キン",
+   "file": "ef377b38181642ca.mp3"
+  },
+  {
+   "text": "ギュウ",
+   "file": "c0a788b3e4d4ce34.mp3"
+  },
+  {
+   "text": "ギョ",
+   "file": "1f8e4f44260bef1d.mp3"
+  },
+  {
+   "text": "ギョウ",
+   "file": "f70df8cac6d15eea.mp3"
+  },
+  {
+   "text": "ギン",
+   "file": "1f8e5b44260c0381.mp3"
+  },
+  {
+   "text": "クウ",
+   "file": "d2a696452a161d3a.mp3"
+  },
+  {
+   "text": "ケイ",
+   "file": "ed474f4af95115f6.mp3"
+  },
+  {
+   "text": "ケン",
+   "file": "ed4bca4af955cfce.mp3"
+  },
+  {
+   "text": "ゲツ",
+   "file": "f3415355cd477f30.mp3"
+  },
+  {
+   "text": "ゲン",
+   "file": "f3416a55cd47a645.mp3"
+  },
+  {
+   "text": "コ",
+   "file": "4d8f341b83616e39.mp3"
+  },
+  {
+   "text": "コウ",
+   "file": "2715bd61de343246.mp3"
+  },
+  {
+   "text": "コク",
+   "file": "2715c661de344191.mp3"
+  },
+  {
+   "text": "コン",
+   "file": "2717d261de34d8cc.mp3"
+  },
+  {
+   "text": "コーヒーを飲んで、勉強します。",
+   "file": "8e4eeca14bd790e1.mp3"
+  },
+  {
+   "text": "ゴ",
+   "file": "4d8f351b83616fec.mp3"
+  },
+  {
+   "text": "サ",
+   "file": "4d8f361b8361719f.mp3"
+  },
+  {
+   "text": "サク",
+   "file": "c1ef8e6ec6277737.mp3"
+  },
+  {
+   "text": "サン",
+   "file": "c1f39a6ec62b7472.mp3"
+  },
+  {
+   "text": "シ",
+   "file": "4d8f381b83617505.mp3"
+  },
+  {
+   "text": "シキ",
+   "file": "cdf7fc846e25a007.mp3"
+  },
+  {
+   "text": "シツ",
+   "file": "cdfb79846e28aa45.mp3"
+  },
+  {
+   "text": "シャ",
+   "file": "cdfb52846e286800.mp3"
+  },
+  {
+   "text": "シャク",
+   "file": "388c15dbdc79a16a.mp3"
+  },
+  {
+   "text": "シュ",
+   "file": "cdfb58846e287232.mp3"
+  },
+  {
+   "text": "シュウ",
+   "file": "aebecf0c96f23e0f.mp3"
+  },
+  {
+   "text": "シュツ",
+   "file": "aebb4b0c96ef27ec.mp3"
+  },
+  {
+   "text": "シュン",
+   "file": "aebb3a0c96ef0b09.mp3"
+  },
+  {
+   "text": "ショ",
+   "file": "cdfb56846e286ecc.mp3"
+  },
+  {
+   "text": "ショウ",
+   "file": "ba3df6f5d9520cf1.mp3"
+  },
+  {
+   "text": "ショク",
+   "file": "ba3dedf5d951fda6.mp3"
+  },
+  {
+   "text": "シン",
+   "file": "cdfb62846e288330.mp3"
+  },
+  {
+   "text": "ジ",
+   "file": "4d8f391b836176b8.mp3"
+  },
+  {
+   "text": "ジュウ",
+   "file": "dabd858be30f0d46.mp3"
+  },
+  {
+   "text": "ジョ",
+   "file": "ab763e86ac35fbd3.mp3"
+  },
+  {
+   "text": "ジョウ",
+   "file": "a0ef1574fe2bed90.mp3"
+  },
+  {
+   "text": "ジン",
+   "file": "ab765286ac361dcf.mp3"
+  },
+  {
+   "text": "スイ",
+   "file": "6f9eaf915be0b6fe.mp3"
+  },
+  {
+   "text": "ズ",
+   "file": "4d8f3b1b83617a1e.mp3"
+  },
+  {
+   "text": "セイ",
+   "file": "4fab5b9e6b0094a8.mp3"
+  },
+  {
+   "text": "セキ",
+   "file": "4fab549e6b0088c3.mp3"
+  },
+  {
+   "text": "セツ",
+   "file": "4fada19e6b018e71.mp3"
+  },
+  {
+   "text": "セン",
+   "file": "4fadd29e6b01e1b4.mp3"
+  },
+  {
+   "text": "ゼン",
+   "file": "592562a941ef40b3.mp3"
+  },
+  {
+   "text": "ソウ",
+   "file": "444725b528b775b4.mp3"
+  },
+  {
+   "text": "ソク",
+   "file": "44471eb528b769cf.mp3"
+  },
+  {
+   "text": "ゾク",
+   "file": "f74ea6b62cb3932c.mp3"
+  },
+  {
+   "text": "タ",
+   "file": "4d8f401b8361829d.mp3"
+  },
+  {
+   "text": "タイ",
+   "file": "27b993c23aba1304.mp3"
+  },
+  {
+   "text": "ダイ",
+   "file": "7b2259ef2ca2af80.mp3"
+  },
+  {
+   "text": "ダン",
+   "file": "7b24f0ef2ca432ec.mp3"
+  },
+  {
+   "text": "チ",
+   "file": "4d92861b83642f66.mp3"
+  },
+  {
+   "text": "チャ",
+   "file": "4ab418e31e996b15.mp3"
+  },
+  {
+   "text": "チャク",
+   "file": "465a0f31edfe75dd.mp3"
+  },
+  {
+   "text": "チュウ",
+   "file": "3b4a1df73f2960c0.mp3"
+  },
+  {
+   "text": "チョウ",
+   "file": "6e4cce0e1e469b36.mp3"
+  },
+  {
+   "text": "ツウ",
+   "file": "d5dc1407f25f9d42.mp3"
+  },
+  {
+   "text": "テイ",
+   "file": "1cc825fc1a5c3df2.mp3"
+  },
+  {
+   "text": "テストは難しくなかった。",
+   "file": "11bff92009d8f4db.mp3"
+  },
+  {
+   "text": "テン",
+   "file": "1ccbb8fc1a5f6d92.mp3"
+  },
+  {
+   "text": "デン",
+   "file": "2e40a0f030b1494b.mp3"
+  },
+  {
+   "text": "トウ",
+   "file": "aa83fc2bbf356aae.mp3"
+  },
+  {
+   "text": "トク",
+   "file": "aa83f52bbf355ec9.mp3"
+  },
+  {
+   "text": "ド",
+   "file": "4d928e1b83643cfe.mp3"
+  },
+  {
+   "text": "ドウ",
+   "file": "a477d620eb2ea17b.mp3"
+  },
+  {
+   "text": "ドク",
+   "file": "a477cd20eb2e9230.mp3"
+  },
+  {
+   "text": "ナン",
+   "file": "c715491ead3640f6.mp3"
+  },
+  {
+   "text": "ニク",
+   "file": "06528514006e21c2.mp3"
+  },
+  {
+   "text": "ニチ",
+   "file": "064f0314006b0f05.mp3"
+  },
+  {
+   "text": "ニュウ",
+   "file": "532a566df4d092a6.mp3"
+  },
+  {
+   "text": "ネン",
+   "file": "4b57d9437b1f2671.mp3"
+  },
+  {
+   "text": "ハク",
+   "file": "b09bfd369344cc5e.mp3"
+  },
+  {
+   "text": "ハツ",
+   "file": "b09876369341b122.mp3"
+  },
+  {
+   "text": "ハン",
+   "file": "b09881369341c3d3.mp3"
+  },
+  {
+   "text": "バ",
+   "file": "4d92971b83644c49.mp3"
+  },
+  {
+   "text": "バイ",
+   "file": "260fda721bff8fd0.mp3"
+  },
+  {
+   "text": "ヒン",
+   "file": "f310c95b3ce5995e.mp3"
+  },
+  {
+   "text": "ビョウ",
+   "file": "b4583e6b0e3b0208.mp3"
+  },
+  {
+   "text": "フ",
+   "file": "4d929a1b83645162.mp3"
+  },
+  {
+   "text": "フウ",
+   "file": "cdb32e89ddb29d9f.mp3"
+  },
+  {
+   "text": "フク",
+   "file": "cdb33589ddb2a984.mp3"
+  },
+  {
+   "text": "フン",
+   "file": "cdb0b989ddb153f9.mp3"
+  },
+  {
+   "text": "ブツ",
+   "file": "c7b8e47f09bbbd73.mp3"
+  },
+  {
+   "text": "ブン",
+   "file": "c7b9197f09bc1782.mp3"
+  },
+  {
+   "text": "ベツ",
+   "file": "a258d2adaa8774a8.mp3"
+  },
+  {
+   "text": "ベン",
+   "file": "a258a9adaa872efd.mp3"
+  },
+  {
+   "text": "ホ",
+   "file": "4d929c1b836454c8.mp3"
+  },
+  {
+   "text": "ホウ",
+   "file": "b13fce96efcaa49d.mp3"
+  },
+  {
+   "text": "ホク",
+   "file": "b13fc596efca9552.mp3"
+  },
+  {
+   "text": "ホン",
+   "file": "b13d5196efc94d5f.mp3"
+  },
+  {
+   "text": "ボ",
+   "file": "4d92a31b836460ad.mp3"
+  },
+  {
+   "text": "マイ",
+   "file": "434206c56684204a.mp3"
+  },
+  {
+   "text": "ミ",
+   "file": "4d92a01b83645b94.mp3"
+  },
+  {
+   "text": "ム",
+   "file": "4d92a71b83646779.mp3"
+  },
+  {
+   "text": "メイ",
+   "file": "caf1f8ea3756f3f9.mp3"
+  },
+  {
+   "text": "モク",
+   "file": "17ea75e9335ad31b.mp3"
+  },
+  {
+   "text": "モン",
+   "file": "17ede9e9335dce0e.mp3"
+  },
+  {
+   "text": "ヤ",
+   "file": "4d92ab1b83646e45.mp3"
+  },
+  {
+   "text": "ユウ",
+   "file": "999ba5033032102c.mp3"
+  },
+  {
+   "text": "ヨウ",
+   "file": "7db27d3ca7ea0c4e.mp3"
+  },
+  {
+   "text": "ライ",
+   "file": "77a85931d3e6ac81.mp3"
+  },
+  {
+   "text": "ラク",
+   "file": "77a84e31d3e699d0.mp3"
+  },
+  {
+   "text": "リ",
+   "file": "4d92ad1b836471ab.mp3"
+  },
+  {
+   "text": "リツ",
+   "file": "474f5d25c5f0395f.mp3"
+  },
+  {
+   "text": "リョ",
+   "file": "474f3e25c5f004b2.mp3"
+  },
+  {
+   "text": "リョウ",
+   "file": "9e981a44833bf88f.mp3"
+  },
+  {
+   "text": "リョク",
+   "file": "9e982144833c0474.mp3"
+  },
+  {
+   "text": "ワ",
+   "file": "4d92b01b836476c4.mp3"
+  },
+  {
+   "text": "一緒に帰ろう！",
+   "file": "9a46b4ca28000acb.mp3"
+  },
+  {
+   "text": "先生に名前を呼ばれた。",
+   "file": "9191fdc15b12c1af.mp3"
+  },
+  {
+   "text": "家に着いたら、電話してください。",
+   "file": "1927516b54361529.mp3"
+  },
+  {
+   "text": "急げば、間に合う。",
+   "file": "e7df0051073bce27.mp3"
+  },
+  {
+   "text": "旅行はとても楽しかった。",
+   "file": "a3a57f33be38e685.mp3"
+  },
+  {
+   "text": "日本に行きたいです。",
+   "file": "a6dffffabf0e70b4.mp3"
+  },
+  {
+   "text": "早く起きろ！",
+   "file": "7e80a44280b1bb0f.mp3"
+  },
+  {
+   "text": "朝ごはんを食べない。",
+   "file": "cccb8337140cd389.mp3"
+  },
+  {
+   "text": "母は弟に野菜を食べさせた。",
+   "file": "5a42e98ad8f3f115.mp3"
+  },
+  {
+   "text": "毎日日本語を勉強します。",
+   "file": "20eec4e05496355b.mp3"
+  },
+  {
+   "text": "毎朝早く起きます。",
+   "file": "32652e8afcf481e7.mp3"
+  },
+  {
+   "text": "私は漢字が読める。",
+   "file": "939b372d7012e78a.mp3"
+  }
+ ]
+}

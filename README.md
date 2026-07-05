@@ -6,8 +6,10 @@ A mobile-first web app for practicing **Japanese conjugation** (て-form, ない
 
 | File | What it is |
 |---|---|
-| `index.html` | The whole app (UI + game logic + Supabase client) |
+| `index.html` | The whole app (UI + game logic + Supabase client + audio engine) |
 | `kanji-data.js` | Stroke data for all 250 N5/N4 kanji (bundled, works offline) |
+| `audio-manifest.json` | Every text the app can speak (1,230 clips) with its filename |
+| `generate_audio.py` | Batch script: synthesizes all clips with Azure TTS into `audio/` |
 | `supabase-schema.sql` | Database tables, security policies, fair-play trigger |
 | `README.md` | This file |
 
@@ -34,18 +36,35 @@ const CONFIG = {
 };
 ```
 
-**5. Deploy** — put the three files (`index.html`, `kanji-data.js`, and this README if you like) anywhere static:
-   - **Netlify Drop** (easiest): drag the folder onto [app.netlify.com/drop](https://app.netlify.com/drop) → instant URL
-   - **Vercel**: `vercel deploy`
-   - **GitHub Pages**: push to a repo, enable Pages
+**5. Deploy (GitHub Pages)** — since you're hosting on GitHub Pages:
+   1. Create a repo and put `index.html`, `kanji-data.js`, and the `audio/` folder (see below) at its root
+   2. Repo → **Settings → Pages** → Source: *Deploy from a branch* → `main` / root → Save
+   3. Your app is live at `https://yourname.github.io/reponame/` in ~a minute
 
 Send the URL to your friends. On the Squad tab, one person taps **Create squad code** and shares the 5-letter code; everyone else joins with it. Add the site to your phone's home screen (Share → Add to Home Screen) for an app-like experience.
 
+## Audio setup (Azure TTS)
+
+The app speaks everything: every verb/adjective in every conjugated form, every kanji reading, and an example sentence for each grammar form. Clips are pre-generated once with **Azure neural TTS** (ja-JP-NanamiNeural — the most natural Japanese voice) and served as static files from your GitHub Pages repo. Until the clips exist, the app automatically falls back to your phone's built-in Japanese voice, so audio works day one either way.
+
+**One-time generation (~10 minutes):**
+1. Azure portal → Create resource → **Speech service**. The **free F0 tier** is more than enough: the entire manifest is ~4,800 characters against a 500,000-character monthly free quota.
+2. From the resource's *Keys and Endpoint* page, copy **Key 1** and the **Region**.
+3. Run the batch script next to `audio-manifest.json`:
+   ```bash
+   pip install requests
+   AZURE_SPEECH_KEY=your_key AZURE_SPEECH_REGION=your_region python3 generate_audio.py
+   ```
+4. It writes 1,230 small MP3s (~15–25 MB total) into `audio/`. Commit that folder to your Pages repo next to `index.html`. Done — the app finds each clip by a hash of its text, so no code changes are needed.
+
+The script skips files that already exist, so it's safe to re-run after adding words. Want a male voice? `AZURE_TTS_VOICE=ja-JP-KeitaNeural python3 generate_audio.py`. The full list of sentences/words being voiced is human-readable inside `audio-manifest.json`. A 🔊 toggle in the app header mutes everything.
+
 ## How the game works
 
-- **⚡ Grammar Sprint** — 60 seconds, multiple-choice conjugation, combo multipliers, 2 tries/day. Everyone gets the same seeded words each day. Wrong options are *real* learner errors (ら抜き, stem mix-ups, wrong て-groups), so losing teaches you something.
-- **✍️ Kanji Writing** — five seeded kanji per day, drawn from memory stroke-by-stroke with your finger. Stroke order and direction are validated; each mistake costs points; a hint flashes after 3 misses. 2 tries/day. Today's kanji stay blurred until you use a try.
-- **Kanji Studio (書 tab)** — the full N5/N4 library. For each kanji: **Watch** the stroke order animate, **Trace** over the outline, then **Recall** it from memory. Recall with ≤2 mistakes = mastered ⭐.
+- **⚡ Grammar Sprint** — 60 seconds, multiple-choice conjugation, combo multipliers, 2 tries/day. Everyone gets the same seeded words each day, and you *hear* every correct form as it's revealed. Wrong options are *real* learner errors (ら抜き, stem mix-ups, wrong て-groups), so losing teaches you something.
+- **✍️ Kanji Writing** — five seeded kanji per day, drawn from memory on a blank canvas, stroke order and direction validated. **Three mistakes (or tapping Hint) reveals the full shadow outline: you trace it to learn it, score 0 for that pass, and the kanji is requeued at the end of the day's list for a second attempt from memory (worth up to half points).** No brute-forcing past a kanji you can't actually write. Failing a kanji you'd mastered drops it back to "to learn."
+- **Kanji Studio (書 tab)** — the full N5/N4 library with audio for every reading. **Watch** the stroke order animate, **Trace** the outline, then **Recall** from memory. Recall with ≤2 mistakes = mastered ⭐. Using the hint reveals the outline but disqualifies that run — assisted completion never counts as autonomous recall.
+- **Learn (学 tab)** — every grammar form with its rule, a natural example sentence (with audio and the conjugated word highlighted), and live conjugated examples you can tap to hear.
 - **Season** — your best sprint + best kanji score each day add to your monthly total. Top of the board at month's end takes the crown. New month, fresh race.
 
 ## Fair play & limitations (honest notes)

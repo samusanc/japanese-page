@@ -19,7 +19,8 @@
    ============================================================ */
 const CONFIG = {
   SUPABASE_URL: "https://wtrcmonzygqhjzqhncoc.supabase.co",
-  SUPABASE_ANON_KEY: "sb_publishable_Re0lGgZFGWNfKOAv0Twbqw_0JNcrSpC"
+  SUPABASE_ANON_KEY: "sb_publishable_Re0lGgZFGWNfKOAv0Twbqw_0JNcrSpC",
+  AUDIO_BASE: "./audio/"     // folder of pre-generated Azure TTS clips (see generate_audio.py)
 };
 </script>
 <style>
@@ -121,6 +122,27 @@ h1.big{font-family:var(--disp); font-weight:900; font-size:26px; margin:0 0 4px;
 .row-lb .sc{font-family:var(--disp); font-weight:900; font-size:16px; color:var(--ai);}
 .row-lb.me{background:var(--ai-tint); margin:0 -10px; padding:11px 10px; border-radius:12px; border-bottom:none;}
 .row-lb .rank.r1{color:var(--gold); font-size:18px;}
+
+/* ---------- Audio ---------- */
+.spk{display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:10px;
+  background:var(--ai-tint); color:var(--ai); font-size:15px; border:1.5px solid transparent; vertical-align:middle; flex:none;}
+.spk:active{transform:scale(.92);}
+.spk.big{width:42px; height:42px; font-size:19px; border-radius:13px;}
+.sound-toggle{background:var(--card); border:1.5px solid var(--line); border-radius:99px; width:38px; height:38px;
+  font-size:16px; box-shadow:var(--shadow); margin-right:8px;}
+.sound-toggle.off{opacity:.45;}
+.readings{display:flex; flex-wrap:wrap; gap:7px; justify-content:center; margin-top:8px;}
+.reading-chip{font-family:var(--disp); font-weight:700; font-size:14.5px; padding:7px 13px; border-radius:99px;
+  background:var(--ai-tint); color:var(--ai); border:1.5px solid transparent; display:inline-flex; gap:6px; align-items:center;}
+.reading-chip:active{transform:scale(.95);}
+.hintbtn{display:block; margin:10px auto 0; font-family:var(--disp); font-weight:700; font-size:12.5px;
+  padding:9px 16px; border-radius:99px; background:var(--card); border:1.5px dashed var(--ink2); color:var(--ink2);}
+.hintbtn:disabled{opacity:.4;}
+.sentence{background:var(--paper); border-left:3px solid var(--ai); border-radius:0 12px 12px 0;
+  padding:10px 12px; margin-top:10px; font-size:13.5px; line-height:1.7;}
+.sentence .jp{font-family:var(--disp); font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px;}
+.sentence .jp b{color:var(--ai);}
+.sentence .en{color:var(--ink2); font-size:12.5px; font-style:italic;}
 
 /* ---------- Sprint game overlay ---------- */
 .overlay{position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px;
@@ -284,7 +306,10 @@ footer p{font-size:10px; color:var(--ink2); line-height:1.6;}
 <div id="app">
   <header>
     <div class="logo"><span class="jp">活用<em style="color:var(--shu);font-style:normal">!</em></span><span class="en">Katsuyo</span></div>
-    <div class="streak-pill">🔥 <span id="streakN">0</span><span class="lbl">DAY STREAK</span></div>
+    <div style="display:flex; align-items:center;">
+      <button class="sound-toggle" id="soundToggle" title="Toggle audio">🔊</button>
+      <div class="streak-pill">🔥 <span id="streakN">0</span><span class="lbl">DAY STREAK</span></div>
+    </div>
   </header>
 
   <main>
@@ -491,7 +516,7 @@ footer p{font-size:10px; color:var(--ink2); line-height:1.6;}
       <div class="q-word" id="qWord">飲む</div>
       <div class="q-kana" id="qKana">のむ</div>
       <div class="q-mean" id="qMean">to drink</div>
-      <div class="q-type"><span class="badge" id="qType">godan</span></div>
+      <div class="q-type"><span class="badge" id="qType">godan</span> <span id="qSpk"></span></div>
       <div class="explain" id="explain"></div>
     </div>
     <div class="choices" id="choices"></div>
@@ -510,11 +535,12 @@ footer p{font-size:10px; color:var(--ink2); line-height:1.6;}
   <div class="g-body" style="justify-content:flex-start; padding-top:6px;">
     <div class="k-prompt">
       <div class="kmean" id="kMean">water</div>
-      <div class="kread" id="kRead">みず・スイ</div>
+      <div class="readings" id="kRead"></div>
     </div>
     <div class="writer-wrap"><div class="writer-box" id="kWriterBox"><div class="stamp" id="kStamp">正解</div></div></div>
     <div class="k-feedback" id="kFeedback"></div>
-    <p class="note" style="text-align:center; margin-top:0;">Draw each stroke in order. Stuck? After 3 misses a hint stroke flashes.</p>
+    <button class="hintbtn" id="kHint">👁 Reveal outline — 0 pts, comes back later</button>
+    <p class="note" style="text-align:center; margin-top:4px;">Draw each stroke in order. 3 mistakes reveals the shadow — then that kanji returns at the end for a second try from memory.</p>
   </div>
 </div>
 
@@ -531,10 +557,11 @@ footer p{font-size:10px; color:var(--ink2); line-height:1.6;}
   <div class="g-body" style="justify-content:flex-start; padding-top:0;">
     <div class="k-prompt">
       <div class="kmean" id="stMean">water</div>
-      <div class="kread" id="stRead">みず・スイ</div>
+      <div class="readings" id="stRead"></div>
     </div>
     <div class="writer-wrap"><div class="writer-box" id="stWriterBox"><div class="stamp" id="stStamp">正解</div></div></div>
     <div class="k-feedback" id="stFeedback"></div>
+    <button class="hintbtn" id="stHint">👁 Reveal outline — counts as a fail</button>
     <div class="mode-row">
       <button class="mode-btn" id="mWatch">▶ Watch</button>
       <button class="mode-btn on" id="mTrace">Trace</button>
@@ -593,6 +620,59 @@ function pick(arr, rnd){ return arr[Math.floor((rnd?rnd():Math.random())*arr.len
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 let toastT;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("on"),2400); }
+
+/* =========================================================
+   AUDIO — pre-generated Azure TTS clips + browser fallback
+   File name = fnv1a64(text).mp3  (generate_audio.py uses the
+   identical hash, so app and clips always agree.)
+   ========================================================= */
+let sndOn = LS.get("sound")!==false;
+const _enc=new TextEncoder(), _aidCache=new Map();
+function audioId(text){
+  if(_aidCache.has(text)) return _aidCache.get(text);
+  let h=0xcbf29ce484222325n;
+  for(const b of _enc.encode(text)){ h^=BigInt(b); h=(h*0x100000001b3n)&0xFFFFFFFFFFFFFFFFn; }
+  const id=h.toString(16).padStart(16,"0");
+  _aidCache.set(text,id); return id;
+}
+const _audioEls={};
+function ttsFallback(text){
+  try{
+    if(!window.speechSynthesis) return;
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang="ja-JP"; u.rate=0.92;
+    const v=speechSynthesis.getVoices().find(v=>v.lang && v.lang.toLowerCase().startsWith("ja"));
+    if(v) u.voice=v;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(e){}
+}
+function speak(text){
+  if(!sndOn || !text) return;
+  const id=audioId(text);
+  let a=_audioEls[id];
+  if(a==="bad") return ttsFallback(text);
+  if(!a){ a=new Audio(CONFIG.AUDIO_BASE+id+".mp3"); a.preload="auto"; _audioEls[id]=a; }
+  try{ speechSynthesis && speechSynthesis.cancel(); }catch(e){}
+  a.currentTime=0;
+  const pr=a.play();
+  if(pr && pr.catch) pr.catch(()=>{ _audioEls[id]="bad"; ttsFallback(text); });
+}
+function spkBtn(text, big){ // returns HTML for a speaker button
+  return `<button class="spk${big?" big":""}" data-say="${escapeHtml(text)}" aria-label="play audio">🔊</button>`;
+}
+document.addEventListener("click", e=>{
+  const b=e.target.closest("[data-say]");
+  if(b){ e.stopPropagation(); speak(b.dataset.say); }
+});
+function renderSoundToggle(){
+  const b=$("#soundToggle");
+  b.textContent=sndOn?"🔊":"🔇";
+  b.classList.toggle("off",!sndOn);
+}
+$("#soundToggle").addEventListener("click",()=>{
+  sndOn=!sndOn; LS.set("sound",sndOn); renderSoundToggle();
+  if(sndOn) speak("こんにちは"); else { try{speechSynthesis.cancel();}catch(e){} }
+});
 
 /* ---------- tiny sounds ---------- */
 let actx=null;
@@ -807,6 +887,26 @@ const FORMS=[
    rule:"い-adj: drop い + く (早い→早く走る = run fast)\n(な-adj use に: 静かに — not drilled here)"}
 ];
 const FORM = Object.fromEntries(FORMS.map(f=>[f.id,f]));
+/* one natural example sentence per form — full list also lives in audio-manifest.json */
+const SENTENCES={
+  te:  {jp:"コーヒーを飲んで、勉強します。", hi:"飲んで", en:"I drink coffee and (then) study."},
+  ta:  {jp:"きのう映画を見た。", hi:"見た", en:"I watched a movie yesterday."},
+  nai: {jp:"朝ごはんを食べない。", hi:"食べない", en:"I don't eat breakfast."},
+  masu:{jp:"毎日日本語を勉強します。", hi:"勉強します", en:"I study Japanese every day."},
+  tai: {jp:"日本に行きたいです。", hi:"行きたい", en:"I want to go to Japan."},
+  pot: {jp:"私は漢字が読める。", hi:"読める", en:"I can read kanji."},
+  vol: {jp:"一緒に帰ろう！", hi:"帰ろう", en:"Let's go home together!"},
+  ba:  {jp:"急げば、間に合う。", hi:"急げば", en:"If we hurry, we'll make it in time."},
+  tara:{jp:"家に着いたら、電話してください。", hi:"着いたら", en:"When you get home, please call me."},
+  imp: {jp:"早く起きろ！", hi:"起きろ", en:"Get up already!"},
+  pass:{jp:"先生に名前を呼ばれた。", hi:"呼ばれた", en:"My name was called by the teacher."},
+  caus:{jp:"母は弟に野菜を食べさせた。", hi:"食べさせた", en:"Mom made my little brother eat vegetables."},
+  aneg:{jp:"この店は高くない。", hi:"高くない", en:"This shop isn't expensive."},
+  apast:{jp:"旅行はとても楽しかった。", hi:"楽しかった", en:"The trip was really fun."},
+  apneg:{jp:"テストは難しくなかった。", hi:"難しくなかった", en:"The test wasn't difficult."},
+  ate: {jp:"この部屋は広くて、明るい。", hi:"広くて", en:"This room is spacious and bright."},
+  aadv:{jp:"毎朝早く起きます。", hi:"早く", en:"I get up early every morning."}
+};
 const TYPE_LABEL={g:"godan・う-verb", i:"ichidan・る-verb", s:"irregular・する", k:"irregular・くる", ia:"い-adjective", na:"な-adjective"};
 
 function answer(item, fid){ return FORM[fid].kind==="v" ? vconj(item.r, item.t, fid, item.x) : aconj(item.r, item.t, fid); }
@@ -1055,6 +1155,7 @@ function renderQ(){
   $("#qMean").textContent=G.mode==="daily"?q.item.m.split("⚠")[0].trim():q.item.m;
   $("#qType").textContent=TYPE_LABEL[q.item.t];
   $("#qType").style.display=G.mode==="practice"?"":"none";
+  $("#qSpk").innerHTML = G.mode==="practice" ? spkBtn(q.item.r) : "";
   $("#explain").style.display="none"; $("#btnNext").style.display="none";
   const ch=$("#choices"); ch.innerHTML="";
   q.options.forEach(op=>{
@@ -1068,6 +1169,7 @@ function onAnswer(btn,op,q){
   if(G.lock||G.over) return; G.lock=true;
   const right=op===q.correct;
   $$("#choices .choice").forEach(b=>{ b.disabled=true; if(b.textContent===q.correct) b.classList.add("right"); });
+  speak(q.correct);   // hear the correct form every time — listening reps for free
   if(right){
     btn.classList.add("right");
     G.combo++; G.bestCombo=Math.max(G.bestCombo,G.combo);
@@ -1090,8 +1192,9 @@ function onAnswer(btn,op,q){
 }
 function nextStep(){ $("#stamp").classList.remove("hit"); renderQ(); }
 function showExplain(q){
-  const e=$("#explain");
-  e.innerHTML=`Correct: <b>${q.correct}</b> — ${escapeHtml(q.item.k)} is a <b>${TYPE_LABEL[q.item.t]}</b>.<br><br>${escapeHtml(FORM[q.fid].rule).replace(/\n/g,"<br>")}`;
+  const e=$("#explain"), s=SENTENCES[q.fid];
+  e.innerHTML=`Correct: <b>${q.correct}</b> ${spkBtn(q.correct)} — ${escapeHtml(q.item.k)} is a <b>${TYPE_LABEL[q.item.t]}</b>.<br><br>${escapeHtml(FORM[q.fid].rule).replace(/\n/g,"<br>")}`
+    + (s?`<div class="sentence" style="margin-top:10px;"><div class="jp"><span>${escapeHtml(s.jp).replace(escapeHtml(s.hi),"<b>"+escapeHtml(s.hi)+"</b>")}</span>${spkBtn(s.jp)}</div><div class="en">${escapeHtml(s.en)}</div></div>`:"");
   e.style.display="block";
   const nb=$("#btnNext"); nb.style.display="block";
   nb.onclick=()=>{ G.i++; $("#stamp").classList.remove("hit"); renderQ(); };
@@ -1203,14 +1306,20 @@ $("#kanjiSeg").addEventListener("click",e=>{
 /* =========================================================
    KANJI STUDIO (watch / trace / recall)
    ========================================================= */
-let stWriter=null, stKanji=null, stMode="trace";
+let stWriter=null, stKanji=null, stMode="trace", stUsedHint=false;
+function readingChips(k, elId){
+  const parts=k.r.split("・").map(s=>s.trim()).filter(Boolean);
+  $(elId).innerHTML = parts.map(p=>`<button class="reading-chip" data-say="${escapeHtml(p)}">${escapeHtml(p)} <span style="font-size:12px;">🔊</span></button>`).join("");
+  return parts;
+}
 function openStudio(k){
   stKanji=k;
   $("#studio").classList.add("on");
   $("#stChar").textContent=k.c;
   $("#stLvl").textContent="N"+k.l;
   $("#stMean").textContent=k.m;
-  $("#stRead").textContent=k.r;
+  const parts=readingChips(k,"#stRead");
+  if(parts.length) speak(parts[0]);              // hear the main reading as it opens
   renderStars();
   setStudioMode("trace");
 }
@@ -1219,12 +1328,13 @@ function renderStars(){
   $("#stStars").innerHTML = p.rc ? '<span class="star">⭐</span>' : (p.tr ? '<span class="star" style="opacity:.45">⭐</span>' : "");
 }
 function setStudioMode(mode){
-  stMode=mode;
+  stMode=mode; stUsedHint=false;
   ["mWatch","mTrace","mRecall"].forEach(id=>$("#"+id).classList.toggle("on",
     (mode==="watch"&&id==="mWatch")||(mode==="trace"&&id==="mTrace")||(mode==="recall"&&id==="mRecall")));
   $("#stFeedback").textContent=""; $("#stFeedback").className="k-feedback";
+  $("#stHint").style.display = mode==="recall" ? "" : "none";
+  $("#stHint").disabled=false;
   const box=$("#stWriterBox");
-  let mistakes=0;
   if(mode==="watch"){
     stWriter=makeWriter(box, stKanji.c, {showCharacter:true, showOutline:false, strokeAnimationSpeed:1.1, delayBetweenStrokes:260});
     const loop=()=>{ if(stMode==="watch" && $("#studio").classList.contains("on")) stWriter.animateCharacter({onComplete:()=>setTimeout(loop,900)}); };
@@ -1234,20 +1344,35 @@ function setStudioMode(mode){
   stWriter=makeWriter(box, stKanji.c, {showOutline:mode==="trace"});
   stWriter.quiz({
     leniency:1.2,
-    onMistake:()=>{ mistakes++; $("#stFeedback").textContent="✕ not quite — stroke "+"order & direction matter"; $("#stFeedback").className="k-feedback bad"; beep("no"); },
-    onCorrectStroke:d=>{ $("#stFeedback").textContent="stroke "+(d.strokesRemaining===0?"✓":(d.totalMistakes===mistakes?"✓ nice":"✓")); $("#stFeedback").className="k-feedback"; },
+    showHintAfterMisses: mode==="recall" ? 999 : 3,   // recall = blank canvas, no free hints
+    onMistake:()=>{ $("#stFeedback").textContent="✕ not quite — stroke order & direction matter"; $("#stFeedback").className="k-feedback bad"; beep("no"); },
+    onCorrectStroke:d=>{ $("#stFeedback").textContent="✓"; $("#stFeedback").className="k-feedback"; },
     onComplete:sum=>{
       beep("ok");
       const stp=$("#stStamp"); stp.classList.remove("hit"); void stp.offsetWidth; stp.classList.add("hit");
       const m=sum.totalMistakes;
-      $("#stFeedback").textContent = m===0 ? "Perfect! 完璧!" : `Done with ${m} mistake${m===1?"":"s"}`;
       if(mode==="trace") setKprog(stKanji.c,{tr:true});
-      if(mode==="recall" && m<=2){ setKprog(stKanji.c,{rc:true}); toast(stKanji.c+" mastered! ⭐"); }
+      if(mode==="recall"){
+        if(stUsedHint){ $("#stFeedback").textContent="Finished with the outline — try again from memory"; $("#stFeedback").className="k-feedback bad"; }
+        else if(m<=2){ setKprog(stKanji.c,{rc:true}); toast(stKanji.c+" mastered! ⭐"); $("#stFeedback").textContent=m===0?"Perfect! 完璧!":`Mastered with ${m} mistake${m===1?"":"s"}`; }
+        else { $("#stFeedback").textContent=`${m} mistakes — almost! Mastery needs ≤2`; $("#stFeedback").className="k-feedback bad"; }
+      } else {
+        $("#stFeedback").textContent = m===0 ? "Perfect! 完璧!" : `Done with ${m} mistake${m===1?"":"s"}`;
+      }
+      speak(stKanji.r.split("・")[0]);
       renderStars();
-      setTimeout(()=>{ stp.classList.remove("hit"); if(stMode===mode) setStudioMode(mode); }, 1600);
+      setTimeout(()=>{ stp.classList.remove("hit"); if(stMode===mode) setStudioMode(mode); }, 1700);
     }
   });
 }
+$("#stHint").addEventListener("click",()=>{
+  if(!stWriter || stMode!=="recall" || stUsedHint) return;
+  stUsedHint=true;                                   // hint = this run can't count (Luli-style penalty)
+  stWriter.showOutline();
+  $("#stHint").disabled=true;
+  $("#stFeedback").textContent="Outline revealed — finish it, but this run won't count as mastered";
+  $("#stFeedback").className="k-feedback bad";
+});
 $("#mWatch").addEventListener("click",()=>setStudioMode("watch"));
 $("#mTrace").addEventListener("click",()=>setStudioMode("trace"));
 $("#mRecall").addEventListener("click",()=>setStudioMode("recall"));
@@ -1256,48 +1381,96 @@ $("#stClose").addEventListener("click",()=>{ $("#studio").classList.remove("on")
 /* =========================================================
    KANJI DAILY CHALLENGE
    ========================================================= */
+/* =========================================================
+   KANJI DAILY CHALLENGE
+   Fail policy (inspired by Luli's Kanji Study):
+   - No per-stroke hints. 3 mistakes (or the hint button)
+     reveals the full shadow outline → 0 pts for this pass,
+     and the kanji is REQUEUED at the end of today's list.
+   - The requeued pass is from memory again, worth up to 50.
+   - Failing a kanji you'd mastered degrades it back to
+     "to learn" — mastery has to be re-earned.
+   ========================================================= */
+const FAIL_AT=3;
+let kWriter=null;
 function startKanjiDaily(){
   if(dayRec.kU>=DAILY_ATTEMPTS){ toast("No tries left today"); return; }
   dayRec.kU++; saveDay();          // consume on start
-  KG={set:dailyKanjiSet(), i:0, score:0, results:[], over:false};
+  KG={queue:dailyKanjiSet().map(k=>({k, requeue:false})), done:[], cur:null,
+      score:0, results:[], over:false, mistakes:0, revealed:false};
   $("#kScore").textContent="0";
   $("#kgame").classList.add("on");
-  renderKProgress();
   nextKanji();
 }
 function renderKProgress(){
   const el=$("#kProgress"); el.innerHTML="";
-  KG.set.forEach((k,i)=>{
+  const total=KG.done.length + (KG.cur?1:0) + KG.queue.length;
+  for(let i=0;i<total;i++){
     const d=document.createElement("div");
-    d.className="pd"+(i<KG.i?" ok":(i===KG.i?" cur":""));
+    d.className="pd"+(i<KG.done.length ? (KG.done[i].pts>0?" ok":"") : (i===KG.done.length && KG.cur?" cur":""));
     el.appendChild(d);
-  });
+  }
+}
+function failCurrent(reason){
+  if(!KG || KG.over || KG.revealed || !kWriter) return;
+  KG.revealed=true;
+  kWriter.showOutline();
+  beep("no"); if(navigator.vibrate) navigator.vibrate([50,40,50]);
+  $("#kFeedback").textContent = reason==="hint"
+    ? "Outline revealed — trace it, it comes back at the end"
+    : "3 mistakes — trace the shadow, it comes back at the end";
+  $("#kFeedback").className="k-feedback bad";
+  $("#kHint").disabled=true;
+  // mastery degradation
+  if(isMastered(KG.cur.k.c)){ setKprog(KG.cur.k.c,{rc:false}); toast(KG.cur.k.c+" dropped from mastered — win it back!"); }
+  if(!KG.cur.requeue){ KG.queue.push({k:KG.cur.k, requeue:true}); renderKProgress(); }
 }
 function nextKanji(){
   if(!KG || KG.over) return;
-  if(KG.i>=KG.set.length){ endKanjiDaily(); return; }
-  const k=KG.set[KG.i];
+  KG.cur=KG.queue.shift()||null;
+  if(!KG.cur){ endKanjiDaily(); return; }
+  KG.mistakes=0; KG.revealed=false;
+  const {k, requeue}=KG.cur;
   renderKProgress();
-  $("#kMean").textContent=k.m;
-  $("#kRead").textContent=k.r;
-  $("#kFeedback").textContent=""; $("#kFeedback").className="k-feedback";
-  const box=$("#kWriterBox");
-  const writer=makeWriter(box, k.c, {showOutline:false});   // recall mode — draw from memory
-  writer.quiz({
+  $("#kMean").textContent=k.m+(requeue?"  (round 2!)":"");
+  readingChips(k,"#kRead");
+  speak(k.r.split("・")[0]);                        // hear the reading with every prompt
+  $("#kFeedback").textContent=requeue?"From memory this time — up to 50 pts":"";
+  $("#kFeedback").className="k-feedback";
+  $("#kHint").disabled=false;
+  kWriter=makeWriter($("#kWriterBox"), k.c, {showOutline:false});   // blank canvas recall
+  kWriter.quiz({
     leniency:1.2,
-    onMistake:()=>{ $("#kFeedback").textContent="✕ try that stroke again"; $("#kFeedback").className="k-feedback bad"; beep("no"); if(navigator.vibrate) navigator.vibrate(40); },
-    onCorrectStroke:()=>{ $("#kFeedback").textContent="✓"; $("#kFeedback").className="k-feedback"; },
+    showHintAfterMisses:999,                        // no free stroke hints — misses have stakes
+    onMistake:()=>{
+      if(KG.revealed) return;
+      KG.mistakes++;
+      if(KG.mistakes>=FAIL_AT){ failCurrent("mistakes"); return; }
+      $("#kFeedback").textContent=`✕ ${FAIL_AT-KG.mistakes} ${FAIL_AT-KG.mistakes===1?"miss":"misses"} left before the shadow`;
+      $("#kFeedback").className="k-feedback bad";
+      beep("no"); if(navigator.vibrate) navigator.vibrate(40);
+    },
+    onCorrectStroke:()=>{ if(!KG.revealed){ $("#kFeedback").textContent="✓"; $("#kFeedback").className="k-feedback"; } },
     onComplete:sum=>{
       if(!KG||KG.over) return;
-      const pts=Math.max(20, 100-12*sum.totalMistakes);
-      KG.score+=pts; KG.results.push({c:k.c, m:k.m, mistakes:sum.totalMistakes, pts});
+      const {k, requeue}=KG.cur;
+      let pts=0;
+      if(!KG.revealed) pts = requeue ? Math.max(10, 50-10*sum.totalMistakes) : Math.max(20, 100-12*sum.totalMistakes);
+      KG.score+=pts;
+      KG.done.push({c:k.c, m:k.m, mistakes:sum.totalMistakes, pts, revealed:KG.revealed, requeue});
+      KG.results=KG.done;
       $("#kScore").textContent=KG.score;
-      beep("ok");
-      const stp=$("#kStamp"); stp.classList.remove("hit"); void stp.offsetWidth; stp.classList.add("hit");
-      setTimeout(()=>{ stp.classList.remove("hit"); if(KG && !KG.over){ KG.i++; nextKanji(); } }, 900);
+      if(pts>0){
+        beep("ok");
+        const stp=$("#kStamp"); stp.classList.remove("hit"); void stp.offsetWidth; stp.classList.add("hit");
+        setTimeout(()=>{ stp.classList.remove("hit"); if(KG && !KG.over) nextKanji(); }, 900);
+      } else {
+        setTimeout(()=>{ if(KG && !KG.over) nextKanji(); }, 1100);
+      }
     }
   });
 }
+$("#kHint").addEventListener("click",()=>failCurrent("hint"));
 $("#kQuit").addEventListener("click",()=>{ if(KG && !KG.over) endKanjiDaily(true); });
 async function endKanjiDaily(quit){
   if(!KG||KG.over) return;
@@ -1312,13 +1485,13 @@ async function endKanjiDaily(quit){
   $("#kgame").classList.remove("on");
   $("#resScore").textContent=score;
   $("#resKind").textContent="✍️ Kanji writing";
-  $("#resRight").textContent=results.filter(r=>r.mistakes===0).length; $("#resRightK").textContent="Perfect";
-  $("#resWrong").textContent=results.reduce((a,r)=>a+r.mistakes,0); $("#resWrongK").textContent="Mistakes";
-  $("#resCombo").textContent=results.length+"/"+KANJI_COUNT; $("#resComboK").textContent="Completed";
+  $("#resRight").textContent=results.filter(r=>r.mistakes===0 && !r.revealed).length; $("#resRightK").textContent="Perfect";
+  $("#resWrong").textContent=results.filter(r=>r.revealed).length; $("#resWrongK").textContent="Revealed";
+  $("#resCombo").textContent=results.length; $("#resComboK").textContent="Drawn";
   $("#resPostLine").innerHTML=postLine+(quit?"<br>(ended early — the try was still used)":"");
   $("#resListTitle").textContent="Today's kanji";
   $("#resList").innerHTML = results.length
-    ? results.map(r=>`<div class="wl-row ${r.mistakes===0?"good":(r.mistakes>2?"bad":"")}"><span style="font-family:var(--disp);font-weight:700;">${r.c}　<span style="font-weight:500;color:var(--ink2);font-size:12.5px;">${escapeHtml(r.m)}</span></span><span class="a">${r.mistakes===0?"perfect ✓":r.mistakes+" miss"} ・ +${r.pts}</span></div>`).join("")
+    ? results.map(r=>`<div class="wl-row ${r.revealed?"bad":(r.mistakes===0?"good":"")}"><span style="font-family:var(--disp);font-weight:700;">${r.c}${r.requeue?" ↻":""}　<span style="font-weight:500;color:var(--ink2);font-size:12.5px;">${escapeHtml(r.m)}</span></span><span class="a">${r.revealed?"revealed 👁":(r.mistakes===0?"perfect ✓":r.mistakes+" miss")} ・ +${r.pts}</span></div>`).join("")
     : '<div class="empty">No kanji completed.</div>';
   const again=$("#btnResAgain");
   const left=DAILY_ATTEMPTS-dayRec.kU;
@@ -1353,11 +1526,15 @@ function buildLearn(){
   const sampleA=["たかい","いい","しずか"].map(r=>ADJS.find(a=>a.r===r));
   FORMS.forEach(f=>{
     const samples=f.kind==="v"?sampleV:(f.iaOnly?sampleA.filter(a=>a.t==="ia"):sampleA);
-    const exs=samples.map(w=>`<div class="ex"><span>${w.k}（${w.r}）</span><span class="to">${answer(w,f.id)}</span></div>`).join("");
+    const exs=samples.map(w=>`<div class="ex"><span>${w.k}（${w.r}）</span><span style="display:flex;align-items:center;gap:8px;"><span class="to">${answer(w,f.id)}</span>${spkBtn(answer(w,f.id))}</span></div>`).join("");
+    const s=SENTENCES[f.id];
+    const sent = s ? `<div class="sentence">
+        <div class="jp"><span>${escapeHtml(s.jp).replace(escapeHtml(s.hi),"<b>"+escapeHtml(s.hi)+"</b>")}</span>${spkBtn(s.jp)}</div>
+        <div class="en">${escapeHtml(s.en)}</div></div>` : "";
     const card=document.createElement("div");
     card.className="card learn-card";
     card.innerHTML=`<button class="learn-head"><span class="fj">${f.jp}</span><span class="fe">${f.en} · ${f.lvl}</span><span class="caret">▸</span></button>
-      <div class="learn-body"><div class="rule">${escapeHtml(f.rule)}</div>${exs}</div>`;
+      <div class="learn-body"><div class="rule">${escapeHtml(f.rule)}</div>${sent}${exs}</div>`;
     card.querySelector(".learn-head").addEventListener("click",()=>card.classList.toggle("open"));
     wrap.appendChild(card);
   });
@@ -1456,7 +1633,7 @@ $("#onbGo").addEventListener("click",async()=>{
    INIT
    ========================================================= */
 (async function init(){
-  buildChips(); buildLearn(); buildOnb();
+  buildChips(); buildLearn(); buildOnb(); renderSoundToggle();
   profile=LS.get("profile");
   dayRec=LS.get("day:"+todayStr())||{sU:0,sB:0,kU:0,kB:0};
   renderHome();
