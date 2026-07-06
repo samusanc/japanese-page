@@ -46,7 +46,7 @@ export function startPractice() {
 }
 
 export function runGame(cfg) {
-  state.G = { ...cfg, i: 0, score: 0, right: 0, wrong: 0, combo: 0, bestCombo: 0, misses: [], over: false, lock: true };
+  state.G = { ...cfg, i: 0, score: 0, right: 0, wrong: 0, combo: 0, bestCombo: 0, misses: [], over: false, lock: true, triggeredHalf: false };
   $("#gScore").textContent = "0";
   $("#gCombo").textContent = "";
   $("#timerwrap").style.visibility = cfg.timed ? "visible" : "hidden";
@@ -54,6 +54,12 @@ export function runGame(cfg) {
   bar.style.width = "100%";
   bar.classList.remove("low");
   gameEl().classList.add("on");
+  
+  const bubble = $("#charBubble");
+  if (bubble) {
+    bubble.classList.remove("show");
+    bubble.textContent = "";
+  }
   
   const cEl = $("#count");
   const nEl = $("#countN");
@@ -89,11 +95,31 @@ export function startTimer() {
     const bar = $("#timerbar");
     bar.style.width = Math.max(0, (rem / 60) * 100) + "%";
     if (rem <= 10) bar.classList.add("low");
+    if (rem <= 30 && !state.G.triggeredHalf) {
+      state.G.triggeredHalf = true;
+      triggerHalfDialogue();
+    }
     if (rem <= 0) {
       clearInterval(timerIv);
       endGame();
     }
   }, 100);
+}
+
+export function triggerHalfDialogue() {
+  const phrases = [
+    "どうしたの？時間がなくなっちゃうよ…",
+    "ねえ、まだ終わらないの？待たせないでよ。",
+    "焦らさないで、早く君の答えを聞かせて？",
+    "ちょっと、難しすぎる？手伝ってあげようか？",
+    "時間、半分しかないよ？君ならできるって信じてるけど…"
+  ];
+  const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+  const bubble = $("#charBubble");
+  if (bubble) {
+    bubble.textContent = phrase;
+    bubble.classList.add("show");
+  }
 }
 
 export function renderQ() {
@@ -247,6 +273,9 @@ export async function endGame(quit) {
   state.G.over = true;
   clearInterval(timerIv);
   beep("end");
+  
+  const bubble = $("#charBubble");
+  if (bubble) bubble.classList.remove("show");
   
   const { mode, score, right, wrong, bestCombo, misses } = state.G;
   const st = LS.get("stats") || { r: 0, w: 0 };

@@ -315,6 +315,48 @@ footer p{font-size:10px; color:var(--ink2); line-height:1.6;}
   animation: otomeBreathe 4s ease-in-out infinite;
 }
 
+.otome-char-bubble {
+  position: absolute;
+  top: -50px;
+  right: -60px;
+  width: 155px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  padding: 8px 12px;
+  font-family: var(--body);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: scale(0.85) translate(-10px, 10px);
+  transition: all 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  pointer-events: none;
+  z-index: 15;
+  text-align: left;
+}
+
+.otome-char-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 28px;
+  border-width: 7px 7px 0;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.45) transparent;
+  display: block;
+  width: 0;
+}
+
+.otome-char-bubble.show {
+  opacity: 1;
+  transform: scale(1) translate(0, 0);
+}
+
 .otome-char-silhouette {
   font-size: 80px;
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
