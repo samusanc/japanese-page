@@ -81,7 +81,10 @@ export function renderHome() {
 
 export function renderStreak() {
   const s = LS.get("streak");
-  $("#streakN").textContent = (s && (s.last === todayStr() || s.last === yesterdayStr())) ? s.c : 0;
+  const el = $("#streakN");
+  if (el) {
+    el.textContent = (s && (s.last === todayStr() || s.last === yesterdayStr())) ? s.c : 0;
+  }
 }
 
 export function bumpStreak() {
