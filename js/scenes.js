@@ -107,7 +107,7 @@ export const QUESTION_PROMPTS = {
   },
   sora: {
     name: "Sora",
-    png: "./placeholder.png",
+    png: "./sprites/anastasia.png",
     bg: "bg-shrine",
     prompts: [
       {

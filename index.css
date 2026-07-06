@@ -853,11 +853,11 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   gap: 12px;
 }
 #game .qcard {
-  background: rgba(40, 49, 63, 0.62) !important;
-  backdrop-filter: blur(28px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.22), 0 0 40px rgba(207,165,122,0.06) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(13, 10, 26, 0.5) 100%) !important;
+  backdrop-filter: blur(32px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: var(--shadow), inset 0 2px 2px rgba(255, 255, 255, 0.28), inset 0 -2px 2px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 255, 255, 0.05) !important;
   padding: 36px 20px 20px; text-align: left; margin-bottom: 0;
 }
 .otome-speaker-plate {
@@ -1063,8 +1063,9 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 .slice-bg-3 {
   background:
     linear-gradient(to bottom, rgba(13,10,26,0.1) 0%, rgba(13,10,26,0.92) 85%),
-    url('./placeholder.png') no-repeat center bottom / cover,
+    url('./sprites/anastasia.png') no-repeat center bottom / cover,
     radial-gradient(ellipse 80% 60% at 50% 30%, rgba(52,201,122,0.15) 0%, transparent 70%);
+  filter: hue-rotate(240deg) brightness(0.95) saturate(1.1);
 }
 
 /* Slice hover: zoom in the character and make gradients slightly brighter */
@@ -1086,8 +1087,9 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 .char-slice:hover .slice-bg-3 {
   background:
     linear-gradient(to bottom, rgba(13,10,26,0.02) 0%, rgba(13,10,26,0.85) 85%),
-    url('./placeholder.png') no-repeat center bottom / cover,
+    url('./sprites/anastasia.png') no-repeat center bottom / cover,
     radial-gradient(ellipse 80% 60% at 50% 25%, rgba(52,201,122,0.3) 0%, transparent 70%);
+  filter: hue-rotate(240deg) brightness(1.05) saturate(1.2);
 }
 
 /* ---- Shimmer sweep on hover ---- */
@@ -1407,14 +1409,13 @@ main:has(#s-home.on) {
 .sensei-vn-box {
   position: relative;
   margin: 0 16px calc(env(safe-area-inset-bottom) + 20px);
-  background: rgba(13,10,26,0.72);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border-hi);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(13, 10, 26, 0.5) 100%);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 6px 22px 22px 22px;
   padding: 20px 18px 16px;
-  box-shadow: var(--shadow), 0 0 30px rgba(212,168,83,0.06),
-              inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow: var(--shadow), inset 0 2px 2px rgba(255, 255, 255, 0.28), inset 0 -2px 2px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 255, 255, 0.05);
   animation: senseiBoxSlide .5s cubic-bezier(0.4,0,0.2,1) .15s both;
   cursor: pointer;
 }

@@ -61,7 +61,8 @@ export function runGame(cfg, charId = 'ren') {
     lock: true, 
     triggeredHalf: false,
     scenesList: [],
-    sceneIndex: 0
+    sceneIndex: 0,
+    partnerCharId: charId
   };
   
   $("#gScore").textContent = "0";
@@ -179,6 +180,11 @@ export function executeSceneStep() {
   const charImg = $("#gameCharImg");
   if (charImg) {
     charImg.src = step.png || "./placeholder.png";
+    if (state.G.partnerCharId === "sora" && step.speaker === "Sora") {
+      charImg.style.filter = "hue-rotate(240deg) brightness(0.95) saturate(1.1)";
+    } else {
+      charImg.style.filter = "";
+    }
   }
   
   // Set speaker name plate
