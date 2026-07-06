@@ -200,7 +200,7 @@ export async function endKanjiDaily(quit) {
 }
 
 export function initKanjiGameUI() {
-  $("#kHint").addEventListener("click", () => failCurrent("hint"));
-  $("#kQuit").addEventListener("click", () => { if (state.KG && !state.KG.over) endKanjiDaily(true); });
-  $("#btnKanjiDaily").addEventListener("click", startKanjiDaily);
+  const kh = $("#kHint"); if (kh) kh.addEventListener("click", () => failCurrent("hint"));
+  const kq = $("#kQuit"); if (kq) kq.addEventListener("click", () => { if (state.KG && !state.KG.over) endKanjiDaily(true); });
+  const bkd = $("#btnKanjiDaily"); if (bkd) bkd.addEventListener("click", startKanjiDaily);
 }

@@ -450,13 +450,16 @@ async function resolveVnEnding() {
 }
 
 export function initSprintGameUI() {
-  $("#btnQuit").addEventListener("click", () => {
-    if (activeWriter) {
-      activeWriter.destroy();
-      activeWriter = null;
-    }
-    gameEl().classList.remove("on");
-    state.G = null;
-    appShowScreen("home");
-  });
+  const bq = $("#btnQuit");
+  if (bq) {
+    bq.addEventListener("click", () => {
+      if (activeWriter) {
+        activeWriter.destroy();
+        activeWriter = null;
+      }
+      gameEl().classList.remove("on");
+      state.G = null;
+      appShowScreen("home");
+    });
+  }
 }
