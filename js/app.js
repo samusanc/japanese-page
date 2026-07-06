@@ -97,11 +97,15 @@ export function renderHome() {
       if (nameEl) nameEl.textContent = ch.name;
       if (roleEl) roleEl.textContent = ch.title;
       if (tagEl) tagEl.textContent = ch.tagline;
-      if (figEl) {
-        figEl.innerHTML = ch.img ? `<img src="${ch.img}" style="height:100%; object-fit:contain; border-radius:0;">` : ch.icon;
+      if (ch.img) {
+        slice.style.setProperty('--char-img', `url('${ch.img}')`);
+      } else {
+        slice.style.setProperty('--char-img', 'none');
       }
+      slice.style.setProperty('--char-accent-glow', ch.accent + '22');
+      slice.style.setProperty('--char-accent-glow-hi', ch.accent + '55');
       if (bgEl) {
-        bgEl.style.background = `linear-gradient(135deg, ${ch.accent2}, ${ch.accent})`;
+        bgEl.style.background = "";
       }
       
       const cs = charState(charId);
