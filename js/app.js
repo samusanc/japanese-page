@@ -250,12 +250,8 @@ export function openOnb(edit) {
       e.stopPropagation();
       const clickedCta = e.target.closest(".slice-cta");
       
-      // If the slice is not already expanded, expand it and collapse others
-      if (!slice.classList.contains("expanded")) {
-        $$("[data-char]").forEach(s => s.classList.remove("expanded"));
-        slice.classList.add("expanded");
-      } else {
-        // Already expanded. Click anywhere inside the slice or on the CTA button will start the game.
+      if (clickedCta) {
+        // Only start the game if the CTA button was specifically clicked!
         slice.style.transition = "flex .45s cubic-bezier(0.4,0,0.2,1), border-color .1s, box-shadow .1s, filter .15s";
         slice.style.filter = "brightness(1.5)";
         const charId = slice.dataset.char;
@@ -264,6 +260,15 @@ export function openOnb(edit) {
           slice.classList.remove("expanded");
           startDaily(charId);
         }, 220);
+      } else {
+        // If the slice is not already expanded, expand it and collapse others
+        if (!slice.classList.contains("expanded")) {
+          $$("[data-char]").forEach(s => s.classList.remove("expanded"));
+          slice.classList.add("expanded");
+        } else {
+          // If they click the already expanded character, collapse it
+          slice.classList.remove("expanded");
+        }
       }
     });
   });
