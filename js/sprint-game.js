@@ -5,7 +5,15 @@ import { speak, spkBtn, beep } from './audio.js';
 import { makeWriter } from './kanji-logic.js';
 import { buildQuestion } from './engine.js';
 import { bePostScore } from './config.js';
-import { showScreen, bumpStreak, renderHome } from './app.js';
+async function appShowScreen(screenId) {
+  const app = await import('./app.js');
+  app.showScreen(screenId);
+}
+
+async function appRenderHome() {
+  const app = await import('./app.js');
+  app.renderHome();
+}
 import { dailyKanjiSet } from './kanji-game.js';
 import { CHARACTERS, STORIES } from './stories.js';
 
@@ -418,7 +426,7 @@ async function resolveVnEnding() {
   state.dayRec.kB = total;
   
   LS.set("day:" + todayStr(), state.dayRec);
-  renderHome();
+  appRenderHome();
 
   // Sync online score
   if (state.beReady && !state.debugMode) {
@@ -428,7 +436,7 @@ async function resolveVnEnding() {
   // Button actions
   $("#btnVnResHome").onclick = () => {
     gameEl().classList.remove("on");
-    showScreen("home");
+    appShowScreen("home");
   };
 
   const again = $("#btnVnResAgain");
@@ -449,6 +457,6 @@ export function initSprintGameUI() {
     }
     gameEl().classList.remove("on");
     state.G = null;
-    showScreen("home");
+    appShowScreen("home");
   });
 }

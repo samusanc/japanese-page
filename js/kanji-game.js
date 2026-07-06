@@ -2,7 +2,16 @@ import { state } from './state.js';
 import { LS, $, escapeHtml, todayStr, mulberry32, hashStr, shuffle, toast } from './helpers.js';
 import { speak, beep } from './audio.js';
 import { bePostScore } from './config.js';
-import { showScreen, bumpStreak } from './app.js';
+async function appShowScreen(screenId) {
+  const app = await import('./app.js');
+  app.showScreen(screenId);
+}
+
+async function appBumpStreak() {
+  const app = await import('./app.js');
+  app.bumpStreak();
+}
+
 import { makeWriter, isMastered, setKprog, readingChips } from './kanji-logic.js';
 
 let kWriter = null;
@@ -154,7 +163,7 @@ export async function endKanjiDaily(quit) {
   } else {
     state.dayRec.kB = Math.max(state.dayRec.kB, score);
     LS.set("day:" + todayStr(), state.dayRec);
-    bumpStreak();
+    appBumpStreak();
     if (state.beReady) {
       const ok = await bePostScore("kanji", state.dayRec.kB);
       postLine = ok ? (state.profile?.g ? `Posted to squad <b>${state.profile.g}</b> ✓` : "Saved online ✓") : "Couldn't reach the server — saved on this device.";
@@ -183,10 +192,10 @@ export async function endKanjiDaily(quit) {
   again.disabled = !state.debugMode && left <= 0;
   again.textContent = state.debugMode ? "Draw again (debug) ▶" : (left > 0 ? "Use last try ▶" : "No tries left");
   again.onclick = () => {
-    showScreen("home");
+    appShowScreen("home");
     startKanjiDaily();
   };
-  showScreen("result");
+  appShowScreen("result");
   state.KG = null;
 }
 

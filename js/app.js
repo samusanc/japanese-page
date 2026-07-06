@@ -58,8 +58,13 @@ export function renderHome() {
         slice.classList.add("vn-completed-gold");
       }
       
-      // Style diagonal colors
-      slice.style.background = `linear-gradient(135deg, ${charData.color}dd 0%, #23262Fdd 100%)`;
+      // Style diagonal colors for a translucent crystal look
+      const red = parseInt(charData.color.slice(1,3), 16);
+      const green = parseInt(charData.color.slice(3,5), 16);
+      const blue = parseInt(charData.color.slice(5,7), 16);
+      slice.style.background = `linear-gradient(135deg, rgba(${red}, ${green}, ${blue}, 0.35) 0%, rgba(35, 38, 47, 0.2) 100%)`;
+      slice.style.backdropFilter = "blur(8px)";
+      slice.style.webkitBackdropFilter = "blur(8px)";
       
       // Silhouette filters
       let filtersClass = "";
