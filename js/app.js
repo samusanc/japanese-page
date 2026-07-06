@@ -7,6 +7,7 @@ import { initSprintGameUI, startDaily } from './sprint-game.js';
 import { initKanjiGameUI, dailyKanjiSet } from './kanji-game.js';
 import { initKanjiStudioUI, renderKanjiTab } from './kanji-logic.js';
 import { answer } from './engine.js';
+import { initVnEvents, startRoute, statusOf, todayRoster, charState, CHAR, startTraining } from './otome-route.js';
 
 export function showScreen(id) {
   $$(".screen").forEach(s => s.classList.remove("on"));
@@ -77,6 +78,47 @@ export function renderHome() {
   renderStreak();
   renderStatsStrip();
   renderMiniBoard();
+
+  // Dynamically update homepage slices with today's roster
+  const roster = todayRoster();
+  const slices = $$(".char-slice");
+  
+  roster.forEach((charId, idx) => {
+    const ch = CHAR[charId];
+    const slice = slices[idx];
+    if (slice && ch) {
+      slice.dataset.char = charId;
+      const nameEl = slice.querySelector(".slice-name");
+      const roleEl = slice.querySelector(".slice-role");
+      const tagEl = slice.querySelector(".slice-tagline");
+      const figEl = slice.querySelector(".slice-figure");
+      const bgEl = slice.querySelector(".slice-bg");
+      
+      if (nameEl) nameEl.textContent = ch.name;
+      if (roleEl) roleEl.textContent = ch.title;
+      if (tagEl) tagEl.textContent = ch.tagline;
+      if (figEl) {
+        figEl.innerHTML = ch.img ? `<img src="${ch.img}" style="height:100%; object-fit:contain; border-radius:0;">` : ch.icon;
+      }
+      if (bgEl) {
+        bgEl.style.background = `linear-gradient(135deg, ${ch.accent2}, ${ch.accent})`;
+      }
+      
+      const cs = charState(charId);
+      const ctaEl = slice.querySelector(".slice-cta");
+      if (ctaEl) {
+        if (cs.st === "love") {
+          ctaEl.textContent = "💘 Yours";
+        } else if (cs.st === "friend") {
+          ctaEl.textContent = "🤝 Friend";
+        } else if (cs.st === "bw") {
+          ctaEl.textContent = "Retry ✦";
+        } else {
+          ctaEl.textContent = "Begin ›";
+        }
+      }
+    }
+  });
 }
 
 export function renderStreak() {
@@ -244,6 +286,7 @@ export function openOnb(edit) {
   initSprintGameUI();
   initKanjiGameUI();
   initKanjiStudioUI();
+  initVnEvents();
 
   $$("[data-char]").forEach(slice => {
     slice.addEventListener("click", (e) => {
@@ -251,22 +294,19 @@ export function openOnb(edit) {
       const clickedCta = e.target.closest(".slice-cta");
       
       if (clickedCta) {
-        // Only start the game if the CTA button was specifically clicked!
         slice.style.transition = "flex .45s cubic-bezier(0.4,0,0.2,1), border-color .1s, box-shadow .1s, filter .15s";
         slice.style.filter = "brightness(1.5)";
         const charId = slice.dataset.char;
         setTimeout(() => {
           slice.style.filter = "";
           slice.classList.remove("expanded");
-          startDaily(charId);
+          startRoute(charId);
         }, 220);
       } else {
-        // If the slice is not already expanded, expand it and collapse others
         if (!slice.classList.contains("expanded")) {
           $$("[data-char]").forEach(s => s.classList.remove("expanded"));
           slice.classList.add("expanded");
         } else {
-          // If they click the already expanded character, collapse it
           slice.classList.remove("expanded");
         }
       }
@@ -390,6 +430,34 @@ export function openOnb(edit) {
   buildChips();
   buildLearn();
   buildOnb();
+
+  ["ktCount", "ktSrc", "ftCount"].forEach(id => {
+    const el = $("#" + id);
+    if (el) {
+      el.querySelectorAll("button").forEach(btn => btn.addEventListener("click", () => {
+        el.querySelectorAll("button").forEach(x => x.classList.remove("on"));
+        btn.classList.add("on");
+      }));
+    }
+  });
+
+  const btnTrainK = $("#btnTrainK");
+  if (btnTrainK) {
+    btnTrainK.addEventListener("click", () => {
+      const n = +($("#ktCount .on")?.dataset.n || 5);
+      const l = $("#ktSrc .on")?.dataset.l || "";
+      startTraining("kanji", { n, lvl: l ? +l : null });
+    });
+  }
+
+  const btnTrainF = $("#btnTrainF");
+  if (btnTrainF) {
+    btnTrainF.addEventListener("click", () => {
+      const n = +($("#ftCount .on")?.dataset.n || 5);
+      const sel = $$("#chipsVerb .chip.on, #chipsAdj .chip.on").map(c => c.dataset.f);
+      startTraining("forms", { n, forms: sel });
+    });
+  }
   
   state.profile = LS.get("profile");
   state.dayRec = LS.get("day:" + todayStr()) || { sU: 0, sB: 0, kU: 0, kB: 0 };
