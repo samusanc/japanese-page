@@ -563,51 +563,57 @@ footer p{font-size:10px; color:var(--ink2); line-height:1.6;}
    ========================================================= */
 .otome-menu-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100%;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 .otome-menu-slice {
   position: relative;
-  flex: 1;
   overflow: hidden;
   cursor: pointer;
   background-size: cover;
   background-position: center;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  padding: 20px 24px;
-  border-left: none;
-  border-right: none;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.25);
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+  text-align: center;
   transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-top: none;
+  border-bottom: none;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
 }
 
 .otome-menu-slice:nth-child(1) {
-  clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+  width: calc(33.33% + 10vw);
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 0 100%);
   z-index: 3;
 }
 
 .otome-menu-slice:nth-child(2) {
-  margin-top: -8vh;
-  padding-top: calc(8vh + 20px);
-  clip-path: polygon(0 12%, 100% 0, 100% 88%, 0 100%);
+  margin-left: -10vw;
+  width: calc(33.33% + 20vw);
+  padding-left: 5vw;
+  clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
   z-index: 2;
 }
 
 .otome-menu-slice:nth-child(3) {
-  margin-top: -8vh;
-  padding-top: calc(8vh + 20px);
-  clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 100%);
+  margin-left: -10vw;
+  width: calc(33.33% + 10vw);
+  padding-left: 5vw;
+  clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
   z-index: 1;
 }
 
 .otome-menu-slice:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08) saturate(1.1);
 }
 
 .otome-menu-slice-content {
