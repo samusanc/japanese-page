@@ -9,7 +9,7 @@ export const INTRO_SCENES = {
       speaker: "先生 · Sensei",
       text_ja: "あら、今日の練習パートナーは{partnerName}さんですね。",
       text_en: "Ah, it seems {partnerName} will be your partner for today's practice.",
-      png: "./placeholder.png",
+      png: "./sprites/teacher.png",
       bg: "bg-classroom",
       sound: ""
     },
@@ -17,7 +17,7 @@ export const INTRO_SCENES = {
       speaker: "先生 · Sensei",
       text_ja: "文法の活用をマスターすることは、言葉の絆を深める第一歩ですよ。",
       text_en: "Mastering grammar conjugations is the first step to deepening your linguistic bond.",
-      png: "./placeholder.png",
+      png: "./sprites/teacher.png",
       bg: "bg-classroom",
       sound: ""
     },
@@ -25,7 +25,7 @@ export const INTRO_SCENES = {
       speaker: "先生 · Sensei",
       text_ja: "焦らず、正確に。彼らの期待に応えて見せましょう！",
       text_en: "Stay calm, be precise. Let's show them what you're capable of!",
-      png: "./placeholder.png",
+      png: "./sprites/teacher.png",
       bg: "bg-classroom",
       sound: ""
     },
@@ -33,7 +33,7 @@ export const INTRO_SCENES = {
       speaker: "先生 · Sensei",
       text_ja: "準備はよろしいですか？それでは…始めますよ！",
       text_en: "Are you ready? Now... let us begin!",
-      png: "./placeholder.png",
+      png: "./sprites/teacher.png",
       bg: "bg-classroom",
       sound: ""
     }
@@ -43,7 +43,7 @@ export const INTRO_SCENES = {
       speaker: "先生 · Sensei",
       text_ja: "自主練習の時間ですね。基本をしっかり身につけましょう。",
       text_en: "Time for self-directed practice. Let's build a solid foundation.",
-      png: "./placeholder.png",
+      png: "./sprites/teacher.png",
       bg: "bg-classroom",
       sound: ""
     },
@@ -51,7 +51,7 @@ export const INTRO_SCENES = {
       speaker: "先生 · Sensei",
       text_ja: "準備はよろしいですか？それでは…始めますよ！",
       text_en: "Are you ready? Now... let us begin!",
-      png: "./placeholder.png",
+      png: "./sprites/teacher.png",
       bg: "bg-classroom",
       sound: ""
     }

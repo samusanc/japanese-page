@@ -5,9 +5,9 @@
   /* Palette — warm midnight crystal */
   --bg:          #161821;
   --bg2:         #28313f;
-  --surface:     rgba(40, 49, 63, 0.45); /* translucent slate blue */
-  --surface-md:  rgba(40, 49, 63, 0.65);
-  --surface-hi:  rgba(40, 49, 63, 0.82);
+  --surface:     rgba(40, 49, 63, 0.28); /* translucent slate blue */
+  --surface-md:  rgba(40, 49, 63, 0.48);
+  --surface-hi:  rgba(40, 49, 63, 0.68);
   --glass-border:rgba(255, 255, 255, 0.18);
   --glass-border-hi:rgba(255, 255, 255, 0.32);
 
@@ -789,17 +789,17 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 }
 
 .otome-character-area {
-  position: absolute; top: 10%; left: 0; right: 0; bottom: 36%;
+  position: absolute; top: 5%; left: 0; right: 0; bottom: 25%;
   display: flex; justify-content: center; align-items: flex-end;
   z-index: 9; pointer-events: none;
 }
 .otome-character-card {
-  width: 280px; height: 380px;
-  background: transparent;
-  backdrop-filter: none; -webkit-backdrop-filter: none;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
+  width: 280px; height: 440px;
+  background: transparent !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 12px;
   position: relative;
   animation: otomeBreathe 4s ease-in-out infinite;
@@ -812,6 +812,7 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   width: auto;
   height: 100%;
   object-fit: contain;
+  border-radius: 0;
   z-index: 1;
 }
 .otome-char-bubble {
@@ -854,11 +855,11 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   gap: 12px;
 }
 #game .qcard {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(13, 10, 26, 0.5) 100%) !important;
-  backdrop-filter: blur(32px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(190%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow: var(--shadow), inset 0 2px 2px rgba(255, 255, 255, 0.28), inset 0 -2px 2px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 255, 255, 0.05) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(40, 49, 63, 0.22) 40%, rgba(22, 24, 33, 0.4) 100%) !important;
+  backdrop-filter: blur(35px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(35px) saturate(220%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32) !important;
+  box-shadow: var(--shadow), inset 0 2px 2px rgba(255, 255, 255, 0.35), inset 0 -2px 2px rgba(0, 0, 0, 0.3), 0 0 30px rgba(207, 165, 122, 0.05) !important;
   padding: 36px 20px 20px; text-align: left; margin-bottom: 0;
 }
 .otome-speaker-plate {
