@@ -42,7 +42,7 @@ export function startPractice() {
     return;
   }
   const len = +($("#chipsLen .chip.on")?.dataset.len || 15);
-  runGame({ mode: "practice", qs: makePool(sel, len, null), timed: false });
+  runGame({ mode: "practice", qs: makePool(sel, len, null), timed: true });
 }
 
 export function runGame(cfg) {
