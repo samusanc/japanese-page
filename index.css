@@ -2,41 +2,43 @@
    KATSUYO — Fantasy Aristocratic Crystal UI
    ==================================================== */
 :root {
-  /* Palette — deep midnight jewel */
-  --bg:          #0d0a1a;
-  --bg2:         #12102a;
-  --surface:     rgba(255,255,255,0.045);
-  --surface-md:  rgba(255,255,255,0.08);
-  --surface-hi:  rgba(255,255,255,0.13);
-  --glass-border:rgba(255,255,255,0.15);
-  --glass-border-hi:rgba(255,255,255,0.28);
+  /* Palette — warm midnight crystal */
+  --bg:          #161821;
+  --bg2:         #28313f;
+  --surface:     rgba(40, 49, 63, 0.45); /* translucent slate blue */
+  --surface-md:  rgba(40, 49, 63, 0.65);
+  --surface-hi:  rgba(40, 49, 63, 0.82);
+  --glass-border:rgba(255, 255, 255, 0.18);
+  --glass-border-hi:rgba(255, 255, 255, 0.32);
 
-  /* Jewel accents */
-  --sapphire:    #4f82d4;
-  --sapphire-glow:rgba(79,130,212,0.4);
-  --amethyst:    #a855f7;
-  --amethyst-glow:rgba(168,85,247,0.35);
-  --rose:        #e05b7c;
-  --rose-glow:   rgba(224,91,124,0.35);
-  --gold:        #d4a853;
-  --gold-glow:   rgba(212,168,83,0.45);
-  --emerald:     #34c97a;
-  --emerald-glow:rgba(52,201,122,0.35);
+  /* Warm accents */
+  --gold:        #cfa57a;
+  --gold-glow:   rgba(207, 165, 122, 0.4);
+  --rose:        #9a5b4f;
+  --rose-glow:   rgba(154, 91, 79, 0.4);
+  --crimson:     #5c3b3b;
+  --crimson-glow:rgba(92, 59, 59, 0.4);
+  --sapphire:    #7a9ccf;
+  --sapphire-glow:rgba(122, 156, 207, 0.4);
+  --amethyst:    #8c678a;
+  --amethyst-glow:rgba(140, 103, 138, 0.35);
+  --emerald:     #8caf7e;
+  --emerald-glow:rgba(140, 175, 126, 0.35);
 
-  /* Text */
-  --ink:    #f0ecff;
-  --ink2:   #9b96c0;
-  --ink3:   #6b6690;
+  /* Warm text colors */
+  --ink:    #f7f4f0;
+  --ink2:   #c3bcae;
+  --ink3:   #8a7f72;
 
   /* Geometry */
   --r:    16px;
   --r-lg: 24px;
 
-  /* Shadows */
-  --shadow: 0 8px 32px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
-  --glow-s: 0 0 16px var(--sapphire-glow), 0 0 40px rgba(79,130,212,0.15);
-  --glow-a: 0 0 16px var(--amethyst-glow), 0 0 40px rgba(168,85,247,0.1);
-  --glow-g: 0 0 16px var(--gold-glow), 0 0 40px rgba(212,168,83,0.1);
+  /* Shadows & Glows */
+  --shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.3);
+  --glow-s: 0 0 16px var(--sapphire-glow), 0 0 40px rgba(122,156,207,0.15);
+  --glow-a: 0 0 16px var(--amethyst-glow), 0 0 40px rgba(140,103,138,0.1);
+  --glow-g: 0 0 16px var(--gold-glow), 0 0 40px rgba(207,165,122,0.15);
 
   /* Typography */
   --disp: 'Cinzel', 'Cormorant Garamond', 'Noto Sans JP', serif;
@@ -759,30 +761,30 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 }
 .bg-classroom {
   background:
-    linear-gradient(to bottom, rgba(160,110,40,0.2) 0%, rgba(13,10,26,0.95) 80%),
-    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(212,168,83,0.15) 0%, transparent 70%);
+    linear-gradient(to bottom, rgba(92,59,59,0.2) 0%, rgba(22,24,33,0.96) 80%),
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(207,165,122,0.15) 0%, transparent 70%);
 }
 .bg-garden {
   background:
-    linear-gradient(to bottom, rgba(100,60,160,0.2) 0%, rgba(13,10,26,0.95) 80%),
-    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(168,85,247,0.18) 0%, transparent 70%);
+    linear-gradient(to bottom, rgba(140,103,138,0.2) 0%, rgba(22,24,33,0.96) 80%),
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(140,103,138,0.15) 0%, transparent 70%);
 }
 .bg-dojo {
   background:
-    linear-gradient(to bottom, rgba(40,70,180,0.2) 0%, rgba(13,10,26,0.95) 80%),
-    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(79,130,212,0.2) 0%, transparent 70%);
+    linear-gradient(to bottom, rgba(122,156,207,0.2) 0%, rgba(22,24,33,0.96) 80%),
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(122,156,207,0.18) 0%, transparent 70%);
 }
 .bg-shrine {
   background:
-    linear-gradient(to bottom, rgba(30,120,90,0.2) 0%, rgba(13,10,26,0.95) 80%),
-    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(52,211,153,0.15) 0%, transparent 70%);
+    linear-gradient(to bottom, rgba(140,175,126,0.15) 0%, rgba(22,24,33,0.96) 80%),
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(140,175,126,0.15) 0%, transparent 70%);
 }
 
 /* darken BG for readability */
 #game.overlay::after {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(13,10,26,0.5) 0%, rgba(13,10,26,0.2) 40%, rgba(13,10,26,0.7) 100%);
+  background: linear-gradient(to bottom, rgba(22,24,33,0.5) 0%, rgba(22,24,33,0.2) 40%, rgba(22,24,33,0.75) 100%);
   pointer-events: none; z-index: 2;
 }
 
@@ -793,11 +795,11 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 }
 .otome-character-card {
   width: 180px; height: 280px;
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(40, 49, 63, 0.4);
+  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 24px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 0 30px rgba(79,130,212,0.1);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.25), 0 0 35px rgba(207,165,122,0.06);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
   position: relative;
   animation: otomeBreathe 4s ease-in-out infinite;
@@ -810,8 +812,8 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 }
 .otome-char-bubble {
   position: absolute; top: -50px; right: -60px; width: 155px;
-  background: rgba(13,10,26,0.85);
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  background: rgba(22,24,33,0.88);
+  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1px solid var(--glass-border-hi);
   border-radius: 16px; padding: 8px 12px;
   font-family: var(--jp); font-size: 11px; font-weight: 700; line-height: 1.4;
@@ -823,7 +825,7 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 .otome-char-bubble::after {
   content: ''; position: absolute; bottom: -7px; left: 28px;
   border-width: 7px 7px 0; border-style: solid;
-  border-color: rgba(79,130,212,0.4) transparent; display: block; width: 0;
+  border-color: rgba(207,165,122,0.4) transparent; display: block; width: 0;
 }
 .otome-char-bubble.show { opacity: 1; transform: scale(1) translate(0,0); }
 .otome-char-silhouette { font-size: 80px; filter: drop-shadow(0 8px 24px rgba(79,130,212,0.3)); }
@@ -838,7 +840,7 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 
 #game .g-top {
   position: relative; z-index: 10;
-  background: linear-gradient(to bottom, rgba(13,10,26,0.8), transparent);
+  background: linear-gradient(to bottom, rgba(22,24,33,0.8), transparent);
 }
 #game .g-combo { position: relative; z-index: 10; }
 #game .g-body {
@@ -848,11 +850,11 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   gap: 12px;
 }
 #game .qcard {
-  background: rgba(13,10,26,0.6) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid var(--glass-border-hi) !important;
-  box-shadow: var(--shadow), 0 0 40px rgba(79,130,212,0.08) !important;
+  background: rgba(40, 49, 63, 0.62) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.22), 0 0 40px rgba(207,165,122,0.06) !important;
   padding: 36px 20px 20px; text-align: left; margin-bottom: 0;
 }
 .otome-speaker-plate {
@@ -903,7 +905,7 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 
 #game .choices { grid-template-columns: 1fr 1fr; gap: 8px; }
 #game .choice {
-  background: rgba(13,10,26,0.55) !important;
+  background: rgba(40, 49, 63, 0.55) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
   border: 1px solid var(--glass-border) !important;
@@ -911,10 +913,10 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   font-size: 14px; padding: 10px 12px; border-radius: 14px; font-weight: 700;
   transition: all 0.2s ease;
 }
-#game .choice:hover { border-color: var(--glass-border-hi) !important; background: rgba(79,130,212,0.1) !important; }
-#game .choice.right { background: rgba(52,201,122,0.15) !important; border-color: rgba(52,201,122,0.5) !important; color: var(--emerald) !important; box-shadow: 0 0 20px var(--emerald-glow) !important; }
-#game .choice.wrong { background: rgba(224,91,124,0.15) !important; border-color: rgba(224,91,124,0.5) !important; color: var(--rose) !important; box-shadow: 0 0 20px var(--rose-glow) !important; }
-#game .explain { background: rgba(13,10,26,0.75); backdrop-filter: blur(12px); border: 1px dashed rgba(255,255,255,0.1); color: var(--ink2); margin-top: 14px; border-radius: 14px; padding: 12px; }
+#game .choice:hover { border-color: var(--glass-border-hi) !important; background: rgba(207, 165, 122, 0.15) !important; }
+#game .choice.right { background: rgba(140, 175, 126, 0.18) !important; border-color: rgba(140, 175, 126, 0.5) !important; color: var(--emerald) !important; box-shadow: 0 0 20px var(--emerald-glow) !important; }
+#game .choice.wrong { background: rgba(92, 59, 59, 0.25) !important; border-color: rgba(92, 59, 59, 0.6) !important; color: #ffb5b5 !important; box-shadow: 0 0 20px var(--crimson-glow) !important; }
+#game .explain { background: rgba(22, 24, 33, 0.85); backdrop-filter: blur(12px); border: 1px dashed rgba(255, 255, 255, 0.1); color: var(--ink2); margin-top: 14px; border-radius: 14px; padding: 12px; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
