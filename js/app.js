@@ -245,6 +245,19 @@ export function openOnb(edit) {
   initKanjiGameUI();
   initKanjiStudioUI();
 
+  $$("[data-char]").forEach(slice => {
+    slice.addEventListener("click", (e) => {
+      e.stopPropagation();
+      slice.style.transition = "flex .45s cubic-bezier(0.4,0,0.2,1), border-color .1s, box-shadow .1s, filter .15s";
+      slice.style.filter = "brightness(1.5)";
+      const charId = slice.dataset.char;
+      setTimeout(() => {
+        slice.style.filter = "";
+        startDaily(charId);
+      }, 220);
+    });
+  });
+
   $$(".tab").forEach(t => t.addEventListener("click", () => showScreen(t.dataset.s)));
   const gg = $("#goGroup");
   if (gg) gg.addEventListener("click", () => showScreen("group"));

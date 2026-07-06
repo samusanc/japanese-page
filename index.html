@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#FCFBF7">
+<meta name="theme-color" content="#0d0a1a">
 <title>活用! Katsuyo — Daily Japanese Battles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.3/dist/hanzi-writer.min.js"></script>
 <script src="./kanji-data.js"></script>
@@ -20,42 +20,107 @@
   <main>
     <!-- ============ HOME ============ -->
     <section id="s-home" class="screen on">
-      <div class="stat-strip">
-        <div class="stat"><div class="v" id="stTotal">0</div><div class="k">Season pts</div></div>
-        <div class="stat"><div class="v" id="stAcc">–</div><div class="k">Accuracy</div></div>
-        <div class="stat"><div class="v" id="stRank">–</div><div class="k">Squad rank</div></div>
-      </div>
+      <!-- Hidden functional elements required by app logic -->
+      <span id="todayDate" style="display:none"></span>
+      <span id="attemptBadge" style="display:none">2 tries left</span>
+      <span id="kAttemptBadge" style="display:none">2 tries left</span>
+      <div id="dailyForms" style="display:none"></div>
+      <div id="dailyBestLine" style="display:none"></div>
+      <div id="kDailyBestLine" style="display:none"></div>
+      <div id="kanjiPreview" style="display:none"></div>
+      <div id="stTotal" style="display:none">0</div>
+      <div id="stAcc" style="display:none">–</div>
+      <div id="stRank" style="display:none">–</div>
+      <div id="miniBoard" style="display:none"></div>
+      <button id="goGroup" style="display:none"></button>
+      <button id="btnDaily" style="display:none">Play the sprint ▶</button>
+      <button id="btnKanjiDaily" style="display:none">Draw today's kanji ▶</button>
 
-      <div class="card daily-card">
-        <div class="date-line">
-          <span class="eyebrow" style="margin:0" id="todayDate"></span>
-          <span class="badge shu" id="attemptBadge">2 tries left</span>
+      <!-- ============ CHARACTER SELECT SLICES ============ -->
+      <div class="char-select-screen" id="charSelectScreen">
+        <!-- Decorative title crest -->
+        <div class="char-select-crest">
+          <div class="crest-line"></div>
+          <div class="crest-title">
+            <span class="crest-jp">活用<em>!</em></span>
+            <span class="crest-en">Choose your Companion</span>
+          </div>
+          <div class="crest-line"></div>
         </div>
-        <h1 class="big">⚡ Grammar Sprint</h1>
-        <p class="sub">60 seconds. Conjugate as many as you can. Same words for your whole squad today.</p>
-        <div class="daily-forms" id="dailyForms"></div>
-        <div id="dailyBestLine" class="sub" style="margin-bottom:12px;"></div>
-        <button class="btn shu" id="btnDaily">Play the sprint ▶</button>
-      </div>
 
-      <div class="card daily-card kanjic">
-        <div class="date-line">
-          <span class="eyebrow" style="margin:0">Daily challenge #2</span>
-          <span class="badge ink" id="kAttemptBadge">2 tries left</span>
-        </div>
-        <h1 class="big">✍️ Kanji Writing</h1>
-        <p class="sub">Draw today's five kanji from memory — stroke by stroke, correct order. Fewer mistakes, more points.</p>
-        <div class="kanji-preview" id="kanjiPreview"></div>
-        <div id="kDailyBestLine" class="sub" style="margin-bottom:12px;"></div>
-        <button class="btn ink" id="btnKanjiDaily">Draw today's kanji ▶</button>
-      </div>
+        <div class="char-slices">
+          <!-- Slice 1 — Hana -->
+          <button class="char-slice" id="sliceHana" data-char="hana" aria-label="Play with Hana">
+            <div class="slice-bg slice-bg-1"></div>
+            <div class="slice-particles">
+              <span class="particle p1">✦</span>
+              <span class="particle p2">✧</span>
+              <span class="particle p3">❋</span>
+              <span class="particle p4">✦</span>
+            </div>
+            <div class="slice-content">
+              <div class="slice-sigil">花</div>
+              <div class="slice-figure">🌸</div>
+              <div class="slice-info">
+                <div class="slice-name">Hana</div>
+                <div class="slice-role">The Scholar</div>
+                <div class="slice-tagline">Gentle · Wise</div>
+              </div>
+              <div class="slice-cta">Begin ›</div>
+            </div>
+            <div class="slice-shimmer"></div>
+          </button>
 
-      <div class="card">
-        <div class="date-line" style="margin-bottom:6px;">
-          <span class="eyebrow" style="margin:0">Today in your squad</span>
-          <button class="chip-sm" id="goGroup" style="cursor:pointer">See all →</button>
+          <!-- Slice 2 — Ren (centre, slightly wider) -->
+          <button class="char-slice char-slice--center" id="sliceRen" data-char="ren" aria-label="Play with Ren">
+            <div class="slice-bg slice-bg-2"></div>
+            <div class="slice-particles">
+              <span class="particle p1">✦</span>
+              <span class="particle p2">❋</span>
+              <span class="particle p3">✧</span>
+              <span class="particle p4">✦</span>
+              <span class="particle p5">✧</span>
+            </div>
+            <div class="slice-content">
+              <div class="slice-sigil">恋</div>
+              <div class="slice-figure">🗡️</div>
+              <div class="slice-info">
+                <div class="slice-name">Ren</div>
+                <div class="slice-role">The Guardian</div>
+                <div class="slice-tagline">Bold · Loyal</div>
+              </div>
+              <div class="slice-cta">Begin ›</div>
+            </div>
+            <div class="slice-shimmer"></div>
+          </button>
+
+          <!-- Slice 3 — Sora -->
+          <button class="char-slice" id="sliceSora" data-char="sora" aria-label="Play with Sora">
+            <div class="slice-bg slice-bg-3"></div>
+            <div class="slice-particles">
+              <span class="particle p1">✧</span>
+              <span class="particle p2">✦</span>
+              <span class="particle p3">✦</span>
+              <span class="particle p4">❋</span>
+            </div>
+            <div class="slice-content">
+              <div class="slice-sigil">空</div>
+              <div class="slice-figure">🌙</div>
+              <div class="slice-info">
+                <div class="slice-name">Sora</div>
+                <div class="slice-role">The Mystic</div>
+                <div class="slice-tagline">Elusive · Deep</div>
+              </div>
+              <div class="slice-cta">Begin ›</div>
+            </div>
+            <div class="slice-shimmer"></div>
+          </button>
         </div>
-        <div id="miniBoard"><div class="empty">Join a squad to battle your friends.</div></div>
+
+        <!-- Bottom ornament -->
+        <div class="char-select-bottom">
+          <div class="bottom-rune">✦ &nbsp; 毎日の挑戦 &nbsp; ✦</div>
+        </div>
       </div>
     </section>
 
@@ -211,10 +276,39 @@
   <div class="otome-character-area">
     <div class="otome-character-card">
       <div class="otome-char-bubble" id="charBubble"></div>
-      <div class="otome-char-silhouette">👦</div>
-      <div class="otome-char-name">Katsuyo-kun</div>
+      <div class="otome-char-silhouette" id="gameCharEmoji">👦</div>
+      <div class="otome-char-name" id="gameCharName">Katsuyo-kun</div>
     </div>
   </div>
+
+
+  <!-- ============ SENSEI INTRO SCREEN (otome layout) ============ -->
+  <div class="sensei-panel" id="senseiPanel">
+
+    <!-- Character area — same style as otome-character-area -->
+    <div class="sensei-char-area">
+      <div class="sensei-char-card">
+        <div class="sensei-aura"></div>
+        <div class="sensei-emoji">👩‍🏫</div>
+        <div class="sensei-name-plate">先生 · Sensei</div>
+      </div>
+    </div>
+
+    <!-- VN dialogue box — sits at bottom like the game qcard -->
+    <div class="sensei-vn-box">
+      <!-- speaker plate -->
+      <div class="sensei-speaker-plate">先生</div>
+      <!-- dialogue text — filled by JS -->
+      <div class="sensei-vn-text" id="senseiVnText"></div>
+      <!-- tap-indicator (replaces the button) -->
+      <div class="sensei-tap-hint" id="senseiTapHint">
+        <span class="sensei-tap-jp">タップして続ける</span>
+        <span class="sensei-tap-blink">▼</span>
+      </div>
+    </div>
+
+  </div>
+
 
   <div class="g-top">
     <button class="g-quit" id="btnQuit">✕</button>

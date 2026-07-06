@@ -9,7 +9,7 @@ import { showScreen, bumpStreak } from './app.js';
 const gameEl = () => $("#game");
 let timerIv = null;
 
-export function startDaily() {
+export function startDaily(charId = 'ren') {
   if (state.dayRec.sU >= 2 && !state.debugMode) {
     toast("No tries left today");
     return;
@@ -34,7 +34,7 @@ export function startDaily() {
     return shuf(DAILY_FORM_POOL, rndForms).slice(0, 5);
   };
 
-  runGame({ mode: "daily", qs: makePool(dailySeedForms(), 80, rnd), timed: true });
+  runGame({ mode: "daily", qs: makePool(dailySeedForms(), 80, rnd), timed: true }, charId);
 }
 
 export function startPractice() {
@@ -44,10 +44,10 @@ export function startPractice() {
     return;
   }
   const len = +($("#chipsLen .chip.on")?.dataset.len || 15);
-  runGame({ mode: "practice", qs: makePool(sel, len, null), timed: true });
+  runGame({ mode: "practice", qs: makePool(sel, len, null), timed: true }, 'ren');
 }
 
-export function runGame(cfg) {
+export function runGame(cfg, charId = 'ren') {
   state.G = { ...cfg, i: 0, score: 0, right: 0, wrong: 0, combo: 0, bestCombo: 0, misses: [], over: false, lock: true, triggeredHalf: false };
   $("#gScore").textContent = "0";
   $("#gCombo").textContent = "";
@@ -62,7 +62,81 @@ export function runGame(cfg) {
     bubble.classList.remove("show");
     bubble.textContent = "";
   }
-  
+
+  // Set the companion details
+  const CHARACTERS = {
+    hana: { name: "Hana", emoji: "🌸" },
+    ren: { name: "Ren", emoji: "🗡️" },
+    sora: { name: "Sora", emoji: "🌙" }
+  };
+  const charData = CHARACTERS[charId] || CHARACTERS.ren;
+  const charEmojiEl = $("#gameCharEmoji");
+  const charNameEl = $("#gameCharName");
+  if (charEmojiEl) charEmojiEl.textContent = charData.emoji;
+  if (charNameEl) charNameEl.textContent = charData.name;
+
+  // Prepare Sensei's dialogues
+  const dialogueLines = [
+    { jp: `あら、今日の練習パートナーは${charData.name}さんですね。`, en: `Ah, it seems ${charData.name} will be your partner for today's practice.` },
+    { jp: "文法の活用をマスターすることは、言葉の絆を深める第一歩ですよ。", en: "Mastering grammar conjugations is the first step to deepening your linguistic bond." },
+    { jp: "焦らず、正確に。彼らの期待に応えて見せましょう！", en: "Stay calm, be precise. Let's show them what you're capable of!" },
+    { jp: "準備はよろしいですか？それでは…始めますよ！", en: "Are you ready? Now... let us begin!" }
+  ];
+
+  // Show Sensei panel
+  const panel = $("#senseiPanel");
+  if (panel) {
+    panel.classList.remove("hidden");
+    
+    let lineIdx = 0;
+    const vnTextEl = $("#senseiVnText");
+    const tapHintEl = $("#senseiTapHint");
+
+    const updateLine = () => {
+      const line = dialogueLines[lineIdx];
+      if (vnTextEl) {
+        vnTextEl.innerHTML = `${line.jp}<br><span class="svn-en">${line.en}</span>`;
+      }
+      if (tapHintEl) {
+        const hintJp = tapHintEl.querySelector(".sensei-tap-jp");
+        if (lineIdx === dialogueLines.length - 1) {
+          tapHintEl.classList.add("final");
+          if (hintJp) hintJp.textContent = "タップして開始";
+        } else {
+          tapHintEl.classList.remove("final");
+          if (hintJp) hintJp.textContent = "タップして続ける";
+        }
+      }
+    };
+
+    updateLine();
+
+    // Store show time to filter out accidental immediate clicks/bubbles from the slice screen
+    let showTime = Date.now();
+
+    const handleTap = (e) => {
+      e.stopPropagation();
+      const now = Date.now();
+      if (now - showTime < 300) return; // Prevent bubbling / immediate taps from slice screen
+      showTime = now; // update to prevent rapid tapping
+
+      if (lineIdx < dialogueLines.length - 1) {
+        lineIdx++;
+        updateLine();
+      } else {
+        panel.classList.add("hidden");
+        panel.removeEventListener("click", handleTap);
+        _beginCountdown(cfg);
+      }
+    };
+
+    panel.addEventListener("click", handleTap);
+  } else {
+    _beginCountdown(cfg);
+  }
+}
+
+function _beginCountdown(cfg) {
   const cEl = $("#count");
   const nEl = $("#countN");
   cEl.classList.add("on");
@@ -85,6 +159,7 @@ export function runGame(cfg) {
     }
   }, 800);
 }
+
 
 export function startTimer() {
   const t0 = Date.now();
