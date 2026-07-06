@@ -248,15 +248,32 @@ export function openOnb(edit) {
   $$("[data-char]").forEach(slice => {
     slice.addEventListener("click", (e) => {
       e.stopPropagation();
-      slice.style.transition = "flex .45s cubic-bezier(0.4,0,0.2,1), border-color .1s, box-shadow .1s, filter .15s";
-      slice.style.filter = "brightness(1.5)";
-      const charId = slice.dataset.char;
-      setTimeout(() => {
-        slice.style.filter = "";
-        startDaily(charId);
-      }, 220);
+      const clickedCta = e.target.closest(".slice-cta");
+      
+      // If the slice is not already expanded, expand it and collapse others
+      if (!slice.classList.contains("expanded")) {
+        $$("[data-char]").forEach(s => s.classList.remove("expanded"));
+        slice.classList.add("expanded");
+      } else {
+        // Already expanded. Click anywhere inside the slice or on the CTA button will start the game.
+        slice.style.transition = "flex .45s cubic-bezier(0.4,0,0.2,1), border-color .1s, box-shadow .1s, filter .15s";
+        slice.style.filter = "brightness(1.5)";
+        const charId = slice.dataset.char;
+        setTimeout(() => {
+          slice.style.filter = "";
+          slice.classList.remove("expanded");
+          startDaily(charId);
+        }, 220);
+      }
     });
   });
+
+  const screenHome = $("#s-home");
+  if (screenHome) {
+    screenHome.addEventListener("click", () => {
+      $$("[data-char]").forEach(s => s.classList.remove("expanded"));
+    });
+  }
 
   $$(".tab").forEach(t => t.addEventListener("click", () => showScreen(t.dataset.s)));
   const gg = $("#goGroup");

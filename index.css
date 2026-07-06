@@ -794,23 +794,24 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   z-index: 9; pointer-events: none;
 }
 .otome-character-card {
-  width: 180px; height: 280px;
-  background: rgba(40, 49, 63, 0.4);
-  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 24px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.25), 0 0 35px rgba(207,165,122,0.06);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  width: 280px; height: 380px;
+  background: transparent;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 12px;
   position: relative;
   animation: otomeBreathe 4s ease-in-out infinite;
 }
 .otome-char-portrait {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
   height: 100%;
-  object-fit: cover;
-  border-radius: 24px;
+  object-fit: contain;
   z-index: 1;
 }
 .otome-char-bubble {
@@ -1286,6 +1287,65 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   color: var(--ink3);
   text-transform: uppercase;
   opacity: 0.55;
+}
+
+/* Click-to-expand support on select menu */
+.char-slice.expanded {
+  flex: 1.8 !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6), 0 0 20px var(--sapphire-glow) !important;
+}
+.char-slice--center.expanded {
+  border-color: rgba(212, 168, 83, 0.5) !important;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6), 0 0 24px var(--gold-glow) !important;
+}
+.char-slices:has(.char-slice.expanded) .char-slice:not(.expanded) {
+  flex: 0.7 !important;
+}
+.char-slice.expanded .slice-bg {
+  transform: scale(1.06);
+}
+.char-slice.expanded .slice-bg-1 {
+  background:
+    linear-gradient(to bottom, rgba(13,10,26,0.02) 0%, rgba(13,10,26,0.85) 85%),
+    url('./sprites/anastasia.png') no-repeat center bottom / cover,
+    radial-gradient(ellipse 80% 60% at 50% 25%, rgba(168,85,247,0.4) 0%, transparent 70%) !important;
+}
+.char-slice.expanded .slice-bg-2 {
+  background:
+    linear-gradient(to bottom, rgba(13,10,26,0.02) 0%, rgba(13,10,26,0.85) 85%),
+    url('./sprites/conrad.png') no-repeat center bottom / cover,
+    radial-gradient(ellipse 80% 60% at 50% 25%, rgba(79,130,212,0.45) 0%, transparent 70%) !important;
+}
+.char-slice.expanded .slice-bg-3 {
+  background:
+    linear-gradient(to bottom, rgba(13,10,26,0.02) 0%, rgba(13,10,26,0.85) 85%),
+    url('./sprites/anastasia.png') no-repeat center bottom / cover,
+    radial-gradient(ellipse 80% 60% at 50% 25%, rgba(52,201,122,0.3) 0%, transparent 70%) !important;
+  filter: hue-rotate(240deg) brightness(1.05) saturate(1.2) !important;
+}
+.char-slice.expanded .slice-tagline {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+.char-slice.expanded .slice-cta {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  background: rgba(255,255,255,0.12) !important;
+  color: var(--ink) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+}
+.char-slice--center.expanded .slice-cta {
+  background: rgba(212,168,83,0.15) !important;
+  border-color: rgba(212,168,83,0.5) !important;
+  color: var(--gold) !important;
+  box-shadow: 0 0 12px var(--gold-glow) !important;
+}
+.char-slice--center.expanded .slice-name {
+  background: linear-gradient(135deg, var(--gold), #f5e070) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
 }
 
 /* Entry animation for slices */
