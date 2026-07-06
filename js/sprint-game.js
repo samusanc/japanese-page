@@ -114,6 +114,26 @@ export function renderQ() {
   $("#qSpk").innerHTML = state.G.mode === "practice" ? spkBtn(q.item.r) : "";
   $("#explain").style.display = "none";
   $("#btnNext").style.display = "none";
+
+  // Dialogue construction for Otome theme
+  const mean = state.G.mode === "daily" ? q.item.m.split("⚠")[0].trim() : q.item.m;
+  const wordDisplay = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span> (${q.item.r})`;
+  const typeDisplay = state.G.mode === "practice" ? ` [${TYPE_LABEL[q.item.t]}]` : "";
+  
+  const dialoguePrompts = [
+    `Hey, can you help me conjugate ${wordDisplay} ("${mean}") into the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplay}`,
+    `I'm stuck on this one! What is ${wordDisplay} ("${mean}") in the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplay}`,
+    `Do you know the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en}) form of ${wordDisplay} ("${mean}")?${typeDisplay}`,
+    `Let's see if we can conjugate ${wordDisplay} ("${mean}") to the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})!${typeDisplay}`
+  ];
+
+  let hash = 0;
+  const seedString = q.item.k + q.fid;
+  for (let idx = 0; idx < seedString.length; idx++) {
+    hash = (hash * 31 + seedString.charCodeAt(idx)) | 0;
+  }
+  const promptIdx = Math.abs(hash) % dialoguePrompts.length;
+  $("#qDialogue").innerHTML = dialoguePrompts[promptIdx];
   
   const ch = $("#choices");
   ch.innerHTML = "";

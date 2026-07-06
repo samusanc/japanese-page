@@ -213,6 +213,14 @@
 
 <!-- ============ SPRINT GAME OVERLAY ============ -->
 <div id="game" class="overlay">
+  <!-- Background character placeholder -->
+  <div class="otome-character-area">
+    <div class="otome-character-card">
+      <div class="otome-char-silhouette">👦</div>
+      <div class="otome-char-name">Katsuyo-kun</div>
+    </div>
+  </div>
+
   <div class="g-top">
     <button class="g-quit" id="btnQuit">✕</button>
     <div class="timerwrap" id="timerwrap"><div id="timerbar"></div></div>
@@ -224,11 +232,20 @@
       <div id="count"><div class="n" id="countN">3</div></div>
       <div class="stamp" id="stamp">正解</div>
       <div class="floatpts" id="floatpts">+100</div>
-      <div><span class="q-form" id="qForm">て形</span><div class="q-form-en" id="qFormEn">te-form</div></div>
-      <div class="q-word" id="qWord">飲む</div>
-      <div class="q-kana" id="qKana">のむ</div>
-      <div class="q-mean" id="qMean">to drink</div>
-      <div class="q-type"><span class="badge" id="qType">godan</span> <span id="qSpk"></span></div>
+      
+      <!-- New Otome Speaker and Dialogue text -->
+      <div class="otome-speaker-plate">Katsuyo-kun</div>
+      <div id="qDialogue" class="otome-dialogue-text"></div>
+
+      <!-- Hidden standard elements for compatibility -->
+      <div class="otome-compat-hidden">
+        <div><span class="q-form" id="qForm">て形</span><div class="q-form-en" id="qFormEn">te-form</div></div>
+        <div class="q-word" id="qWord">飲む</div>
+        <div class="q-kana" id="qKana">のむ</div>
+        <div class="q-mean" id="qMean">to drink</div>
+        <div class="q-type"><span class="badge" id="qType">godan</span> <span id="qSpk"></span></div>
+      </div>
+
       <div class="explain" id="explain"></div>
     </div>
     <div class="choices" id="choices"></div>
