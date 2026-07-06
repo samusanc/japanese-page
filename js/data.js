@@ -23,7 +23,13 @@ export const VERBS=[
   {k:"着る",r:"きる",m:"to wear",t:"i"},{k:"降りる",r:"おりる",m:"to get off",t:"i"},{k:"浴びる",r:"あびる",m:"to shower",t:"i"},
   {k:"する",r:"する",m:"to do",t:"s"},{k:"勉強する",r:"べんきょうする",m:"to study",t:"s"},
   {k:"電話する",r:"でんわする",m:"to phone",t:"s"},{k:"掃除する",r:"そうじする",m:"to clean",t:"s"},
-  {k:"練習する",r:"れんしゅうする",m:"to practice",t:"s"},{k:"来る",r:"くる",m:"to come",t:"k"}
+  {k:"練習する",r:"れんしゅうする",m:"to practice",t:"s"},{k:"来る",r:"くる",m:"to come",t:"k"},
+  {k:"踊る",r:"おどる",m:"to dance",t:"g"},{k:"決める",r:"きめる",m:"to decide",t:"i"},
+  {k:"守る",r:"まもる",m:"to protect",t:"g"},{k:"抱きしめる",r:"だきしめる",m:"to hug",t:"i"},
+  {k:"妬む",r:"ねたむ",m:"to envy",t:"g"},{k:"従う",r:"したがう",m:"to obey",t:"g"},
+  {k:"結ぶ",r:"むすぶ",m:"to tie",t:"g"},{k:"終わる",r:"おわる",m:"to end",t:"g"},
+  {k:"壊す",r:"こわす",m:"to break",t:"g"},{k:"勝つ",r:"かつ",m:"to win",t:"g"},
+  {k:"掴む",r:"つかむ",m:"to grab",t:"g"},{k:"縛る",r:"しばる",m:"to bind",t:"g"}
 ];
 export const ADJS=[
   {k:"高い",r:"たかい",m:"tall / expensive",t:"ia"},{k:"安い",r:"やすい",m:"cheap",t:"ia"},
@@ -39,7 +45,9 @@ export const ADJS=[
   {k:"有名",r:"ゆうめい",m:"famous",t:"na"},{k:"便利",r:"べんり",m:"convenient",t:"na"},
   {k:"大変",r:"たいへん",m:"tough",t:"na"},{k:"好き",r:"すき",m:"liked",t:"na"},
   {k:"簡単",r:"かんたん",m:"simple",t:"na"},{k:"親切",r:"しんせつ",m:"kind",t:"na"},
-  {k:"暇",r:"ひま",m:"free (time)",t:"na"},{k:"きれい",r:"きれい",m:"pretty / clean ⚠na-adj!",t:"na"}
+  {k:"暇",r:"ひま",m:"free (time)",t:"na"},{k:"きれい",r:"きれい",m:"pretty / clean ⚠na-adj!",t:"na"},
+  {k:"美しい",r:"うつくしい",m:"beautiful",t:"ia"},{k:"幼い",r:"おさない",m:"young",t:"ia"},
+  {k:"優しい",r:"やさしい",m:"kind",t:"ia"},{k:"弱い",r:"よわい",m:"weak",t:"ia"}
 ];
 export const FORMS=[
   {id:"te",  kind:"v", jp:"て形", en:"te-form", lvl:"N5",

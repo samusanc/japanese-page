@@ -102,7 +102,6 @@ function loadClassroomStep() {
   box.innerHTML = "";
   
   if (activeWriter) {
-    activeWriter.destroy();
     activeWriter = null;
   }
   
@@ -292,7 +291,6 @@ function loadBattleKanji() {
   box.innerHTML = "";
 
   if (activeWriter) {
-    activeWriter.destroy();
     activeWriter = null;
   }
 
@@ -367,7 +365,6 @@ async function resolveVnEnding() {
   $("#pnlResults").style.display = "flex";
 
   if (activeWriter) {
-    activeWriter.destroy();
     activeWriter = null;
   }
 
@@ -454,7 +451,6 @@ export function initSprintGameUI() {
   if (bq) {
     bq.addEventListener("click", () => {
       if (activeWriter) {
-        activeWriter.destroy();
         activeWriter = null;
       }
       gameEl().classList.remove("on");
