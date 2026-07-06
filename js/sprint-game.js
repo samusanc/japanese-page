@@ -10,12 +10,14 @@ const gameEl = () => $("#game");
 let timerIv = null;
 
 export function startDaily() {
-  if (state.dayRec.sU >= 2) {
+  if (state.dayRec.sU >= 2 && !state.debugMode) {
     toast("No tries left today");
     return;
   }
-  state.dayRec.sU++;
-  LS.set("day:" + todayStr(), state.dayRec);
+  if (!state.debugMode) {
+    state.dayRec.sU++;
+    LS.set("day:" + todayStr(), state.dayRec);
+  }
   const rnd = mulberry32(hashStr(todayStr() + "::katsuyo"));
   
   const dailySeedForms = () => {
@@ -285,14 +287,19 @@ export async function endGame(quit) {
   
   let postLine = "";
   if (mode === "daily") {
-    state.dayRec.sB = Math.max(state.dayRec.sB, score);
-    LS.set("day:" + todayStr(), state.dayRec);
-    bumpStreak();
-    if (state.beReady) {
-      const ok = await bePostScore("sprint", state.dayRec.sB);
-      postLine = ok ? (state.profile?.g ? `Posted to squad <b>${state.profile.g}</b> ✓` : `Saved online ✓ — <a href="#" id="resJoinLink" style="color:var(--ai);font-weight:700;">join a squad</a> to compete!`) : "Couldn't reach the server — saved on this device.";
+    if (state.debugMode) {
+      postLine = "Debug mode: Score not saved or uploaded.";
+      toast("Debug mode active: Results ignored.");
     } else {
-      postLine = "Saved on this device (solo mode).";
+      state.dayRec.sB = Math.max(state.dayRec.sB, score);
+      LS.set("day:" + todayStr(), state.dayRec);
+      bumpStreak();
+      if (state.beReady) {
+        const ok = await bePostScore("sprint", state.dayRec.sB);
+        postLine = ok ? (state.profile?.g ? `Posted to squad <b>${state.profile.g}</b> ✓` : `Saved online ✓ — <a href="#" id="resJoinLink" style="color:var(--ai);font-weight:700;">join a squad</a> to compete!`) : "Couldn't reach the server — saved on this device.";
+      } else {
+        postLine = "Saved on this device (solo mode).";
+      }
     }
   } else {
     postLine = "Practice run complete.";
@@ -316,8 +323,8 @@ export async function endGame(quit) {
   const again = $("#btnResAgain");
   if (mode === "daily") {
     const left = 2 - state.dayRec.sU;
-    again.disabled = left <= 0;
-    again.textContent = left > 0 ? "Use last try ▶" : "No tries left";
+    again.disabled = !state.debugMode && left <= 0;
+    again.textContent = state.debugMode ? "Play again (debug) ▶" : (left > 0 ? "Use last try ▶" : "No tries left");
     again.onclick = () => {
       showScreen("home");
       startDaily();

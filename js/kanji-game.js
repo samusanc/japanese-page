@@ -15,12 +15,14 @@ export function dailyKanjiSet() {
 }
 
 export function startKanjiDaily() {
-  if (state.dayRec.kU >= 2) {
+  if (state.dayRec.kU >= 2 && !state.debugMode) {
     toast("No tries left today");
     return;
   }
-  state.dayRec.kU++;
-  LS.set("day:" + todayStr(), state.dayRec);
+  if (!state.debugMode) {
+    state.dayRec.kU++;
+    LS.set("day:" + todayStr(), state.dayRec);
+  }
   state.KG = {
     queue: dailyKanjiSet().map(k => ({ k, requeue: false })),
     done: [],
@@ -145,16 +147,20 @@ export async function endKanjiDaily(quit) {
   beep("end");
   
   const { score, results } = state.KG;
-  state.dayRec.kB = Math.max(state.dayRec.kB, score);
-  LS.set("day:" + todayStr(), state.dayRec);
-  bumpStreak();
-  
   let postLine = "";
-  if (state.beReady) {
-    const ok = await bePostScore("kanji", state.dayRec.kB);
-    postLine = ok ? (state.profile?.g ? `Posted to squad <b>${state.profile.g}</b> ✓` : "Saved online ✓") : "Couldn't reach the server — saved on this device.";
+  if (state.debugMode) {
+    postLine = "Debug mode: Score not saved or uploaded.";
+    toast("Debug mode active: Results ignored.");
   } else {
-    postLine = "Saved on this device (solo mode).";
+    state.dayRec.kB = Math.max(state.dayRec.kB, score);
+    LS.set("day:" + todayStr(), state.dayRec);
+    bumpStreak();
+    if (state.beReady) {
+      const ok = await bePostScore("kanji", state.dayRec.kB);
+      postLine = ok ? (state.profile?.g ? `Posted to squad <b>${state.profile.g}</b> ✓` : "Saved online ✓") : "Couldn't reach the server — saved on this device.";
+    } else {
+      postLine = "Saved on this device (solo mode).";
+    }
   }
   
   $("#kgame").classList.remove("on");
@@ -174,8 +180,8 @@ export async function endKanjiDaily(quit) {
     
   const again = $("#btnResAgain");
   const left = 2 - state.dayRec.kU;
-  again.disabled = left <= 0;
-  again.textContent = left > 0 ? "Use last try ▶" : "No tries left";
+  again.disabled = !state.debugMode && left <= 0;
+  again.textContent = state.debugMode ? "Draw again (debug) ▶" : (left > 0 ? "Use last try ▶" : "No tries left");
   again.onclick = () => {
     showScreen("home");
     startKanjiDaily();

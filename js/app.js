@@ -24,10 +24,10 @@ export function renderHome() {
   
   const sLeft = 2 - state.dayRec.sU;
   const b1 = $("#attemptBadge");
-  b1.textContent = sLeft > 0 ? `${sLeft} ${sLeft === 1 ? "try" : "tries"} left` : "Done today";
-  b1.className = "badge " + (sLeft > 0 ? "shu" : "gold");
-  $("#btnDaily").disabled = sLeft <= 0;
-  $("#btnDaily").textContent = sLeft > 0 ? "Play the sprint ▶" : "Come back tomorrow 🌙";
+  b1.textContent = state.debugMode ? "∞ tries (debug)" : (sLeft > 0 ? `${sLeft} ${sLeft === 1 ? "try" : "tries"} left` : "Done today");
+  b1.className = "badge " + (state.debugMode ? "shu" : (sLeft > 0 ? "shu" : "gold"));
+  $("#btnDaily").disabled = !state.debugMode && sLeft <= 0;
+  $("#btnDaily").textContent = (state.debugMode || sLeft > 0) ? "Play the sprint ▶" : "Come back tomorrow 🌙";
   $("#dailyBestLine").innerHTML = state.dayRec.sB > 0 ? `Your best today: <b style="color:var(--ai)">${state.dayRec.sB} pts</b>` : "";
   
   const df = $("#dailyForms");
@@ -59,10 +59,10 @@ export function renderHome() {
 
   const kLeft = 2 - state.dayRec.kU;
   const b2 = $("#kAttemptBadge");
-  b2.textContent = kLeft > 0 ? `${kLeft} ${kLeft === 1 ? "try" : "tries"} left` : "Done today";
-  b2.className = "badge " + (kLeft > 0 ? "ink" : "gold");
-  $("#btnKanjiDaily").disabled = kLeft <= 0;
-  $("#btnKanjiDaily").textContent = kLeft > 0 ? "Draw today's kanji ▶" : "Come back tomorrow 🌙";
+  b2.textContent = state.debugMode ? "∞ tries (debug)" : (kLeft > 0 ? `${kLeft} ${kLeft === 1 ? "try" : "tries"} left` : "Done today");
+  b2.className = "badge " + (state.debugMode ? "ink" : (kLeft > 0 ? "ink" : "gold"));
+  $("#btnKanjiDaily").disabled = !state.debugMode && kLeft <= 0;
+  $("#btnKanjiDaily").textContent = (state.debugMode || kLeft > 0) ? "Draw today's kanji ▶" : "Come back tomorrow 🌙";
   $("#kDailyBestLine").innerHTML = state.dayRec.kB > 0 ? `Your best today: <b style="color:var(--ai)">${state.dayRec.kB} pts</b>` : "";
   
   const kp = $("#kanjiPreview");
@@ -184,6 +184,14 @@ export async function renderGroup() {
   $("#profileCard").style.display = "";
   $("#pName").textContent = state.profile?.n || "You";
   $("#pAva").textContent = state.profile?.e || "🦊";
+  
+  const bd = $("#btnToggleDebug");
+  if (bd) {
+    bd.textContent = state.debugMode ? "ON" : "OFF";
+    bd.style.background = state.debugMode ? "var(--ai)" : "var(--line)";
+    bd.style.borderColor = state.debugMode ? "var(--ai)" : "var(--line)";
+    bd.style.color = state.debugMode ? "#fff" : "var(--ink2)";
+  }
   
   if (!(state.beReady && state.profile?.g)) return;
   $("#myCode").textContent = state.profile.g;
@@ -313,6 +321,17 @@ export function openOnb(edit) {
     $("#onbName").value = state.profile.n;
     $("#onbCode").value = state.profile.g || "";
     openOnb(true);
+  });
+
+  const bd = $("#btnToggleDebug");
+  if (bd) bd.addEventListener("click", () => {
+    state.debugMode = !state.debugMode;
+    bd.textContent = state.debugMode ? "ON" : "OFF";
+    bd.style.background = state.debugMode ? "var(--ai)" : "var(--line)";
+    bd.style.borderColor = state.debugMode ? "var(--ai)" : "var(--line)";
+    bd.style.color = state.debugMode ? "#fff" : "var(--ink2)";
+    renderHome();
+    toast(state.debugMode ? "Debug mode: Infinite Tries active!" : "Debug mode: Disabled");
   });
 
   const og = $("#onbGo");

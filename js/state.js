@@ -7,5 +7,6 @@ export const state = {
   beReady: false,
   beError: "",
   sb: null,
-  uid: null
+  uid: null,
+  debugMode: false
 };
