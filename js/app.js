@@ -131,18 +131,23 @@ export function bumpStreak() {
 }
 
 export async function renderStatsStrip() {
+  const acc = $("#stAcc");
+  const rnk = $("#stRank");
+  const tot = $("#stTotal");
+  if (!acc && !rnk && !tot) return;
   const st = LS.get("stats") || { r: 0, w: 0 };
-  $("#stAcc").textContent = (st.r + st.w) > 0 ? Math.round(100 * st.r / (st.r + st.w)) + "%" : "–";
+  if (acc) acc.textContent = (st.r + st.w) > 0 ? Math.round(100 * st.r / (st.r + st.w)) + "%" : "–";
   const rows = await fetchBoard();
   const seas = rows.slice().sort((a, b) => b.total - a.total);
   const meIdx = seas.findIndex(x => x.pid === (state.uid || state.profile?.pid));
-  $("#stRank").textContent = (state.beReady && state.profile?.g && meIdx >= 0) ? "#" + (meIdx + 1) : "–";
+  if (rnk) rnk.textContent = (state.beReady && state.profile?.g && meIdx >= 0) ? "#" + (meIdx + 1) : "–";
   const mine = rows.find(x => x.pid === (state.uid || state.profile?.pid));
-  $("#stTotal").textContent = mine ? mine.total : 0;
+  if (tot) tot.textContent = mine ? mine.total : 0;
 }
 
 export async function renderMiniBoard() {
   const el = $("#miniBoard");
+  if (!el) return;
   if (!state.beReady || !state.profile?.g) {
     el.innerHTML = state.beReady
       ? '<div class="empty">Join a squad to battle your friends.</div>'
