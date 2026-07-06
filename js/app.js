@@ -3,7 +3,7 @@ import { CONFIG, beInit, beSaveProfile, bePostScore, fetchBoard } from './config
 import { VERBS, ADJS, FORMS, FORM, SENTENCES } from './data.js';
 import { LS, $, $$, escapeHtml, todayStr, yesterdayStr, toast, mulberry32, hashStr, shuffle } from './helpers.js';
 import { initAudioUI, speak, spkBtn } from './audio.js';
-import { initSprintGameUI } from './sprint-game.js';
+import { initSprintGameUI, startVnGame } from './sprint-game.js';
 import { CHARACTERS } from './stories.js';
 import { initKanjiGameUI, dailyKanjiSet } from './kanji-game.js';
 import { initKanjiStudioUI, renderKanjiTab } from './kanji-logic.js';
@@ -93,9 +93,7 @@ export function renderHome() {
           toast("No tries left for " + charData.name + " today");
           return;
         }
-        import('./sprint-game.js').then(m => {
-          m.startVnGame(cid);
-        });
+        startVnGame(cid);
       });
       
       om.appendChild(slice);
@@ -385,13 +383,16 @@ export function openOnb(edit) {
   buildLearn();
   buildOnb();
   
-  state.profile = LS.get("profile");
+  state.profile = LS.get("profile") || { pid: "player-" + Math.random().toString(36).slice(2, 6), n: "Student", e: "🔮" };
+  LS.set("profile", state.profile);
   state.dayRec = LS.get("day:" + todayStr()) || { sU: 0, sB: 0, kU: 0, kB: 0 };
   
   renderHome();
-  if (!state.profile) openOnb(false);
   
-  const ok = await beInit();
-  if (ok && state.profile) await beSaveProfile();
-  renderHome();
+  beInit().then(async (ok) => {
+    if (ok && state.profile) {
+      await beSaveProfile();
+      renderHome();
+    }
+  });
 })();
