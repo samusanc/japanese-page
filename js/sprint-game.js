@@ -1,182 +1,192 @@
 import { state } from './state.js';
-import { FORM, TYPE_LABEL, SENTENCES } from './data.js';
-import { LS, $, $$, escapeHtml, todayStr, mulberry32, hashStr, toast } from './helpers.js';
+import { FORM, TYPE_LABEL, SENTENCES, VERBS, ADJS } from './data.js';
+import { LS, $, $$, escapeHtml, todayStr, mulberry32, hashStr, toast, shuffle } from './helpers.js';
 import { speak, spkBtn, beep } from './audio.js';
-import { makePool } from './engine.js';
+import { makeWriter } from './kanji-logic.js';
+import { buildQuestion } from './engine.js';
 import { bePostScore } from './config.js';
-import { showScreen, bumpStreak } from './app.js';
+import { showScreen, bumpStreak, renderHome } from './app.js';
+import { dailyKanjiSet } from './kanji-game.js';
+import { CHARACTERS, STORIES } from './stories.js';
 
 const gameEl = () => $("#game");
-let timerIv = null;
+let activeWriter = null;
 
-export function startDaily() {
-  if (state.dayRec.sU >= 2 && !state.debugMode) {
-    toast("No tries left today");
-    return;
-  }
-  if (!state.debugMode) {
-    state.dayRec.sU++;
-    LS.set("day:" + todayStr(), state.dayRec);
-  }
-  const rnd = mulberry32(hashStr(todayStr() + "::katsuyo"));
+export function startVnGame(charId) {
+  // Determine daily active kanjis for this character
+  const CHAR_KEYS = ["prince", "knight", "earl", "archduke", "duchess"];
+  const seedRnd = mulberry32(hashStr(todayStr() + "char-seed"));
+  const activeChars = shuffle(CHAR_KEYS, seedRnd).slice(0, 3);
+  const charIdx = activeChars.indexOf(charId);
+  const dailySet = dailyKanjiSet();
   
-  const dailySeedForms = () => {
-    const DAILY_FORM_POOL = ["te","ta","nai","masu","tai","pot","vol","ba","tara","imp","aneg","apast","ate"];
-    const rndForms = mulberry32(hashStr(todayStr() + "forms"));
-    const shuf = (arr, r) => {
-      const a = arr.slice();
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(r() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    };
-    return shuf(DAILY_FORM_POOL, rndForms).slice(0, 5);
+  // 2 kanjis per character based on daily active index
+  const myKanjis = [
+    dailySet[(charIdx * 2) % 6],
+    dailySet[(charIdx * 2 + 1) % 6]
+  ];
+
+  state.G = {
+    charId,
+    myKanjis,
+    stage: "classroom",
+    step: 0,
+    score: 0,
+    failures: 0,
+    lives: 2,
+    retries: 0,
+    over: false
   };
 
-  runGame({ mode: "daily", qs: makePool(dailySeedForms(), 80, rnd), timed: true });
-}
-
-export function startPractice() {
-  const sel = $$("#chipsVerb .chip.on, #chipsAdj .chip.on").map(c => c.dataset.f);
-  if (!sel.length) {
-    toast("Pick at least one form");
-    return;
-  }
-  const len = +($("#chipsLen .chip.on")?.dataset.len || 15);
-  runGame({ mode: "practice", qs: makePool(sel, len, null), timed: true });
-}
-
-export function runGame(cfg) {
-  state.G = { ...cfg, i: 0, score: 0, right: 0, wrong: 0, combo: 0, bestCombo: 0, misses: [], over: false, lock: true, triggeredHalf: false };
-  $("#gScore").textContent = "0";
-  $("#gCombo").textContent = "";
-  $("#timerwrap").style.visibility = cfg.timed ? "visible" : "hidden";
-  const bar = $("#timerbar");
-  bar.style.width = "100%";
-  bar.classList.remove("low");
+  $("#vnScore").textContent = "0 pts";
+  $("#vnLives").style.display = "none";
   gameEl().classList.add("on");
   
-  const bubble = $("#charBubble");
-  if (bubble) {
-    bubble.classList.remove("show");
-    bubble.textContent = "";
-  }
+  // Hide all panels initially
+  $$(".vn-panel").forEach(p => p.style.display = "none");
   
-  const cEl = $("#count");
-  const nEl = $("#countN");
-  cEl.classList.add("on");
+  runClassroom();
+}
+
+// =========================================================
+// STAGE 1: KANJI CLASSROOM
+// =========================================================
+function runClassroom() {
+  const charData = CHARACTERS[state.G.charId];
+  const storyData = STORIES[state.G.charId];
+  const kanjis = state.G.myKanjis;
   
-  let c = 3;
-  nEl.textContent = c;
-  const iv = setInterval(() => {
-    c--;
-    if (c <= 0) {
-      clearInterval(iv);
-      cEl.classList.remove("on");
-      state.G.lock = false;
-      renderQ();
-      if (cfg.timed) startTimer();
-    } else {
-      nEl.textContent = c;
-      nEl.style.animation = "none";
-      void nEl.offsetWidth;
-      nEl.style.animation = "pop .8s ease";
-    }
-  }, 800);
+  $("#pnlClassroom").style.display = "flex";
+  $("#classCanvasCard").style.display = "none";
+  $("#btnClassroomStart").style.display = "block";
+  
+  // Classroom Intro
+  $("#teacherText").textContent = storyData.classroomIntro;
+  
+  $("#btnClassroomStart").onclick = () => {
+    $("#btnClassroomStart").style.display = "none";
+    $("#classCanvasCard").style.display = "block";
+    loadClassroomStep();
+  };
 }
 
-export function startTimer() {
-  const t0 = Date.now();
-  timerIv = setInterval(() => {
-    if (!state.G) {
-      clearInterval(timerIv);
-      return;
-    }
-    const rem = 60 - (Date.now() - t0) / 1000;
-    const bar = $("#timerbar");
-    bar.style.width = Math.max(0, (rem / 60) * 100) + "%";
-    if (rem <= 10) bar.classList.add("low");
-    if (rem <= 30 && !state.G.triggeredHalf) {
-      state.G.triggeredHalf = true;
-      triggerHalfDialogue();
-    }
-    if (rem <= 0) {
-      clearInterval(timerIv);
-      endGame();
-    }
-  }, 100);
-}
-
-export function triggerHalfDialogue() {
-  const phrases = [
-    "どうしたの？時間がなくなっちゃうよ…",
-    "ねえ、まだ終わらないの？待たせないでよ。",
-    "焦らさないで、早く君の答えを聞かせて？",
-    "ちょっと、難しすぎる？手伝ってあげようか？",
-    "時間、半分しかないよ？君ならできるって信じてるけど…"
-  ];
-  const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-  const bubble = $("#charBubble");
-  if (bubble) {
-    bubble.textContent = phrase;
-    bubble.classList.add("show");
-  }
-}
-
-export function renderQ() {
+function loadClassroomStep() {
   if (!state.G) return;
-  const q = state.G.qs[state.G.i];
-  if (!q) {
-    endGame();
+  const kanjis = state.G.myKanjis;
+  const step = state.G.step; // 0: Trace K1, 1: Trace K2, 2: Recall K1, 3: Recall K2
+  
+  if (step >= 4) {
+    // Go to story!
+    runStory();
     return;
   }
-  $("#qForm").textContent = FORM[q.fid].jp;
-  $("#qFormEn").textContent = FORM[q.fid].en;
-  $("#qWord").textContent = q.item.k;
-  $("#qKana").textContent = q.item.r;
-  $("#qKana").style.display = q.item.k === q.item.r ? "none" : "";
-  $("#qMean").textContent = state.G.mode === "daily" ? q.item.m.split("⚠")[0].trim() : q.item.m;
-  $("#qType").textContent = TYPE_LABEL[q.item.t];
-  $("#qType").style.display = state.G.mode === "practice" ? "" : "none";
-  $("#qSpk").innerHTML = state.G.mode === "practice" ? spkBtn(q.item.r) : "";
-  $("#explain").style.display = "none";
-  $("#btnNext").style.display = "none";
-
-  // Dialogue construction for Otome theme (Japanese and English Translation)
-  const mean = state.G.mode === "daily" ? q.item.m.split("⚠")[0].trim() : q.item.m;
-  const wordDisplay = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span>（${q.item.r}）`;
-  const typeDisplay = state.G.mode === "practice" ? `［${TYPE_LABEL[q.item.t]}］` : "";
-
-  const wordDisplayEn = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span> (${q.item.r})`;
-  const typeDisplayEn = state.G.mode === "practice" ? ` [${TYPE_LABEL[q.item.t]}]` : "";
-
-  const promptsJa = [
-    `ねえ、${wordDisplay}（意味: 「${mean}」）を<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）にしてくれる？${typeDisplay}`,
-    `${wordDisplay}（意味: 「${mean}」）の<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）形が分からないんだ。教えて！${typeDisplay}`,
-    `${wordDisplay}（意味: 「${mean}」）の<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）形、知ってる？${typeDisplay}`,
-    `${wordDisplay}（意味: 「${mean}」）を<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）形に活用してみよう！${typeDisplay}`
-  ];
-
-  const promptsEn = [
-    `Hey, can you help me conjugate ${wordDisplayEn} ("${mean}") into the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplayEn}`,
-    `I'm stuck on this one! What is ${wordDisplayEn} ("${mean}") in the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplayEn}`,
-    `Do you know the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en}) form of ${wordDisplayEn} ("${mean}")?${typeDisplayEn}`,
-    `Let's see if we can conjugate ${wordDisplayEn} ("${mean}") to the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})!${typeDisplayEn}`
-  ];
-
-  let hash = 0;
-  const seedString = q.item.k + q.fid;
-  for (let idx = 0; idx < seedString.length; idx++) {
-    hash = (hash * 31 + seedString.charCodeAt(idx)) | 0;
+  
+  const isRecall = step >= 2;
+  const kIndex = step % 2;
+  const targetK = kanjis[kIndex];
+  
+  $("#classKanjiBadge").textContent = isRecall ? `Spell #${kIndex + 1} (Memory)` : `Spell #${kIndex + 1} (Trace)`;
+  $("#classKanjiBadge").className = "badge " + (isRecall ? "shu" : "ai");
+  $("#classKanjiMean").textContent = targetK.m;
+  $("#classTriesCount").textContent = `Attempts: ${state.G.retries + 1}/5`;
+  
+  const box = $("#classWriterBox");
+  box.innerHTML = "";
+  
+  if (activeWriter) {
+    activeWriter.destroy();
+    activeWriter = null;
   }
-  const promptIdx = Math.abs(hash) % promptsJa.length;
+  
+  activeWriter = makeWriter(box, targetK.c, { showOutline: !isRecall });
+  
+  $("#btnClassReset").onclick = () => {
+    loadClassroomStep();
+  };
+  
+  $("#btnClassNext").disabled = true;
+  $("#btnClassNext").onclick = () => {
+    state.G.step++;
+    state.G.retries = 0;
+    loadClassroomStep();
+  };
+  
+  activeWriter.quiz({
+    leniency: 1.25,
+    showHintAfterMisses: isRecall ? 999 : 3,
+    onMistake: () => {
+      beep("no");
+      handleClassroomFail();
+    },
+    onCorrectStroke: () => {
+      // Good stroke
+    },
+    onComplete: () => {
+      beep("ok");
+      $("#btnClassNext").disabled = false;
+    }
+  });
+}
 
+function handleClassroomFail() {
+  if (!state.G) return;
+  state.G.retries++;
+  if (state.G.retries >= 5) {
+    toast("Let's proceed. Focus on the next rune!");
+    $("#btnClassNext").disabled = false;
+  } else {
+    toast(`Incorrect stroke! Let's redraw. Attempt ${state.G.retries + 1}/5`);
+    loadClassroomStep();
+  }
+}
+
+// =========================================================
+// STAGE 2: STORY DIALOGUE
+// =========================================================
+function runStory() {
+  if (!state.G) return;
+  state.G.stage = "story";
+  state.G.step = 0; // Represents the scene index
+
+  $("#pnlClassroom").style.display = "none";
+  $("#pnlStory").style.display = "flex";
+
+  const charData = CHARACTERS[state.G.charId];
+  $("#storySilhouette").textContent = charData.avatar;
+  $("#storyName").textContent = charData.fullName;
+  $("#storySpeaker").textContent = charData.name;
+
+  // Visual layout backgrounds
+  $("#game").style.background = `url('./1783326442308.png') no-repeat center center`;
+  $("#game").style.backgroundSize = "cover";
+
+  loadStoryScene();
+}
+
+function loadStoryScene() {
+  if (!state.G) return;
+  const storyData = STORIES[state.G.charId];
+  const sceneIdx = state.G.step;
+
+  if (sceneIdx >= storyData.scenes.length) {
+    // Go to battle!
+    runBattle();
+    return;
+  }
+
+  const scene = storyData.scenes[sceneIdx];
   $("#qDialogue").innerHTML = `
-    <div class="dialogue-ja">${promptsJa[promptIdx]}</div>
-    <div class="dialogue-en">${promptsEn[promptIdx]}</div>
+    <div class="dialogue-ja">${scene.dialogue}</div>
+    <div class="dialogue-en" style="display: none;">${scene.dialogueEn}</div>
   `;
   $("#qDialogue").classList.remove("show-translation");
+
+  // Dynamic Distractor construction from engine.js
+  const prompt = scene.prompt;
+  const item = VERBS.find(v => v.k === prompt.word || v.r === prompt.word) ||
+               ADJS.find(a => a.k === prompt.word || a.r === prompt.word);
+  
+  const q = buildQuestion(item, prompt.form, mulberry32(Math.random() * 1000));
   
   const ch = $("#choices");
   ch.innerHTML = "";
@@ -184,183 +194,261 @@ export function renderQ() {
     const b = document.createElement("button");
     b.className = "choice";
     b.textContent = op;
-    b.addEventListener("click", () => onAnswer(b, op, q));
+    b.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent toggling translation on choice clicks
+      onStoryAnswer(b, op, q.correct);
+    });
     ch.appendChild(b);
   });
-  state.G.lock = false;
 }
 
-export function onAnswer(btn, op, q) {
-  if (!state.G || state.G.lock || state.G.over) return;
-  state.G.lock = true;
-  const isRight = op === q.correct;
+function onStoryAnswer(btn, selection, correct) {
+  if (!state.G || state.G.lock === true) return;
+  state.G.lock = true; // Temporary lock
+
+  const isRight = selection === correct;
   $$("#choices .choice").forEach(b => {
     b.disabled = true;
-    if (b.textContent === q.correct) b.classList.add("right");
+    if (b.textContent === correct) b.classList.add("right");
   });
-  speak(q.correct);
+
   if (isRight) {
-    btn.classList.add("right");
-    state.G.combo++;
-    state.G.bestCombo = Math.max(state.G.bestCombo, state.G.combo);
-    const pts = 100 + Math.min(5, state.G.combo - 1) * 20;
-    state.G.score += pts;
-    state.G.right++;
-    $("#gScore").textContent = state.G.score;
-    $("#gCombo").textContent = state.G.combo > 1 ? `COMBO ×${state.G.combo} 🔥` : "";
-    
-    const st = $("#stamp");
-    st.classList.remove("hit");
-    void st.offsetWidth;
-    st.classList.add("hit");
-    
-    const fp = $("#floatpts");
-    fp.textContent = "+" + pts;
-    fp.classList.remove("go");
-    void fp.offsetWidth;
-    fp.classList.add("go");
-    
     beep("ok");
-    setTimeout(() => {
-      if (state.G && !state.G.over) {
-        state.G.i++;
-        nextStep();
-      }
-    }, state.G.timed ? 420 : 600);
+    btn.classList.add("right");
+    state.G.score += 100;
+    $("#vnScore").textContent = `${state.G.score} pts`;
+    toast("Correct! Rizz increases! ✨");
   } else {
-    btn.classList.add("wrong");
-    state.G.combo = 0;
-    state.G.wrong++;
-    $("#gCombo").textContent = "";
-    state.G.misses.push(q);
     beep("no");
-    if (navigator.vibrate) navigator.vibrate(60);
-    if (state.G.timed) {
-      setTimeout(() => {
-        if (state.G && !state.G.over) {
-          state.G.i++;
-          nextStep();
-        }
-      }, 900);
-    } else {
-      showExplain(q);
-    }
+    btn.classList.add("wrong");
+    state.G.failures++;
+    toast("Missed! Love interest was not impressed.");
   }
+
+  setTimeout(() => {
+    state.G.lock = false;
+    state.G.step++;
+    loadStoryScene();
+  }, 1000);
 }
 
-export function nextStep() {
-  $("#stamp").classList.remove("hit");
-  renderQ();
+// =========================================================
+// STAGE 3: BATTLE SPELLCASTING
+// =========================================================
+function runBattle() {
+  if (!state.G) return;
+  state.G.stage = "battle";
+  state.G.step = 0; // Kanji index (0 or 1)
+
+  $("#pnlStory").style.display = "none";
+  $("#pnlBattle").style.display = "flex";
+  $("#vnLives").style.display = "block";
+
+  const charData = CHARACTERS[state.G.charId];
+  const storyData = STORIES[state.G.charId];
+  
+  $("#battleSilhouette").textContent = charData.avatar;
+  $("#battleName").textContent = charData.fullName;
+  $("#battleIntroText").textContent = storyData.battle.text;
+
+  // Render Hearts
+  renderVnLives();
+  loadBattleKanji();
 }
 
-export function showExplain(q) {
-  const e = $("#explain");
-  const s = SENTENCES[q.fid];
-  e.innerHTML = `Correct: <b>${q.correct}</b> ${spkBtn(q.correct)} — ${escapeHtml(q.item.k)} is a <b>${TYPE_LABEL[q.item.t]}</b>.<br><br>${escapeHtml(FORM[q.fid].rule).replace(/\n/g, "<br>")}` +
-    (s ? `<div class="sentence" style="margin-top:10px;"><div class="jp"><span>${escapeHtml(s.jp).replace(escapeHtml(s.hi), "<b>" + escapeHtml(s.hi) + "</b>")}</span>${spkBtn(s.jp)}</div><div class="en">${escapeHtml(s.en)}</div></div>` : "");
-  e.style.display = "block";
-  const nb = $("#btnNext");
-  nb.style.display = "block";
-  nb.onclick = () => {
-    if (state.G) {
-      state.G.i++;
-      $("#stamp").classList.remove("hit");
-      renderQ();
-    }
+function renderVnLives() {
+  if (!state.G) return;
+  const l = state.G.lives;
+  $("#vnLives").textContent = l > 0 ? "❤️ ".repeat(l) : "💔 Defeated";
+}
+
+function loadBattleKanji() {
+  if (!state.G) return;
+  const kanjis = state.G.myKanjis;
+  const kIdx = state.G.step;
+
+  if (kIdx >= 2) {
+    // End the game!
+    resolveVnEnding();
+    return;
+  }
+
+  const targetK = kanjis[kIdx];
+  const storyData = STORIES[state.G.charId];
+  
+  const phrase = storyData.battle.kanjiPrompts[kIdx];
+  $("#battleSpellMean").textContent = targetK.m;
+  $("#battleIntroText").innerHTML = phrase.replace(`{kanji${kIdx+1}}`, `<b style="color:var(--ai);font-size:16px;">${targetK.m}</b>`);
+
+  const box = $("#battleWriterBox");
+  box.innerHTML = "";
+
+  if (activeWriter) {
+    activeWriter.destroy();
+    activeWriter = null;
+  }
+
+  // Draw in blank
+  const outlineSoftly = state.G.lives <= 0;
+  activeWriter = makeWriter(box, targetK.c, { showOutline: outlineSoftly });
+  
+  $("#btnBattleReset").onclick = () => {
+    loadBattleKanji();
   };
+
+  const bubble = $("#battleCharBubble");
+  bubble.classList.remove("show");
+
+  activeWriter.quiz({
+    leniency: 1.2,
+    showHintAfterMisses: outlineSoftly ? 3 : 999,
+    onMistake: () => {
+      beep("no");
+      if (state.G.lives > 0) {
+        state.G.lives--;
+        renderVnLives();
+        
+        // Shout triggers
+        const charData = CHARACTERS[state.G.charId];
+        bubble.textContent = charData.yells.wrong;
+        bubble.classList.add("show");
+        
+        setTimeout(() => bubble.classList.remove("show"), 3500);
+
+        if (state.G.lives <= 0) {
+          toast("No lives left! Outline appearing softly...");
+          loadBattleKanji();
+        }
+      }
+    },
+    onCorrectStroke: () => {
+      // Good stroke
+    },
+    onComplete: sum => {
+      beep("ok");
+      let pts = 0;
+      if (state.G.lives > 0) {
+        pts = sum.totalMistakes === 0 ? 150 : 80;
+      }
+      state.G.score += pts;
+      $("#vnScore").textContent = `${state.G.score} pts`;
+
+      const stp = $("#battleSpellBadge");
+      stp.textContent = "Cast Successful! 🔮";
+      stp.style.background = "var(--matcha)";
+      
+      setTimeout(() => {
+        stp.textContent = "Cast spell";
+        stp.style.background = "var(--ai)";
+        state.G.step++;
+        loadBattleKanji();
+      }, 1200);
+    }
+  });
 }
 
-export async function endGame(quit) {
+// =========================================================
+// STAGE 4: ENDING RESOLVER
+// =========================================================
+async function resolveVnEnding() {
   if (!state.G || state.G.over) return;
   state.G.over = true;
-  clearInterval(timerIv);
-  beep("end");
+
+  $("#pnlBattle").style.display = "none";
+  $("#vnLives").style.display = "none";
+  $("#pnlResults").style.display = "flex";
+
+  if (activeWriter) {
+    activeWriter.destroy();
+    activeWriter = null;
+  }
+
+  const { charId, score, failures, lives } = state.G;
+  const charData = CHARACTERS[charId];
   
-  const bubble = $("#charBubble");
-  if (bubble) bubble.classList.remove("show");
+  // Calculate total fails (story conjugation fails + lost lives)
+  const lostLives = 2 - lives;
+  const totalFails = failures + lostLives;
+
+  let ending = "neglect";
+  let title = "Neglect Ending";
+  let desc = charData.endings.neglect;
+  let emoji = "💔";
+
+  if (totalFails === 0) {
+    ending = "love";
+    title = "Love Ending 💖";
+    desc = charData.endings.love;
+    emoji = "💖";
+  } else if (totalFails <= 2) {
+    ending = "friend";
+    title = "Friend Ending 🤝";
+    desc = charData.endings.friend;
+    emoji = "🤝";
+  }
+
+  $("#resEndingEmoji").textContent = emoji;
+  $("#resEndingTitle").textContent = title;
+  $("#resEndingDesc").textContent = desc;
+  $("#resTotalScore").textContent = score;
   
-  const { mode, score, right, wrong, bestCombo, misses } = state.G;
-  const st = LS.get("stats") || { r: 0, w: 0 };
-  st.r += right;
-  st.w += wrong;
-  LS.set("stats", st);
+  // Calculate perfect spell counts
+  const perfectKanji = (lives > 0 && totalFails === failures) ? 2 : (lives > 0 ? 1 : 0);
+  $("#resPerfectKanji").textContent = perfectKanji;
+  $("#resGrammarMistakes").textContent = failures;
+
+  // Day stats updates
+  const rec = state.dayRec.chars[charId] || { status: "playable", triesLeft: 2, score: 0 };
   
-  let postLine = "";
-  if (mode === "daily") {
-    if (state.debugMode) {
-      postLine = "Debug mode: Score not saved or uploaded.";
-      toast("Debug mode active: Results ignored.");
-    } else {
-      state.dayRec.sB = Math.max(state.dayRec.sB, score);
-      LS.set("day:" + todayStr(), state.dayRec);
-      bumpStreak();
-      if (state.beReady) {
-        const ok = await bePostScore("sprint", state.dayRec.sB);
-        postLine = ok ? (state.profile?.g ? `Posted to squad <b>${state.profile.g}</b> ✓` : `Saved online ✓ — <a href="#" id="resJoinLink" style="color:var(--ai);font-weight:700;">join a squad</a> to compete!`) : "Couldn't reach the server — saved on this device.";
-      } else {
-        postLine = "Saved on this device (solo mode).";
-      }
+  if (ending === "love") {
+    rec.status = "completed";
+  } else {
+    rec.status = "failed";
+    if (!state.debugMode) {
+      rec.triesLeft = Math.max(0, rec.triesLeft - 1);
     }
-  } else {
-    postLine = "Practice run complete.";
   }
+  rec.score = Math.max(rec.score, score);
+  state.dayRec.chars[charId] = rec;
+
+  // Calculate day total
+  const total = Object.values(state.dayRec.chars).reduce((sum, c) => sum + (c.score || 0), 0);
+  state.dayRec.totalScore = total;
+  state.dayRec.sB = total;
+  state.dayRec.kB = total;
   
-  gameEl().classList.remove("on");
-  $("#resScore").textContent = score;
-  $("#resKind").textContent = mode === "daily" ? "⚡ Grammar sprint" : "Practice run";
-  $("#resRight").textContent = right;
-  $("#resRightK").textContent = "Correct";
-  $("#resWrong").textContent = wrong;
-  $("#resWrongK").textContent = "Missed";
-  $("#resCombo").textContent = "×" + bestCombo;
-  $("#resComboK").textContent = "Best combo";
-  $("#resPostLine").innerHTML = postLine + (quit ? "<br>(ended early — the try was still used)" : "");
-  $("#resListTitle").textContent = "Review your misses";
-  $("#resList").innerHTML = misses.length
-    ? misses.map(q => `<div class="wl-row bad"><span>${escapeHtml(q.item.k)}（${q.item.r}）→ ${FORM[q.fid].jp}</span><span class="a">${q.correct}</span></div>`).join("")
-    : '<div class="empty">Perfect run — nothing missed! 🎉</div>';
-  
-  const again = $("#btnResAgain");
-  if (mode === "daily") {
-    const left = 2 - state.dayRec.sU;
-    again.disabled = !state.debugMode && left <= 0;
-    again.textContent = state.debugMode ? "Play again (debug) ▶" : (left > 0 ? "Use last try ▶" : "No tries left");
-    again.onclick = () => {
-      showScreen("home");
-      startDaily();
-    };
-  } else {
-    again.disabled = false;
-    again.textContent = "Drill again ▶";
-    again.onclick = () => {
-      showScreen("practice");
-      startPractice();
-    };
+  LS.set("day:" + todayStr(), state.dayRec);
+  renderHome();
+
+  // Sync online score
+  if (state.beReady && !state.debugMode) {
+    await bePostScore("sprint", total);
   }
-  showScreen("result");
-  const jl = $("#resJoinLink");
-  if (jl) jl.addEventListener("click", e => { e.preventDefault(); showScreen("group"); });
-  state.G = null;
+
+  // Button actions
+  $("#btnVnResHome").onclick = () => {
+    gameEl().classList.remove("on");
+    showScreen("home");
+  };
+
+  const again = $("#btnVnResAgain");
+  const left = rec.triesLeft;
+  again.disabled = rec.status !== "completed" && left <= 0 && !state.debugMode;
+  again.textContent = state.debugMode ? "Retry (debug) ▶" : (rec.status === "completed" ? "Practice again ▶" : (left > 0 ? "Use last try ▶" : "No tries left"));
+  
+  again.onclick = () => {
+    startVnGame(charId);
+  };
 }
 
 export function initSprintGameUI() {
   $("#btnQuit").addEventListener("click", () => {
-    if (state.G && !state.G.over && state.G.mode === "daily") {
-      endGame(true);
-    } else {
-      clearInterval(timerIv);
-      gameEl().classList.remove("on");
-      state.G = null;
-      showScreen("home");
+    if (activeWriter) {
+      activeWriter.destroy();
+      activeWriter = null;
     }
-  });
-
-  $("#btnResHome").addEventListener("click", () => showScreen("home"));
-  $("#btnDaily").addEventListener("click", startDaily);
-  $("#btnPractice").addEventListener("click", startPractice);
-
-  // Dialogue tap-to-translate event listener
-  $("#qcard").addEventListener("click", () => {
-    $("#qDialogue").classList.toggle("show-translation");
+    gameEl().classList.remove("on");
+    state.G = null;
+    showScreen("home");
   });
 }

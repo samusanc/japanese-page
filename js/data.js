@@ -75,7 +75,11 @@ export const FORMS=[
   {id:"ate", kind:"a", jp:"形容詞・て形", en:"adj te-form (linking)", lvl:"N5",
    rule:"い-adj: drop い + くて (高くて安い = tall and cheap) ⚠ いい→よくて\nな-adj: + で (静かで便利 = quiet and convenient)"},
   {id:"aadv",kind:"a", jp:"副詞化", en:"adj → adverb", lvl:"N5", iaOnly:true,
-   rule:"い-adj: drop い + く (早い→早く走る = run fast)\n(ない-adj use に: 静かに — not drilled here)"}
+   rule:"い-adj: drop い + く (早い→早く走る = run fast)\n(ない-adj use に: 静かに — not drilled here)"},
+  {id:"dict", kind:"v", jp:"辞書形", en:"dictionary form", lvl:"N5",
+   rule:"This is the plain, neutral form of the verb as found in a dictionary. No changes."},
+  {id:"apres", kind:"a", jp:"形容詞・現在肯定", en:"adj present", lvl:"N5",
+   rule:"Plain present affirmative adjective. No changes."}
 ];
 export const FORM = Object.fromEntries(FORMS.map(f=>[f.id,f]));
 export const SENTENCES={

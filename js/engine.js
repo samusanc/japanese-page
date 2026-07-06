@@ -21,6 +21,7 @@ export function teToTa(te) {
 }
 
 export function vconj(r, t, f, iku) {
+  if (f === "dict") return r;
   const last = r.slice(-1), stem = r.slice(0, -1);
   if (t === "s") {
     const b = r.slice(0, -2);
@@ -54,10 +55,10 @@ export function vconj(r, t, f, iku) {
 export function aconj(r, t, f) {
   if (t === "ia") {
     const stem = (r === "いい") ? "よ" : r.slice(0, -1);
-    const M = { aneg: stem + "くない", apast: stem + "かった", apneg: stem + "くなかった", ate: stem + "くて", aadv: stem + "く" };
+    const M = { apres: r, aneg: stem + "くない", apast: stem + "かった", apneg: stem + "くなかった", ate: stem + "くて", aadv: stem + "く" };
     return M[f];
   }
-  const M = { aneg: r + "じゃない", apast: r + "だった", apneg: r + "じゃなかった", ate: r + "で" };
+  const M = { apres: r, aneg: r + "じゃない", apast: r + "だった", apneg: r + "じゃなかった", ate: r + "で" };
   return M[f];
 }
 
@@ -67,8 +68,15 @@ export function answer(item, fid) {
 
 export function verbDistractors(item, fid, correct) {
   const r = item.r, out = new Set();
-  const naive = { te: "て", ta: "た", nai: "ない", masu: "ます", tai: "たい", pot: "られる", vol: "よう", ba: "れば", tara: "たら", imp: "ろ", pass: "られる", caus: "させる" };
   const add = v => { if (v && v !== correct) out.add(v); };
+  if (fid === "dict") {
+    add(vconj(r, item.t, "masu"));
+    add(vconj(r, item.t, "te"));
+    add(vconj(r, item.t, "nai"));
+    add(vconj(r, item.t, "ta"));
+    return [...out];
+  }
+  const naive = { te: "て", ta: "た", nai: "ない", masu: "ます", tai: "たい", pot: "られる", vol: "よう", ba: "れば", tara: "たら", imp: "ろ", pass: "られる", caus: "させる" };
   if (item.t === "g") {
     if (r.slice(-1) === "る") add(vconj(r, "i", fid));
     const mstem = vconj(r, "g", "masu").slice(0, -2);
@@ -123,6 +131,12 @@ export function verbDistractors(item, fid, correct) {
 
 export function adjDistractors(item, fid, correct) {
   const r = item.r, out = new Set(), add = v => { if (v && v !== correct) out.add(v); };
+  if (fid === "apres") {
+    add(aconj(r, item.t, "aneg"));
+    add(aconj(r, item.t, "apast"));
+    add(aconj(r, item.t, "ate"));
+    return [...out];
+  }
   if (item.t === "ia") {
     const stem = r.slice(0, -1);
     if (r === "いい") {

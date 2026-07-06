@@ -1,9 +1,10 @@
 import { state } from './state.js';
 import { CONFIG, beInit, beSaveProfile, bePostScore, fetchBoard } from './config.js';
 import { VERBS, ADJS, FORMS, FORM, SENTENCES } from './data.js';
-import { LS, $, $$, escapeHtml, todayStr, yesterdayStr, toast } from './helpers.js';
+import { LS, $, $$, escapeHtml, todayStr, yesterdayStr, toast, mulberry32, hashStr, shuffle } from './helpers.js';
 import { initAudioUI, speak, spkBtn } from './audio.js';
 import { initSprintGameUI } from './sprint-game.js';
+import { CHARACTERS } from './stories.js';
 import { initKanjiGameUI, dailyKanjiSet } from './kanji-game.js';
 import { initKanjiStudioUI, renderKanjiTab } from './kanji-logic.js';
 import { answer } from './engine.js';
@@ -22,57 +23,79 @@ export function showScreen(id) {
 export function renderHome() {
   $("#todayDate").textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
   
-  const sLeft = 2 - state.dayRec.sU;
-  const b1 = $("#attemptBadge");
-  b1.textContent = state.debugMode ? "∞ tries (debug)" : (sLeft > 0 ? `${sLeft} ${sLeft === 1 ? "try" : "tries"} left` : "Done today");
-  b1.className = "badge " + (state.debugMode ? "shu" : (sLeft > 0 ? "shu" : "gold"));
-  $("#btnDaily").disabled = !state.debugMode && sLeft <= 0;
-  $("#btnDaily").textContent = (state.debugMode || sLeft > 0) ? "Play the sprint ▶" : "Come back tomorrow 🌙";
-  $("#dailyBestLine").innerHTML = state.dayRec.sB > 0 ? `Your best today: <b style="color:var(--ai)">${state.dayRec.sB} pts</b>` : "";
+  const CHAR_KEYS = ["prince", "knight", "earl", "archduke", "duchess"];
+  const seedRnd = mulberry32(hashStr(todayStr() + "char-seed"));
+  const activeChars = shuffle(CHAR_KEYS, seedRnd).slice(0, 3);
   
-  const df = $("#dailyForms");
-  df.innerHTML = "";
+  // Safe load of day record
+  state.dayRec = LS.get("day:" + todayStr()) || { chars: {}, totalScore: 0 };
+  if (!state.dayRec.chars) state.dayRec.chars = {};
   
-  const dailySeedForms = () => {
-    const DAILY_FORM_POOL = ["te","ta","nai","masu","tai","pot","vol","ba","tara","imp","aneg","apast","ate"];
-    const r = () => {
-      let h = hashStr(todayStr() + "forms");
-      let a = (h + 0x6d2b79f5) | 0;
-      let t = Math.imul(a ^ (a >>> 15), 1 | a);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-    const a = DAILY_FORM_POOL.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(r() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+  activeChars.forEach(cid => {
+    if (!state.dayRec.chars[cid]) {
+      state.dayRec.chars[cid] = { status: "playable", triesLeft: 2, score: 0 };
     }
-    return a.slice(0, 5);
-  };
-  
-  dailySeedForms().forEach(fid => {
-    const s = document.createElement("span");
-    s.className = "chip-sm";
-    s.textContent = FORM[fid].jp;
-    df.appendChild(s);
   });
-
-  const kLeft = 2 - state.dayRec.kU;
-  const b2 = $("#kAttemptBadge");
-  b2.textContent = state.debugMode ? "∞ tries (debug)" : (kLeft > 0 ? `${kLeft} ${kLeft === 1 ? "try" : "tries"} left` : "Done today");
-  b2.className = "badge " + (state.debugMode ? "ink" : (kLeft > 0 ? "ink" : "gold"));
-  $("#btnKanjiDaily").disabled = !state.debugMode && kLeft <= 0;
-  $("#btnKanjiDaily").textContent = (state.debugMode || kLeft > 0) ? "Draw today's kanji ▶" : "Come back tomorrow 🌙";
-  $("#kDailyBestLine").innerHTML = state.dayRec.kB > 0 ? `Your best today: <b style="color:var(--ai)">${state.dayRec.kB} pts</b>` : "";
+  LS.set("day:" + todayStr(), state.dayRec);
   
-  const kp = $("#kanjiPreview");
-  kp.innerHTML = "";
-  dailyKanjiSet().forEach(k => {
-    const d = document.createElement("div");
-    d.className = "kp" + (state.dayRec.kU > 0 ? "" : " hidden-k");
-    d.textContent = k.c;
-    kp.appendChild(d);
-  });
+  const totalScore = Object.values(state.dayRec.chars).reduce((sum, c) => sum + (c.score || 0), 0);
+  state.dayRec.totalScore = totalScore;
+  state.dayRec.sB = totalScore;
+  state.dayRec.kB = totalScore;
+  
+  $("#dailyTotalBadge").textContent = state.debugMode ? "∞ tries (debug)" : `${totalScore} pts today`;
+  
+  const om = $("#otomeMenu");
+  if (om) {
+    om.innerHTML = "";
+    activeChars.forEach((cid, idx) => {
+      const charData = CHARACTERS[cid];
+      const rec = state.dayRec.chars[cid] || { status: "playable", triesLeft: 2, score: 0 };
+      
+      const slice = document.createElement("div");
+      slice.className = "otome-menu-slice";
+      if (rec.status === "completed") {
+        slice.classList.add("vn-completed-gold");
+      }
+      
+      // Style diagonal colors
+      slice.style.background = `linear-gradient(135deg, ${charData.color}dd 0%, #23262Fdd 100%)`;
+      
+      // Silhouette filters
+      let filtersClass = "";
+      if (rec.status === "failed") filtersClass = "vn-failed-bw";
+      
+      let badgeHTML = "";
+      if (rec.status === "completed") {
+        badgeHTML = `<span class="badge gold">Completed 💖</span>`;
+      } else if (rec.status === "failed" && rec.triesLeft <= 0 && !state.debugMode) {
+        badgeHTML = `<span class="badge" style="background:var(--line); color:var(--ink2);">0 tries left 💔</span>`;
+      } else {
+        badgeHTML = `<span class="badge ${rec.triesLeft === 1 ? "shu" : "ink"}">${state.debugMode ? "∞" : rec.triesLeft} ${rec.triesLeft === 1 ? "try" : "tries"} left</span>`;
+      }
+      
+      slice.innerHTML = `
+        <div class="otome-menu-slice-content ${filtersClass}">
+          <div class="otome-menu-slice-name">${charData.emoji} ${charData.fullName}</div>
+          <div class="otome-menu-slice-title">${charData.title}</div>
+          <div style="font-size: 11px; margin-top: 4px; opacity: 0.85;">Best Score: ${rec.score} pts</div>
+        </div>
+        ${badgeHTML}
+      `;
+      
+      slice.addEventListener("click", () => {
+        if (rec.status !== "completed" && rec.triesLeft <= 0 && !state.debugMode) {
+          toast("No tries left for " + charData.name + " today");
+          return;
+        }
+        import('./sprint-game.js').then(m => {
+          m.startVnGame(cid);
+        });
+      });
+      
+      om.appendChild(slice);
+    });
+  }
   
   renderStreak();
   renderStatsStrip();
@@ -124,10 +147,14 @@ export function lbRow(r, i, mode) {
   const sc = mode === "today" ? r.today : r.total;
   const me = r.pid === (state.uid || state.profile?.pid);
   const brk = mode === "today" ? `⚡${r.dS || 0} ・ ✍️${r.dK || 0}` : "";
-  return `<div class="row-lb ${me ? "me" : ""}">
+  const isRizzler = i === 0 && mode === "today";
+  const nameHTML = isRizzler 
+    ? `<span class="who rizzler-glow">${escapeHtml(r.n)} 👑 <span class="rizzler-title">Amazing Rizzler</span>${me ? " (you)" : ""}</span>`
+    : `<span class="who">${escapeHtml(r.n)}${me ? " (you)" : ""}</span>`;
+  return `<div class="row-lb ${me ? "me" : ""} ${isRizzler ? "rizzler-row" : ""}">
     <div class="rank ${i === 0 ? "r1" : ""}">${i === 0 ? "👑" : i + 1}</div>
     <div class="ava">${r.e}</div>
-    <div class="nm"><span class="who">${escapeHtml(r.n)}${me ? " (you)" : ""}</span>${brk ? `<span class="brk">${brk}</span>` : ""}</div>
+    <div class="nm">${nameHTML}${brk ? `<span class="brk">${brk}</span>` : ""}</div>
     <div class="sc">${sc}</div></div>`;
 }
 
