@@ -272,41 +272,16 @@
 
 <!-- ============ SPRINT GAME OVERLAY ============ -->
 <div id="game" class="overlay">
+  <!-- Dynamic Background Wrapper -->
+  <div class="game-bg bg-classroom" id="gameBg"></div>
+
   <!-- Background character placeholder -->
   <div class="otome-character-area">
     <div class="otome-character-card">
       <div class="otome-char-bubble" id="charBubble"></div>
-      <div class="otome-char-silhouette" id="gameCharEmoji">👦</div>
-      <div class="otome-char-name" id="gameCharName">Katsuyo-kun</div>
+      <img class="otome-char-portrait" id="gameCharImg" src="./placeholder.png" alt="Character Portrait">
+      <div class="otome-char-name" id="gameCharName" style="display:none;">Katsuyo-kun</div>
     </div>
-  </div>
-
-
-  <!-- ============ SENSEI INTRO SCREEN (otome layout) ============ -->
-  <div class="sensei-panel" id="senseiPanel">
-
-    <!-- Character area — same style as otome-character-area -->
-    <div class="sensei-char-area">
-      <div class="sensei-char-card">
-        <div class="sensei-aura"></div>
-        <div class="sensei-emoji">👩‍🏫</div>
-        <div class="sensei-name-plate">先生 · Sensei</div>
-      </div>
-    </div>
-
-    <!-- VN dialogue box — sits at bottom like the game qcard -->
-    <div class="sensei-vn-box">
-      <!-- speaker plate -->
-      <div class="sensei-speaker-plate">先生</div>
-      <!-- dialogue text — filled by JS -->
-      <div class="sensei-vn-text" id="senseiVnText"></div>
-      <!-- tap-indicator (replaces the button) -->
-      <div class="sensei-tap-hint" id="senseiTapHint">
-        <span class="sensei-tap-jp">タップして続ける</span>
-        <span class="sensei-tap-blink">▼</span>
-      </div>
-    </div>
-
   </div>
 
 
@@ -322,9 +297,15 @@
       <div class="stamp" id="stamp">正解</div>
       <div class="floatpts" id="floatpts">+100</div>
       
-      <!-- New Otome Speaker and Dialogue text -->
-      <div class="otome-speaker-plate">Katsuyo-kun</div>
-      <div id="qDialogue" class="otome-dialogue-text"></div>
+      <!-- Unified Otome Speaker and Dialogue text -->
+      <div class="otome-speaker-plate" id="gameSpeakerName">先生</div>
+      <div id="gameDialogueText" class="otome-dialogue-text"></div>
+      
+      <!-- Dialogue progression indicator -->
+      <div class="otome-tap-hint" id="gameTapHint">
+        <span class="otome-tap-jp">タップして続ける</span>
+        <span class="otome-tap-blink">▼</span>
+      </div>
 
       <!-- Hidden standard elements for compatibility -->
       <div class="otome-compat-hidden">

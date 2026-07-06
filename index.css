@@ -750,12 +750,40 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   background-size: cover;
 }
 
+/* Unified Game Background */
+.game-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transition: background 0.5s ease;
+}
+.bg-classroom {
+  background:
+    linear-gradient(to bottom, rgba(160,110,40,0.2) 0%, rgba(13,10,26,0.95) 80%),
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(212,168,83,0.15) 0%, transparent 70%);
+}
+.bg-garden {
+  background:
+    linear-gradient(to bottom, rgba(100,60,160,0.2) 0%, rgba(13,10,26,0.95) 80%),
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(168,85,247,0.18) 0%, transparent 70%);
+}
+.bg-dojo {
+  background:
+    linear-gradient(to bottom, rgba(40,70,180,0.2) 0%, rgba(13,10,26,0.95) 80%),
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(79,130,212,0.2) 0%, transparent 70%);
+}
+.bg-shrine {
+  background:
+    linear-gradient(to bottom, rgba(30,120,90,0.2) 0%, rgba(13,10,26,0.95) 80%),
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(52,211,153,0.15) 0%, transparent 70%);
+}
+
 /* darken BG for readability */
 #game.overlay::after {
   content: '';
   position: absolute; inset: 0;
   background: linear-gradient(to bottom, rgba(13,10,26,0.5) 0%, rgba(13,10,26,0.2) 40%, rgba(13,10,26,0.7) 100%);
-  pointer-events: none; z-index: 1;
+  pointer-events: none; z-index: 2;
 }
 
 .otome-character-area {
@@ -774,9 +802,15 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   position: relative;
   animation: otomeBreathe 4s ease-in-out infinite;
 }
+.otome-char-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+}
 .otome-char-bubble {
   position: absolute; top: -50px; right: -60px; width: 155px;
-  background: rgba(13,10,26,0.75);
+  background: rgba(13,10,26,0.85);
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border-hi);
   border-radius: 16px; padding: 8px 12px;
@@ -835,8 +869,37 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 .otome-dialogue-text .otome-word { color: var(--sapphire); font-family: var(--jp); font-weight: 900; font-size: 14.5px; border-bottom: 1px dashed var(--sapphire); padding-bottom: 1px; }
 .otome-dialogue-text .otome-form { color: var(--rose); font-family: var(--jp); font-weight: 900; font-size: 14px; background: rgba(224,91,124,0.12); padding: 1px 5px; border-radius: 5px; }
 .dialogue-en { display: none; font-size: 11px; color: var(--ink3); margin-top: 4px; font-style: italic; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 4px; animation: fadein .25s ease; }
-#qDialogue.show-translation .dialogue-en { display: block; }
+#gameDialogueText.show-translation .dialogue-en { display: block; }
 .otome-compat-hidden { display: none !important; }
+
+.otome-tap-hint {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.otome-tap-jp {
+  font-family: var(--disp);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  opacity: 0.8;
+}
+.otome-tap-hint.final .otome-tap-jp {
+  color: var(--sapphire);
+}
+.otome-tap-blink {
+  font-size: 11px;
+  color: var(--gold);
+  animation: otomeBlinkDown 1.2s ease-in-out infinite;
+}
+@keyframes otomeBlinkDown {
+  0%,100% { opacity: 1; transform: translateY(0); }
+  50% { opacity: 0.3; transform: translateY(3px); }
+}
 
 #game .choices { grid-template-columns: 1fr 1fr; gap: 8px; }
 #game .choice {

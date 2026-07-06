@@ -5,6 +5,7 @@ import { speak, spkBtn, beep } from './audio.js';
 import { makePool } from './engine.js';
 import { bePostScore } from './config.js';
 import { showScreen, bumpStreak } from './app.js';
+import { INTRO_SCENES, QUESTION_PROMPTS } from './scenes.js';
 
 const gameEl = () => $("#game");
 let timerIv = null;
@@ -48,7 +49,21 @@ export function startPractice() {
 }
 
 export function runGame(cfg, charId = 'ren') {
-  state.G = { ...cfg, i: 0, score: 0, right: 0, wrong: 0, combo: 0, bestCombo: 0, misses: [], over: false, lock: true, triggeredHalf: false };
+  state.G = { 
+    ...cfg, 
+    score: 0, 
+    right: 0, 
+    wrong: 0, 
+    combo: 0, 
+    bestCombo: 0, 
+    misses: [], 
+    over: false, 
+    lock: true, 
+    triggeredHalf: false,
+    scenesList: [],
+    sceneIndex: 0
+  };
+  
   $("#gScore").textContent = "0";
   $("#gCombo").textContent = "";
   $("#timerwrap").style.visibility = cfg.timed ? "visible" : "hidden";
@@ -63,80 +78,186 @@ export function runGame(cfg, charId = 'ren') {
     bubble.textContent = "";
   }
 
-  // Set the companion details
-  const CHARACTERS = {
-    hana: { name: "Hana", emoji: "🌸" },
-    ren: { name: "Ren", emoji: "🗡️" },
-    sora: { name: "Sora", emoji: "🌙" }
-  };
-  const charData = CHARACTERS[charId] || CHARACTERS.ren;
-  const charEmojiEl = $("#gameCharEmoji");
-  const charNameEl = $("#gameCharName");
-  if (charEmojiEl) charEmojiEl.textContent = charData.emoji;
-  if (charNameEl) charNameEl.textContent = charData.name;
+  // Get character details
+  const charData = QUESTION_PROMPTS[charId] || QUESTION_PROMPTS.ren;
+  const partnerName = charData.name;
+  
+  // 1. Build teacher / intro dialogues from Scene JSON
+  const introList = INTRO_SCENES[cfg.mode] || INTRO_SCENES.practice;
+  introList.forEach(step => {
+    state.G.scenesList.push({
+      type: "dialogue",
+      speaker: step.speaker,
+      text_ja: step.text_ja.replace("{partnerName}", partnerName),
+      text_en: step.text_en.replace("{partnerName}", partnerName),
+      png: step.png || "./placeholder.png",
+      bg: step.bg || "bg-classroom",
+      sound: step.sound || ""
+    });
+  });
+  
+  // 2. Add Countdown step
+  state.G.scenesList.push({
+    type: "countdown",
+    bg: charData.bg || "bg-dojo",
+    png: charData.png || "./placeholder.png",
+    speaker: partnerName
+  });
+  
+  // 3. Add conjugation question steps dynamically resolved from templates
+  cfg.qs.forEach((q) => {
+    const mean = cfg.mode === "daily" ? q.item.m.split("⚠")[0].trim() : q.item.m;
+    const wordDisplay = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span>（${q.item.r}）`;
+    const typeDisplay = cfg.mode === "practice" ? `［${TYPE_LABEL[q.item.t]}］` : "";
 
-  // Prepare Sensei's dialogues
-  const dialogueLines = [
-    { jp: `あら、今日の練習パートナーは${charData.name}さんですね。`, en: `Ah, it seems ${charData.name} will be your partner for today's practice.` },
-    { jp: "文法の活用をマスターすることは、言葉の絆を深める第一歩ですよ。", en: "Mastering grammar conjugations is the first step to deepening your linguistic bond." },
-    { jp: "焦らず、正確に。彼らの期待に応えて見せましょう！", en: "Stay calm, be precise. Let's show them what you're capable of!" },
-    { jp: "準備はよろしいですか？それでは…始めますよ！", en: "Are you ready? Now... let us begin!" }
-  ];
+    const wordDisplayEn = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span> (${q.item.r})`;
+    const typeDisplayEn = cfg.mode === "practice" ? ` [${TYPE_LABEL[q.item.t]}]` : "";
 
-  // Show Sensei panel
-  const panel = $("#senseiPanel");
-  if (panel) {
-    panel.classList.remove("hidden");
+    // Calculate a unique hash to pick a prompt template stably
+    let hash = 0;
+    const seedString = q.item.k + q.fid;
+    for (let idx = 0; idx < seedString.length; idx++) {
+      hash = (hash * 31 + seedString.charCodeAt(idx)) | 0;
+    }
+    const prompts = charData.prompts;
+    const promptIdx = Math.abs(hash) % prompts.length;
+    const promptTemplate = prompts[promptIdx];
+
+    // Format templates
+    const textJa = promptTemplate.text_ja
+      .replace("{wordDisplay}", wordDisplay)
+      .replace("{mean}", mean)
+      .replace("{formJp}", FORM[q.fid].jp)
+      .replace("{formEn}", FORM[q.fid].en)
+      .replace("{typeDisplay}", typeDisplay);
+
+    const textEn = promptTemplate.text_en
+      .replace("{wordDisplayEn}", wordDisplayEn)
+      .replace("{mean}", mean)
+      .replace("{formJp}", FORM[q.fid].jp)
+      .replace("{formEn}", FORM[q.fid].en)
+      .replace("{typeDisplayEn}", typeDisplayEn);
+
+    state.G.scenesList.push({
+      type: "question",
+      speaker: partnerName,
+      text_ja: textJa,
+      text_en: textEn,
+      png: charData.png || "./placeholder.png",
+      bg: charData.bg || "bg-dojo",
+      choices: q.options,
+      correct: q.correct,
+      questionObj: q
+    });
+  });
+
+  // Launch unified engine loop
+  executeSceneStep();
+}
+
+export function executeSceneStep() {
+  if (!state.G || state.G.over) return;
+  
+  const stepIdx = state.G.sceneIndex;
+  const steps = state.G.scenesList;
+  
+  if (stepIdx >= steps.length) {
+    endGame();
+    return;
+  }
+  
+  const step = steps[stepIdx];
+  
+  // Update background wrapper gradient
+  const gameBg = $("#gameBg");
+  if (gameBg) {
+    gameBg.className = "game-bg";
+    if (step.bg) gameBg.classList.add(step.bg);
+  }
+  
+  // Update character portrait
+  const charImg = $("#gameCharImg");
+  if (charImg) {
+    charImg.src = step.png || "./placeholder.png";
+  }
+  
+  // Set speaker name plate
+  const speakerName = $("#gameSpeakerName");
+  if (speakerName) {
+    speakerName.textContent = step.speaker || "";
+  }
+  
+  // Clear any result overlay elements from previous round
+  $("#stamp").classList.remove("hit");
+  $("#floatpts").classList.remove("go");
+  $("#explain").style.display = "none";
+  $("#btnNext").style.display = "none";
+  
+  if (step.type === "dialogue") {
+    // Show VN dialogues style (Tap to continue)
+    $("#gameTapHint").style.display = "flex";
+    $("#choices").style.display = "none";
+    $("#choices").innerHTML = "";
     
-    let lineIdx = 0;
-    const vnTextEl = $("#senseiVnText");
-    const tapHintEl = $("#senseiTapHint");
-
-    const updateLine = () => {
-      const line = dialogueLines[lineIdx];
-      if (vnTextEl) {
-        vnTextEl.innerHTML = `${line.jp}<br><span class="svn-en">${line.en}</span>`;
-      }
-      if (tapHintEl) {
-        const hintJp = tapHintEl.querySelector(".sensei-tap-jp");
-        if (lineIdx === dialogueLines.length - 1) {
-          tapHintEl.classList.add("final");
-          if (hintJp) hintJp.textContent = "タップして開始";
-        } else {
-          tapHintEl.classList.remove("final");
-          if (hintJp) hintJp.textContent = "タップして続ける";
-        }
-      }
-    };
-
-    updateLine();
-
-    // Store show time to filter out accidental immediate clicks/bubbles from the slice screen
-    let showTime = Date.now();
-
-    const handleTap = (e) => {
-      e.stopPropagation();
-      const now = Date.now();
-      if (now - showTime < 300) return; // Prevent bubbling / immediate taps from slice screen
-      showTime = now; // update to prevent rapid tapping
-
-      if (lineIdx < dialogueLines.length - 1) {
-        lineIdx++;
-        updateLine();
-      } else {
-        panel.classList.add("hidden");
-        panel.removeEventListener("click", handleTap);
-        _beginCountdown(cfg);
-      }
-    };
-
-    panel.addEventListener("click", handleTap);
-  } else {
-    _beginCountdown(cfg);
+    const dialogueText = $("#gameDialogueText");
+    if (dialogueText) {
+      dialogueText.innerHTML = `
+        <div class="dialogue-ja">${step.text_ja}</div>
+        <div class="dialogue-en">${step.text_en}</div>
+      `;
+    }
+    $("#gameDialogueText").classList.remove("show-translation");
+    
+    // Play dialogue audio if specified
+    if (step.sound) {
+      speak(step.sound);
+    }
+    
+    state.G.lock = false;
+  }
+  else if (step.type === "countdown") {
+    // Hide inputs/hints during countdown
+    $("#gameTapHint").style.display = "none";
+    $("#choices").style.display = "none";
+    $("#choices").innerHTML = "";
+    
+    const dialogueText = $("#gameDialogueText");
+    if (dialogueText) {
+      dialogueText.innerHTML = `<div class="dialogue-ja" style="text-align:center; font-weight:900; font-size:18px;">準備はいいですか？</div>`;
+    }
+    
+    _beginCountdown();
+  }
+  else if (step.type === "question") {
+    // Show multiple-choice buttons
+    $("#gameTapHint").style.display = "none";
+    $("#choices").style.display = "grid";
+    
+    const dialogueText = $("#gameDialogueText");
+    if (dialogueText) {
+      dialogueText.innerHTML = `
+        <div class="dialogue-ja">${step.text_ja}</div>
+        <div class="dialogue-en">${step.text_en}</div>
+      `;
+    }
+    $("#gameDialogueText").classList.remove("show-translation");
+    
+    // Render the choices
+    const ch = $("#choices");
+    ch.innerHTML = "";
+    step.choices.forEach(op => {
+      const b = document.createElement("button");
+      b.className = "choice";
+      b.textContent = op;
+      b.addEventListener("click", () => onAnswer(b, op, step));
+      ch.appendChild(b);
+    });
+    
+    state.G.lock = false;
   }
 }
 
-function _beginCountdown(cfg) {
+function _beginCountdown() {
   const cEl = $("#count");
   const nEl = $("#countN");
   cEl.classList.add("on");
@@ -149,8 +270,9 @@ function _beginCountdown(cfg) {
       clearInterval(iv);
       cEl.classList.remove("on");
       state.G.lock = false;
-      renderQ();
-      if (cfg.timed) startTimer();
+      state.G.sceneIndex++; // Advance past the countdown scene
+      executeSceneStep();
+      if (state.G.timed) startTimer();
     } else {
       nEl.textContent = c;
       nEl.style.animation = "none";
@@ -159,7 +281,6 @@ function _beginCountdown(cfg) {
     }
   }, 800);
 }
-
 
 export function startTimer() {
   const t0 = Date.now();
@@ -199,81 +320,19 @@ export function triggerHalfDialogue() {
   }
 }
 
-export function renderQ() {
-  if (!state.G) return;
-  const q = state.G.qs[state.G.i];
-  if (!q) {
-    endGame();
-    return;
-  }
-  $("#qForm").textContent = FORM[q.fid].jp;
-  $("#qFormEn").textContent = FORM[q.fid].en;
-  $("#qWord").textContent = q.item.k;
-  $("#qKana").textContent = q.item.r;
-  $("#qKana").style.display = q.item.k === q.item.r ? "none" : "";
-  $("#qMean").textContent = state.G.mode === "daily" ? q.item.m.split("⚠")[0].trim() : q.item.m;
-  $("#qType").textContent = TYPE_LABEL[q.item.t];
-  $("#qType").style.display = state.G.mode === "practice" ? "" : "none";
-  $("#qSpk").innerHTML = state.G.mode === "practice" ? spkBtn(q.item.r) : "";
-  $("#explain").style.display = "none";
-  $("#btnNext").style.display = "none";
-
-  // Dialogue construction for Otome theme (Japanese and English Translation)
-  const mean = state.G.mode === "daily" ? q.item.m.split("⚠")[0].trim() : q.item.m;
-  const wordDisplay = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span>（${q.item.r}）`;
-  const typeDisplay = state.G.mode === "practice" ? `［${TYPE_LABEL[q.item.t]}］` : "";
-
-  const wordDisplayEn = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span> (${q.item.r})`;
-  const typeDisplayEn = state.G.mode === "practice" ? ` [${TYPE_LABEL[q.item.t]}]` : "";
-
-  const promptsJa = [
-    `ねえ、${wordDisplay}（意味: 「${mean}」）を<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）にしてくれる？${typeDisplay}`,
-    `${wordDisplay}（意味: 「${mean}」）の<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）形が分からないんだ。教えて！${typeDisplay}`,
-    `${wordDisplay}（意味: 「${mean}」）の<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）形、知ってる？${typeDisplay}`,
-    `${wordDisplay}（意味: 「${mean}」）を<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）形に活用してみよう！${typeDisplay}`
-  ];
-
-  const promptsEn = [
-    `Hey, can you help me conjugate ${wordDisplayEn} ("${mean}") into the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplayEn}`,
-    `I'm stuck on this one! What is ${wordDisplayEn} ("${mean}") in the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplayEn}`,
-    `Do you know the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en}) form of ${wordDisplayEn} ("${mean}")?${typeDisplayEn}`,
-    `Let's see if we can conjugate ${wordDisplayEn} ("${mean}") to the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})!${typeDisplayEn}`
-  ];
-
-  let hash = 0;
-  const seedString = q.item.k + q.fid;
-  for (let idx = 0; idx < seedString.length; idx++) {
-    hash = (hash * 31 + seedString.charCodeAt(idx)) | 0;
-  }
-  const promptIdx = Math.abs(hash) % promptsJa.length;
-
-  $("#qDialogue").innerHTML = `
-    <div class="dialogue-ja">${promptsJa[promptIdx]}</div>
-    <div class="dialogue-en">${promptsEn[promptIdx]}</div>
-  `;
-  $("#qDialogue").classList.remove("show-translation");
-  
-  const ch = $("#choices");
-  ch.innerHTML = "";
-  q.options.forEach(op => {
-    const b = document.createElement("button");
-    b.className = "choice";
-    b.textContent = op;
-    b.addEventListener("click", () => onAnswer(b, op, q));
-    ch.appendChild(b);
-  });
-  state.G.lock = false;
-}
-
-export function onAnswer(btn, op, q) {
+export function onAnswer(btn, op, step) {
   if (!state.G || state.G.lock || state.G.over) return;
   state.G.lock = true;
-  const isRight = op === q.correct;
+  const q = step.questionObj;
+  const isRight = op === step.correct;
+  
   $$("#choices .choice").forEach(b => {
     b.disabled = true;
-    if (b.textContent === q.correct) b.classList.add("right");
+    if (b.textContent === step.correct) b.classList.add("right");
   });
-  speak(q.correct);
+  
+  speak(step.correct);
+  
   if (isRight) {
     btn.classList.add("right");
     state.G.combo++;
@@ -296,10 +355,11 @@ export function onAnswer(btn, op, q) {
     fp.classList.add("go");
     
     beep("ok");
+    
     setTimeout(() => {
       if (state.G && !state.G.over) {
-        state.G.i++;
-        nextStep();
+        state.G.sceneIndex++;
+        executeSceneStep();
       }
     }, state.G.timed ? 420 : 600);
   } else {
@@ -310,37 +370,33 @@ export function onAnswer(btn, op, q) {
     state.G.misses.push(q);
     beep("no");
     if (navigator.vibrate) navigator.vibrate(60);
+    
     if (state.G.timed) {
       setTimeout(() => {
         if (state.G && !state.G.over) {
-          state.G.i++;
-          nextStep();
+          state.G.sceneIndex++;
+          executeSceneStep();
         }
       }, 900);
     } else {
-      showExplain(q);
+      showExplain(step);
     }
   }
 }
 
-export function nextStep() {
-  $("#stamp").classList.remove("hit");
-  renderQ();
-}
-
-export function showExplain(q) {
+export function showExplain(step) {
   const e = $("#explain");
+  const q = step.questionObj;
   const s = SENTENCES[q.fid];
-  e.innerHTML = `Correct: <b>${q.correct}</b> ${spkBtn(q.correct)} — ${escapeHtml(q.item.k)} is a <b>${TYPE_LABEL[q.item.t]}</b>.<br><br>${escapeHtml(FORM[q.fid].rule).replace(/\n/g, "<br>")}` +
+  e.innerHTML = `Correct: <b>${step.correct}</b> ${spkBtn(step.correct)} — ${escapeHtml(q.item.k)} is a <b>${TYPE_LABEL[q.item.t]}</b>.<br><br>${escapeHtml(FORM[q.fid].rule).replace(/\n/g, "<br>")}` +
     (s ? `<div class="sentence" style="margin-top:10px;"><div class="jp"><span>${escapeHtml(s.jp).replace(escapeHtml(s.hi), "<b>" + escapeHtml(s.hi) + "</b>")}</span>${spkBtn(s.jp)}</div><div class="en">${escapeHtml(s.en)}</div></div>` : "");
   e.style.display = "block";
   const nb = $("#btnNext");
   nb.style.display = "block";
   nb.onclick = () => {
     if (state.G) {
-      state.G.i++;
-      $("#stamp").classList.remove("hit");
-      renderQ();
+      state.G.sceneIndex++;
+      executeSceneStep();
     }
   };
 }
@@ -431,11 +487,30 @@ export function initSprintGameUI() {
   });
 
   $("#btnResHome").addEventListener("click", () => showScreen("home"));
-  $("#btnDaily").addEventListener("click", startDaily);
+  $("#btnDaily").addEventListener("click", (e) => {
+    // Default to Ren for standard button click
+    startDaily('ren');
+  });
   $("#btnPractice").addEventListener("click", startPractice);
 
-  // Dialogue tap-to-translate event listener
-  $("#qcard").addEventListener("click", () => {
-    $("#qDialogue").classList.toggle("show-translation");
+  // Unified dialogue progression click handler
+  $("#qcard").addEventListener("click", (e) => {
+    if (!state.G || state.G.lock || state.G.over) return;
+    
+    // Ensure we don't handle clicks that were meant for choices, floatpts, nextbtn etc.
+    if (e.target.closest("#choices") || e.target.closest("#explain") || e.target.closest("#btnNext") || e.target.closest(".explain") || e.target.closest(".nextbtn") || e.target.closest("#count")) {
+      return;
+    }
+    
+    const step = state.G.scenesList[state.G.sceneIndex];
+    if (!step) return;
+    
+    if (step.type === "dialogue") {
+      state.G.lock = true;
+      state.G.sceneIndex++;
+      executeSceneStep();
+    } else if (step.type === "question") {
+      $("#gameDialogueText").classList.toggle("show-translation");
+    }
   });
 }
