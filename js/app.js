@@ -1,7 +1,7 @@
 import { state } from './state.js';
 import { CONFIG, beInit, beSaveProfile, bePostScore, fetchBoard } from './config.js';
 import { VERBS, ADJS, FORMS, FORM, SENTENCES } from './data.js';
-import { LS, $, $$, escapeHtml, todayStr, yesterdayStr, toast } from './helpers.js';
+import { LS, $, $$, escapeHtml, todayStr, yesterdayStr, toast, hashStr } from './helpers.js';
 import { initAudioUI, speak, spkBtn } from './audio.js';
 import { initSprintGameUI, startDaily } from './sprint-game.js';
 import { initKanjiGameUI, dailyKanjiSet } from './kanji-game.js';
