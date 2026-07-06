@@ -564,37 +564,50 @@ footer p{font-size:10px; color:var(--ink2); line-height:1.6;}
 .otome-menu-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 10px;
-  border-radius: 20px;
-  overflow: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .otome-menu-slice {
   position: relative;
-  height: 110px;
-  border-radius: 16px;
+  flex: 1;
   overflow: hidden;
   cursor: pointer;
   background-size: cover;
   background-position: center;
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  padding: 20px 24px;
+  border-left: none;
+  border-right: none;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
-  clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
 }
 
-.otome-menu-slice:last-child {
-  clip-path: none;
+.otome-menu-slice:nth-child(1) {
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+  z-index: 3;
+}
+
+.otome-menu-slice:nth-child(2) {
+  margin-top: -8vh;
+  padding-top: calc(8vh + 20px);
+  clip-path: polygon(0 12%, 100% 0, 100% 88%, 0 100%);
+  z-index: 2;
+}
+
+.otome-menu-slice:nth-child(3) {
+  margin-top: -8vh;
+  padding-top: calc(8vh + 20px);
+  clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 100%);
+  z-index: 1;
 }
 
 .otome-menu-slice:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 8px 24px rgba(42, 75, 141, 0.12);
-  border-color: rgba(255, 255, 255, 0.5);
+  filter: brightness(1.1);
 }
 
 .otome-menu-slice-content {

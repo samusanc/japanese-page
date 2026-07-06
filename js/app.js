@@ -15,6 +15,12 @@ export function showScreen(id) {
   if (scr) scr.classList.add("on");
   $$(".tab").forEach(t => t.classList.toggle("on", t.dataset.s === id));
   window.scrollTo({ top: 0 });
+  
+  const header = $("header");
+  if (header) {
+    header.style.display = id === "home" ? "none" : "flex";
+  }
+  
   if (id === "home") renderHome();
   if (id === "group") renderGroup();
   if (id === "kanji") renderKanjiTab();
@@ -107,7 +113,9 @@ export function renderHome() {
 
 export function renderStreak() {
   const s = LS.get("streak");
-  $("#streakN").textContent = (s && (s.last === todayStr() || s.last === yesterdayStr())) ? s.c : 0;
+  const val = (s && (s.last === todayStr() || s.last === yesterdayStr())) ? s.c : 0;
+  const sn = $("#streakN"); if (sn) sn.textContent = val;
+  const hsn = $("#homeStreakN"); if (hsn) hsn.textContent = val;
 }
 
 export function bumpStreak() {
