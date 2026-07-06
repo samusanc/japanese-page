@@ -1045,38 +1045,48 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  transition: opacity .3s ease;
+  transition: background 0.3s ease, transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-size: cover;
 }
 .slice-bg-1 {
   background:
-    linear-gradient(to bottom, rgba(100,60,160,0.3) 0%, rgba(13,10,26,0.9) 80%),
+    linear-gradient(to bottom, rgba(13,10,26,0.1) 0%, rgba(13,10,26,0.92) 85%),
+    url('./sprites/anastasia.png') no-repeat center bottom / cover,
     radial-gradient(ellipse 80% 60% at 50% 30%, rgba(168,85,247,0.25) 0%, transparent 70%);
 }
 .slice-bg-2 {
   background:
-    linear-gradient(to bottom, rgba(40,70,180,0.4) 0%, rgba(13,10,26,0.9) 80%),
+    linear-gradient(to bottom, rgba(13,10,26,0.1) 0%, rgba(13,10,26,0.92) 85%),
+    url('./sprites/conrad.png') no-repeat center bottom / cover,
     radial-gradient(ellipse 80% 60% at 50% 30%, rgba(79,130,212,0.3) 0%, transparent 70%);
 }
 .slice-bg-3 {
   background:
-    linear-gradient(to bottom, rgba(30,80,100,0.4) 0%, rgba(13,10,26,0.9) 80%),
+    linear-gradient(to bottom, rgba(13,10,26,0.1) 0%, rgba(13,10,26,0.92) 85%),
+    url('./placeholder.png') no-repeat center bottom / cover,
     radial-gradient(ellipse 80% 60% at 50% 30%, rgba(52,201,122,0.15) 0%, transparent 70%);
 }
 
-/* Slice hover: brighter bg */
+/* Slice hover: zoom in the character and make gradients slightly brighter */
+.char-slice:hover .slice-bg {
+  transform: scale(1.06);
+}
 .char-slice:hover .slice-bg-1 {
   background:
-    linear-gradient(to bottom, rgba(120,70,200,0.55) 0%, rgba(13,10,26,0.85) 80%),
+    linear-gradient(to bottom, rgba(13,10,26,0.02) 0%, rgba(13,10,26,0.85) 85%),
+    url('./sprites/anastasia.png') no-repeat center bottom / cover,
     radial-gradient(ellipse 80% 60% at 50% 25%, rgba(168,85,247,0.4) 0%, transparent 70%);
 }
 .char-slice:hover .slice-bg-2 {
   background:
-    linear-gradient(to bottom, rgba(50,90,220,0.55) 0%, rgba(13,10,26,0.85) 80%),
+    linear-gradient(to bottom, rgba(13,10,26,0.02) 0%, rgba(13,10,26,0.85) 85%),
+    url('./sprites/conrad.png') no-repeat center bottom / cover,
     radial-gradient(ellipse 80% 60% at 50% 25%, rgba(79,130,212,0.45) 0%, transparent 70%);
 }
 .char-slice:hover .slice-bg-3 {
   background:
-    linear-gradient(to bottom, rgba(30,110,120,0.55) 0%, rgba(13,10,26,0.85) 80%),
+    linear-gradient(to bottom, rgba(13,10,26,0.02) 0%, rgba(13,10,26,0.85) 85%),
+    url('./placeholder.png') no-repeat center bottom / cover,
     radial-gradient(ellipse 80% 60% at 50% 25%, rgba(52,201,122,0.3) 0%, transparent 70%);
 }
 
@@ -1162,6 +1172,7 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
 
 /* Character figure emoji */
 .slice-figure {
+  display: none;
   font-size: clamp(28px, 8vw, 52px);
   line-height: 1;
   filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
