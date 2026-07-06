@@ -5,6 +5,7 @@ import { bePostScore } from './config.js';
 import { VERBS, ADJS, FORMS, FORM } from './data.js';
 import { OTOME } from './game-content.js';
 import { showScreen, bumpStreak } from './app.js';
+import { answer } from './engine.js';
 
 export const CHAR = Object.fromEntries(OTOME.characters.map(c => [c.id, c]));
 export let VN = null;

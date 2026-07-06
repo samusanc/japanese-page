@@ -2,33 +2,33 @@
    KATSUYO — Fantasy Aristocratic Crystal UI
    ==================================================== */
 :root {
-  /* Palette — warm midnight crystal */
-  --bg:          #161821;
-  --bg2:         #28313f;
-  --surface:     rgba(40, 49, 63, 0.28); /* translucent slate blue */
-  --surface-md:  rgba(40, 49, 63, 0.48);
-  --surface-hi:  rgba(40, 49, 63, 0.68);
-  --glass-border:rgba(255, 255, 255, 0.18);
-  --glass-border-hi:rgba(255, 255, 255, 0.32);
+  /* Palette — warm midnight crystal (luxury black & gold) */
+  --bg:          #0a0a0c; /* pure deep luxury black */
+  --bg2:         #121215; /* obsidian black */
+  --surface:     rgba(18, 18, 21, 0.32); /* translucent obsidian black */
+  --surface-md:  rgba(18, 18, 21, 0.52);
+  --surface-hi:  rgba(18, 18, 21, 0.75);
+  --glass-border:rgba(207, 165, 122, 0.15); /* translucent gold border */
+  --glass-border-hi:rgba(207, 165, 122, 0.35); /* bright gold border */
 
   /* Warm accents */
-  --gold:        #cfa57a;
-  --gold-glow:   rgba(207, 165, 122, 0.4);
-  --rose:        #9a5b4f;
-  --rose-glow:   rgba(154, 91, 79, 0.4);
-  --crimson:     #5c3b3b;
-  --crimson-glow:rgba(92, 59, 59, 0.4);
-  --sapphire:    #7a9ccf;
-  --sapphire-glow:rgba(122, 156, 207, 0.4);
-  --amethyst:    #8c678a;
-  --amethyst-glow:rgba(140, 103, 138, 0.35);
-  --emerald:     #8caf7e;
-  --emerald-glow:rgba(140, 175, 126, 0.35);
+  --gold:        #cfa57a; /* royal warm gold */
+  --gold-glow:   rgba(207, 165, 122, 0.3);
+  --rose:        #b58c5c; /* burnished gold / bronze */
+  --rose-glow:   rgba(181, 140, 92, 0.3);
+  --crimson:     #5c3c3c;
+  --crimson-glow:rgba(92, 60, 60, 0.3);
+  --sapphire:    #cfa57a; /* gold theme override */
+  --sapphire-glow:rgba(207, 165, 122, 0.35);
+  --amethyst:    #9c7b56;
+  --amethyst-glow:rgba(156, 123, 86, 0.3);
+  --emerald:     #82a67d;
+  --emerald-glow:rgba(130, 166, 125, 0.3);
 
   /* Warm text colors */
-  --ink:    #f7f4f0;
-  --ink2:   #c3bcae;
-  --ink3:   #8a7f72;
+  --ink:    #fbf9f5;
+  --ink2:   #cfc7b8;
+  --ink3:   #8c8273;
 
   /* Geometry */
   --r:    16px;
@@ -48,17 +48,15 @@
 }
 
 *, *::before, *::after { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html, body { margin:0; padding:0; }
-
-body {
+html, body { margin:0; padding:0; }body {
   font-family: var(--body);
   font-size: 16px;
   color: var(--ink);
   background: var(--bg);
   background-image:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79,130,212,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 90% 90%, rgba(168,85,247,0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 50% at 10% 70%, rgba(212,168,83,0.07) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(207,165,122,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 90%, rgba(181,140,92,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 50% at 10% 70%, rgba(207,165,122,0.06) 0%, transparent 50%);
   min-height: 100dvh;
   touch-action: manipulation;
   -webkit-font-smoothing: antialiased;
@@ -79,7 +77,7 @@ body::before {
     radial-gradient(1px 1px at 70% 75%, rgba(255,255,255,0.35) 0%, transparent 100%),
     radial-gradient(1px 1px at 35% 45%, rgba(255,255,255,0.4) 0%, transparent 100%),
     radial-gradient(1.5px 1.5px at 60% 20%, rgba(212,168,83,0.7) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 88% 55%, rgba(168,85,247,0.6) 0%, transparent 100%);
+    radial-gradient(1.5px 1.5px at 88% 55%, rgba(207,165,122,0.4) 0%, transparent 100%);
   opacity: 0.8;
 }
 
