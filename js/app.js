@@ -27,7 +27,8 @@ export function showScreen(id) {
 }
 
 export function renderHome() {
-  $("#todayDate").textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+  const td = $("#todayDate");
+  if (td) td.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
   
   const CHAR_KEYS = ["prince", "knight", "earl", "archduke", "duchess"];
   const seedRnd = mulberry32(hashStr(todayStr() + "char-seed"));
@@ -49,7 +50,8 @@ export function renderHome() {
   state.dayRec.sB = totalScore;
   state.dayRec.kB = totalScore;
   
-  $("#dailyTotalBadge").textContent = state.debugMode ? "∞ tries (debug)" : `${totalScore} pts today`;
+  const dtb = $("#dailyTotalBadge");
+  if (dtb) dtb.textContent = state.debugMode ? "∞ tries (debug)" : `${totalScore} pts today`;
   
   const om = $("#otomeMenu");
   if (om) {
