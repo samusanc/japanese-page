@@ -118,7 +118,7 @@ characters: [
 {
   id:"knight", name:"Sir Gareth", jp:"ガレス", title:"The Devoted Knight",
   tagline:"The Loyal Protector", icon:"🛡️",
-  accent:"#6FBF9B", accent2:"#CDEBD9", img:null,
+  accent:"#6FBF9B", accent2:"#CDEBD9", img:"./sprites/lucien.png",
   bio:"Your personal guard, who has loved you from afar. His vows, your shared past, your safety — that is his whole world.",
   forms:["ta","tai","apast","ate"],
   yells: [
@@ -172,7 +172,7 @@ characters: [
 {
   id:"earl", name:"Earl Cassius", jp:"カシウス", title:"The Arrogant Earl",
   tagline:"The Tsundere Rival", icon:"🎩",
-  accent:"#E0577E", accent2:"#F8CBD8", img:null,
+  accent:"#E0577E", accent2:"#F8CBD8", img:"./sprites/tyril.png",
   bio:"A wealthy, prideful noble of a rival house. Constantly flustered by you, hiding every blush behind haughty commands.",
   forms:["nai","imp","apneg","aadv"],
   yells: [
@@ -226,7 +226,7 @@ characters: [
 {
   id:"archduke", name:"Archduke Vesper", jp:"ヴェスパー", title:"The Scheming Archduke",
   tagline:"The Court Puppeteer", icon:"🦂",
-  accent:"#9B6FE8", accent2:"#DCCBF8", img:null,
+  accent:"#9B6FE8", accent2:"#DCCBF8", img:"./sprites/crius.png",
   bio:"He operates in the shadows, three steps ahead of everyone. You are either his pawn — or his queen.",
   forms:["caus","ba","tara","vol"],
   yells: [
@@ -279,7 +279,7 @@ characters: [
 {
   id:"duchess", name:"Duchess Seraphina", jp:"セラフィナ", title:"The Defiant Duchess",
   tagline:"The Fierce Warrior", icon:"⚔️",
-  accent:"#E8A13C", accent2:"#F8E3C0", img:null,
+  accent:"#E8A13C", accent2:"#F8E3C0", img:"./sprites/anastasia.png",
   bio:"A brilliant woman who wields a sword in a ballgown and refuses to be anyone's pawn. Fiercely protective of you.",
   forms:["pot","te","pass","aneg"],
   yells: [
