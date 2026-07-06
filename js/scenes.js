@@ -61,7 +61,7 @@ export const INTRO_SCENES = {
 export const QUESTION_PROMPTS = {
   hana: {
     name: "Hana",
-    png: "./placeholder.png",
+    png: "./sprites/anastasia.png",
     bg: "bg-garden",
     prompts: [
       {
@@ -84,7 +84,7 @@ export const QUESTION_PROMPTS = {
   },
   ren: {
     name: "Ren",
-    png: "./placeholder.png",
+    png: "./sprites/conrad.png",
     bg: "bg-dojo",
     prompts: [
       {
