@@ -115,16 +115,26 @@ export function renderQ() {
   $("#explain").style.display = "none";
   $("#btnNext").style.display = "none";
 
-  // Dialogue construction for Otome theme
+  // Dialogue construction for Otome theme (Japanese and English Translation)
   const mean = state.G.mode === "daily" ? q.item.m.split("⚠")[0].trim() : q.item.m;
-  const wordDisplay = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span> (${q.item.r})`;
-  const typeDisplay = state.G.mode === "practice" ? ` [${TYPE_LABEL[q.item.t]}]` : "";
-  
-  const dialoguePrompts = [
-    `Hey, can you help me conjugate ${wordDisplay} ("${mean}") into the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplay}`,
-    `I'm stuck on this one! What is ${wordDisplay} ("${mean}") in the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplay}`,
-    `Do you know the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en}) form of ${wordDisplay} ("${mean}")?${typeDisplay}`,
-    `Let's see if we can conjugate ${wordDisplay} ("${mean}") to the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})!${typeDisplay}`
+  const wordDisplay = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span>（${q.item.r}）`;
+  const typeDisplay = state.G.mode === "practice" ? `［${TYPE_LABEL[q.item.t]}］` : "";
+
+  const wordDisplayEn = q.item.k === q.item.r ? `<span class="otome-word">${q.item.k}</span>` : `<span class="otome-word">${q.item.k}</span> (${q.item.r})`;
+  const typeDisplayEn = state.G.mode === "practice" ? ` [${TYPE_LABEL[q.item.t]}]` : "";
+
+  const promptsJa = [
+    `ねえ、${wordDisplay}（意味: 「${mean}」）を<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）にしてくれる？${typeDisplay}`,
+    `${wordDisplay}（意味: 「${mean}」）の<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）形が分からないんだ。教えて！${typeDisplay}`,
+    `${wordDisplay}（意味: 「${mean}」）の<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）形、知ってる？${typeDisplay}`,
+    `${wordDisplay}（意味: 「${mean}」）を<span class="otome-form">${FORM[q.fid].jp}</span>（${FORM[q.fid].en}）形に活用してみよう！${typeDisplay}`
+  ];
+
+  const promptsEn = [
+    `Hey, can you help me conjugate ${wordDisplayEn} ("${mean}") into the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplayEn}`,
+    `I'm stuck on this one! What is ${wordDisplayEn} ("${mean}") in the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})?${typeDisplayEn}`,
+    `Do you know the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en}) form of ${wordDisplayEn} ("${mean}")?${typeDisplayEn}`,
+    `Let's see if we can conjugate ${wordDisplayEn} ("${mean}") to the <span class="otome-form">${FORM[q.fid].jp}</span> (${FORM[q.fid].en})!${typeDisplayEn}`
   ];
 
   let hash = 0;
@@ -132,8 +142,13 @@ export function renderQ() {
   for (let idx = 0; idx < seedString.length; idx++) {
     hash = (hash * 31 + seedString.charCodeAt(idx)) | 0;
   }
-  const promptIdx = Math.abs(hash) % dialoguePrompts.length;
-  $("#qDialogue").innerHTML = dialoguePrompts[promptIdx];
+  const promptIdx = Math.abs(hash) % promptsJa.length;
+
+  $("#qDialogue").innerHTML = `
+    <div class="dialogue-ja">${promptsJa[promptIdx]}</div>
+    <div class="dialogue-en">${promptsEn[promptIdx]}</div>
+  `;
+  $("#qDialogue").classList.remove("show-translation");
   
   const ch = $("#choices");
   ch.innerHTML = "";
@@ -307,4 +322,9 @@ export function initSprintGameUI() {
   $("#btnResHome").addEventListener("click", () => showScreen("home"));
   $("#btnDaily").addEventListener("click", startDaily);
   $("#btnPractice").addEventListener("click", startPractice);
+
+  // Dialogue tap-to-translate event listener
+  $("#qcard").addEventListener("click", () => {
+    $("#qDialogue").classList.toggle("show-translation");
+  });
 }
