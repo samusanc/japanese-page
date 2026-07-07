@@ -20,6 +20,7 @@ export function audioId(text) {
 }
 
 const _audioEls = {};
+let _activeAudio = null;
 
 export function ttsFallback(text) {
   const time = new Date().toISOString().slice(11, 23);
@@ -55,6 +56,15 @@ export function speak(text) {
     console.log(`[Audio Debug ${time}] speak: text is empty, ignoring`);
     return;
   }
+  if (_activeAudio) {
+    try {
+      console.log(`[Audio Debug ${time}] speak: pausing active audio track`);
+      _activeAudio.pause();
+      _activeAudio.currentTime = 0;
+    } catch (e) {
+      console.log(`[Audio Debug ${time}] speak: error pausing active audio:`, e);
+    }
+  }
   const id = audioId(text);
   let a = _audioEls[id];
   console.log(`[Audio Debug ${time}] speak: id="${id}", cachedStatus=${a ? (a === "bad" ? "bad" : "AudioObject") : "none"}`);
@@ -81,6 +91,7 @@ export function speak(text) {
   } catch (e) {
     console.log(`[Audio Debug ${time}] speak: speechSynthesis.cancel() error:`, e);
   }
+  _activeAudio = a;
   a.currentTime = 0;
   console.log(`[Audio Debug ${time}] speak: calling audio.play() for id="${id}"`);
   const pr = a.play();
