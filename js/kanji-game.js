@@ -85,7 +85,7 @@ export function nextKanji() {
   state.KG.mistakes = 0;
   state.KG.revealed = false;
   const skipBtn = $("#kSkip");
-  if (skipBtn) skipBtn.style.display = "none";
+  if (skipBtn) skipBtn.style.display = "block";
   const { k, requeue } = state.KG.cur;
   renderKProgress();
   $("#kMean").textContent = k.m + (requeue ? "  (round 2!)" : "");

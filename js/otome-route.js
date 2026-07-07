@@ -431,7 +431,7 @@ async function castKanji(k, battle) {
   let mistakes = 0, revealed = false;
   const skipBtn = $("#vnSkip");
   if (skipBtn) {
-    skipBtn.style.display = "none";
+    skipBtn.style.display = "block";
     skipBtn.onclick = () => {
       skipBtn.style.display = "none";
       const r = VN && VN._res;
@@ -567,7 +567,7 @@ async function vnStep(k, mode) {
     let mistakes = 0, revealed = false, skipped = false;
     const skipBtn = $("#vnSkip");
     if (skipBtn) {
-      skipBtn.style.display = "none";
+      skipBtn.style.display = "block";
       skipBtn.onclick = () => {
         skipped = true;
         skipBtn.style.display = "none";
