@@ -429,6 +429,16 @@ async function castKanji(k, battle) {
   $("#vnWFeedback").textContent = "";
   speak(k.r.split("・")[0]);
   let mistakes = 0, revealed = false;
+  const skipBtn = $("#vnSkip");
+  if (skipBtn) {
+    skipBtn.style.display = "none";
+    skipBtn.onclick = () => {
+      skipBtn.style.display = "none";
+      const r = VN && VN._res;
+      if (VN) VN._res = null;
+      if (r) r({ revealed: true, s: { totalMistakes: 99 } });
+    };
+  }
   
   const sum = await new Promise(res => {
     VN._res = res;
@@ -450,6 +460,7 @@ async function castKanji(k, battle) {
           w.showOutline();
           $("#vnWFeedback").textContent = "The sign fades in softly — trace it!";
           $("#vnWFeedback").className = "k-feedback bad";
+          if (skipBtn) skipBtn.style.display = "block";
         } else if (!revealed) {
           $("#vnWFeedback").textContent = `✕ ${3 - mistakes} ${3 - mistakes === 1 ? "miss" : "misses"} before the sign fades in`;
           $("#vnWFeedback").className = "k-feedback bad";
@@ -463,6 +474,7 @@ async function castKanji(k, battle) {
         }
       },
       onComplete: s => {
+        if (skipBtn) skipBtn.style.display = "none";
         const r = VN && VN._res;
         if (VN) VN._res = null;
         if (r) r({ s, revealed });

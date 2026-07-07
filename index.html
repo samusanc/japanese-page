@@ -359,6 +359,7 @@
     <div class="writer-wrap"><div class="writer-box" id="kWriterBox"><div class="stamp" id="kStamp">正解</div></div></div>
     <div class="k-feedback" id="kFeedback"></div>
     <button class="hintbtn" id="kHint">👁 Reveal outline — 0 pts, comes back later</button>
+    <button class="hintbtn skipbtn" id="kSkip" style="display:none; margin-top:6px;">⏩ Skip Kanji</button>
     <p class="note" style="text-align:center; margin-top:4px;">Draw each stroke in order. 3 mistakes reveals the shadow — then that kanji returns at the end for a second try from memory.</p>
   </div>
 </div>
@@ -400,13 +401,15 @@
       <div class="g-score" id="vnScore" style="color:#fff; text-shadow:0 1px 8px rgba(0,0,0,.5);">0</div>
     </div>
     <div class="vn-hearts" id="vnHearts">❤️❤️</div>
-    <div class="vn-sprite" id="vnSprite">👑</div>
+    <div class="vn-sprite-container">
+      <div class="vn-sprite" id="vnSprite">👑</div>
+    </div>
     <div class="vn-yell" id="vnYell"></div>
-    <div style="flex:1"></div>
     <div class="vn-kcards" id="vnKcards" style="display:none;"></div>
     <div class="vn-writer-area" id="vnWriterArea" style="display:none;">
       <div class="writer-box" id="vnWriterBox"><div class="stamp" id="vnStamp">正解</div></div>
       <div class="k-feedback" id="vnWFeedback"></div>
+      <button class="hintbtn skipbtn" id="vnSkip" style="display:none; margin-top:6px;">⏩ Skip Kanji</button>
     </div>
     <div class="vn-bottom">
       <div class="vn-quiz-jp" id="vnQuizJp" style="display:none;"></div>

@@ -62,6 +62,9 @@ export function failCurrent(reason) {
   $("#kFeedback").className = "k-feedback bad";
   $("#kHint").disabled = true;
   
+  const skipBtn = $("#kSkip");
+  if (skipBtn) skipBtn.style.display = "block";
+  
   if (isMastered(state.KG.cur.k.c)) {
     setKprog(state.KG.cur.k.c, { rc: false });
     toast(state.KG.cur.k.c + " dropped from mastered — win it back!");
@@ -81,6 +84,8 @@ export function nextKanji() {
   }
   state.KG.mistakes = 0;
   state.KG.revealed = false;
+  const skipBtn = $("#kSkip");
+  if (skipBtn) skipBtn.style.display = "none";
   const { k, requeue } = state.KG.cur;
   renderKProgress();
   $("#kMean").textContent = k.m + (requeue ? "  (round 2!)" : "");
@@ -194,4 +199,16 @@ export function initKanjiGameUI() {
   $("#kHint").addEventListener("click", () => failCurrent("hint"));
   $("#kQuit").addEventListener("click", () => { if (state.KG && !state.KG.over) endKanjiDaily(true); });
   $("#btnKanjiDaily").addEventListener("click", startKanjiDaily);
+  
+  const skipBtn = $("#kSkip");
+  if (skipBtn) {
+    skipBtn.addEventListener("click", () => {
+      if (!state.KG || state.KG.over || !state.KG.cur) return;
+      const { k, requeue } = state.KG.cur;
+      state.KG.done.push({ c: k.c, m: k.m, mistakes: state.KG.mistakes, pts: 0, revealed: true, requeue });
+      state.KG.results = state.KG.done;
+      skipBtn.style.display = "none";
+      nextKanji();
+    });
+  }
 }

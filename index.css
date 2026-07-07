@@ -388,6 +388,17 @@ h1.big {
 }
 .hintbtn:hover { border-color: var(--rose); color: var(--rose); }
 .hintbtn:disabled { opacity: .3; }
+.skipbtn {
+  background: rgba(217, 83, 79, 0.1) !important;
+  border: 1px solid rgba(217, 83, 79, 0.35) !important;
+  color: #ff9999 !important;
+  cursor: pointer;
+}
+.skipbtn:hover {
+  background: rgba(217, 83, 79, 0.25) !important;
+  border-color: rgba(217, 83, 79, 0.6) !important;
+  color: #ffcccc !important;
+}
 .sentence {
   background: rgba(79,130,212,0.07);
   border-left: 2px solid var(--sapphire);
@@ -1602,22 +1613,34 @@ main:has(#s-home.on) {
 }
 
 .vn-stage { position: relative; flex: 1; display: flex; flex-direction: column; z-index: 2; overflow: hidden; }
-.vn-sprite {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 172px;
+.vn-sprite-container {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
   z-index: 2;
+  pointer-events: none;
+}
+.vn-sprite {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 120px;
+  line-height: 1;
   filter: drop-shadow(0 12px 28px rgba(0,0,0,0.65));
   transition: opacity 0.5s ease;
   animation: vnFloat 4.5s ease-in-out infinite;
+  margin-bottom: -15px; /* Overlap dialogue box slightly */
 }
-.vn-sprite img { height: 56vh; max-height: 460px; width: auto; object-fit: contain; }
-.vn-sprite.left { left: 50%; transform: translateX(-50%); }
+.vn-sprite img { height: 65vh; max-height: 540px; width: auto; object-fit: contain; }
+.vn-sprite.left { left: auto; transform: none; }
 
 @keyframes vnFloat {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, -8px); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .vn-hearts {
