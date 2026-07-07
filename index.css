@@ -746,7 +746,7 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
    GAME OVERLAY — Crystal Fantasy
    ============================================= */
 #game.overlay {
-  background: url('./1783326442308.png') no-repeat center center;
+  background: url('./bg/academy-crest.png') no-repeat center center;
   background-size: cover;
 }
 
@@ -1583,10 +1583,10 @@ main:has(#s-home.on) {
    VN OVERLAY CUSTOM STYLES
    ============================================================ */
 
-#vn .vn-bg { position: absolute; inset: 0; transition: background 1s ease; background: linear-gradient(165deg, #18112d, #3c2e62); }
+#vn .vn-bg { position: absolute; inset: 0; transition: background 1s ease; background: linear-gradient(165deg, #09090b, #181510); }
 #vn .vn-bg::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(22,24,33,0.3) 0%, rgba(22,24,33,0.1) 40%, rgba(22,24,33,0.7) 100%);
+  background: linear-gradient(to bottom, rgba(10,10,12,0.35) 0%, rgba(10,10,12,0.15) 40%, rgba(10,10,12,0.85) 100%);
 }
 .vn-stage { position: relative; flex: 1; display: flex; flex-direction: column; z-index: 2; overflow: hidden; }
 .vn-sprite {
@@ -1602,8 +1602,8 @@ main:has(#s-home.on) {
 }
 .vn-yell {
   position: absolute; right: 8%; bottom: 56%; max-width: 70%; z-index: 5;
-  background: rgba(24, 17, 36, 0.96); border: 1px solid var(--glass-brd); border-radius: 18px 18px 4px 18px;
-  padding: 10px 14px; font-family: var(--disp); font-weight: 900; font-size: 14.5px; color: var(--shu);
+  background: rgba(18, 18, 21, 0.96); border: 1px solid rgba(207, 165, 122, 0.35); border-radius: 18px 18px 4px 18px;
+  padding: 10px 14px; font-family: var(--disp); font-weight: 900; font-size: 14.5px; color: var(--gold);
   box-shadow: var(--shadow); opacity: 0; transform: scale(.7); pointer-events: none;
 }
 .vn-yell .en { display: block; font-weight: 500; font-size: 11px; color: var(--ink2); margin-top: 2px; }
@@ -1614,31 +1614,32 @@ main:has(#s-home.on) {
 
 .vn-dialog {
   position: relative;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(40, 49, 63, 0.22) 40%, rgba(22, 24, 33, 0.4) 100%) !important;
+  background: linear-gradient(135deg, rgba(207, 165, 122, 0.08) 0%, rgba(18, 18, 21, 0.6) 45%, rgba(10, 10, 12, 0.9) 100%) !important;
   backdrop-filter: blur(35px) saturate(220%) !important;
   -webkit-backdrop-filter: blur(35px) saturate(220%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.32) !important;
+  border: 1px solid rgba(207, 165, 122, 0.28) !important;
   border-radius: var(--r);
-  box-shadow: var(--shadow), inset 0 2px 2px rgba(255, 255, 255, 0.35), inset 0 -2px 2px rgba(0, 0, 0, 0.3), 0 0 30px rgba(207, 165, 122, 0.05) !important;
+  box-shadow: var(--shadow), inset 0 1px 1px rgba(207, 165, 122, 0.25), inset 0 -1.5px 2px rgba(0, 0, 0, 0.4), 0 0 30px rgba(207, 165, 122, 0.05) !important;
   padding: 32px 20px 20px;
 }
 .vn-name {
   position: absolute; top: -14px; left: 16px; font-family: var(--disp); font-weight: 900; font-size: 13px; color: #221604;
+  background: var(--gold);
   padding: 4px 14px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,.25);
 }
 .vn-text { font-size: 15px; line-height: 1.75; font-weight: 500; padding-top: 4px; min-height: 56px; color: var(--ink); }
 .vn-text .en { display: block; font-size: 11.5px; color: var(--ink2); font-style: italic; margin-top: 4px; }
-.vn-next { position: absolute; right: 14px; bottom: 8px; color: var(--vio); font-size: 15px; animation: bob 1s ease-in-out infinite; }
+.vn-next { position: absolute; right: 14px; bottom: 8px; color: var(--gold) !important; font-size: 15px; animation: bob 1s ease-in-out infinite; }
 
 .vn-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 
 .vn-quiz-jp {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(40, 49, 63, 0.22) 40%, rgba(22, 24, 33, 0.4) 100%) !important;
+  background: linear-gradient(135deg, rgba(207, 165, 122, 0.08) 0%, rgba(18, 18, 21, 0.6) 45%, rgba(10, 10, 12, 0.9) 100%) !important;
   backdrop-filter: blur(35px) saturate(220%) !important;
   -webkit-backdrop-filter: blur(35px) saturate(220%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.32) !important;
+  border: 1px solid rgba(207, 165, 122, 0.28) !important;
   border-radius: 18px;
-  box-shadow: var(--shadow), inset 0 2px 2px rgba(255, 255, 255, 0.35), inset 0 -2px 2px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: var(--shadow), inset 0 1px 1px rgba(207, 165, 122, 0.25), inset 0 -1.5px 2px rgba(0, 0, 0, 0.4) !important;
   padding: 12px 14px; text-align: center; font-family: var(--jp); font-size: 16px; line-height: 1.5; color: var(--ink);
 }
 .vn-quiz-jp .blank { color: var(--rose); border-bottom: 2.5px dashed var(--rose); padding: 0 6px; }
@@ -1648,17 +1649,17 @@ main:has(#s-home.on) {
 .vn-kcards { display: flex; gap: 12px; justify-content: center; z-index: 3; padding: 8px 0; }
 
 .vn-kcard {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(40, 49, 63, 0.22) 40%, rgba(22, 24, 33, 0.4) 100%) !important;
+  background: linear-gradient(135deg, rgba(207, 165, 122, 0.08) 0%, rgba(18, 18, 21, 0.6) 45%, rgba(10, 10, 12, 0.9) 100%) !important;
   backdrop-filter: blur(35px) saturate(220%) !important;
   -webkit-backdrop-filter: blur(35px) saturate(220%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.32) !important;
-  border-radius: 20px; box-shadow: var(--shadow), inset 0 2px 2px rgba(255, 255, 255, 0.35) !important;
+  border: 1px solid rgba(207, 165, 122, 0.28) !important;
+  border-radius: 20px; box-shadow: var(--shadow), inset 0 1px 1px rgba(207, 165, 122, 0.25) !important;
   padding: 14px 18px; text-align: center; flex: 1; max-width: 140px; color: var(--ink);
 }
 .vn-kcard .kc { font-family: var(--disp); font-weight: 900; font-size: 52px; line-height: 1.1; color: var(--gold); }
 .vn-kcard .km { font-size: 11.5px; color: var(--ink2); margin-top: 3px; }
 
-.vn-ending { position: absolute; inset: 0; z-index: 8; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(14,10,24,.85); backdrop-filter: blur(10px); }
+.vn-ending { position: absolute; inset: 0; z-index: 8; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(10,10,12,.95); backdrop-filter: blur(10px); }
 .vn-ending.on { display: flex; }
 .vn-ending .card { width: 100%; text-align: center; }
 .vn-ending .big-oc { font-family: var(--disp); font-weight: 900; font-size: 26px; margin: 6px 0; }
