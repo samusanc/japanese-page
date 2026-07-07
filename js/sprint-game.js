@@ -164,7 +164,7 @@ function runStory() {
   $("#storySpeaker").textContent = charData.name;
 
   // Visual layout backgrounds
-  $("#game").style.background = `url('./1783326442308.png') no-repeat center center`;
+  $("#game").style.background = `url('./bg/academy-crest.png') no-repeat center center`;
   $("#game").style.backgroundSize = "cover";
 
   loadStoryScene();

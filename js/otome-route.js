@@ -58,7 +58,7 @@ export function statusOf(ch, roster) {
 function vnBgSet(id) {
   const b = OTOME.assets.bg[id];
   if (!b) return;
-  $("#vnBg").style.background = b.img ? `url(${b.img}) center/cover no-repeat` : b.css;
+  $("#vnBg").style.background = b.img ? `url('${b.img}') center/cover no-repeat` : b.css;
 }
 
 function vnMusicPlay(id) {
