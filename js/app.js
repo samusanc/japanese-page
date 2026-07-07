@@ -3,7 +3,7 @@ import { CONFIG, beInit, beSaveProfile, bePostScore, fetchBoard } from './config
 import { VERBS, ADJS, FORMS, FORM, SENTENCES } from './data.js';
 import { LS, $, $$, escapeHtml, todayStr, yesterdayStr, toast, hashStr } from './helpers.js';
 import { initAudioUI, speak, spkBtn } from './audio.js';
-import { initSprintGameUI, startDaily } from './sprint-game.js';
+import { initSprintGameUI } from './sprint-game.js';
 import { initKanjiGameUI, dailyKanjiSet } from './kanji-game.js';
 import { initKanjiStudioUI, renderKanjiTab } from './kanji-logic.js';
 import { answer } from './engine.js';
