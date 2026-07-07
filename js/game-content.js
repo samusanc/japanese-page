@@ -22,12 +22,13 @@ export const OTOME = {
 assets: {
   /* backgrounds: css gradient fallback; set img:"assets/xxx.jpg" to use art */
   bg: {
-    academy:  { css:"linear-gradient(168deg,#120D1F 0%,#241B36 48%,#57431E 135%)", img:"./bg/academy-crest.png" },
+    academy:  { css:"linear-gradient(168deg,#120D1F 0%,#241B36 48%,#57431E 135%)", img:"./bg/magic-training.png" },
     ballroom: { css:"linear-gradient(160deg,#3a2455 0%,#7b4b8f 50%,#d9a0c0 100%)", img:null },
-    garden:   { css:"linear-gradient(165deg,#1f4d43 0%,#4e8a6a 55%,#c9e6b8 100%)", img:null },
-    night:    { css:"linear-gradient(170deg,#0A0814 0%,#1B1738 55%,#3A3168 110%)", img:null },
-    storm:    { css:"linear-gradient(165deg,#20142e 0%,#5e2445 55%,#a63c52 100%)", img:null },
-    rose:     { css:"linear-gradient(160deg,#5e2445 0%,#b0507e 55%,#f7c8d8 100%)", img:null }
+    garden:   { css:"linear-gradient(165deg,#1f4d43 0%,#4e8a6a 55%,#c9e6b8 100%)", img:"./bg/magic-green-forest.png" },
+    night:    { css:"linear-gradient(170deg,#0A0814 0%,#1B1738 55%,#3A3168 110%)", img:"./bg/magic-forest-night.png" },
+    storm:    { css:"linear-gradient(165deg,#20142e 0%,#5e2445 55%,#a63c52 100%)", img:"./bg/magic-forest-night.png" },
+    rose:     { css:"linear-gradient(160deg,#5e2445 0%,#b0507e 55%,#f7c8d8 100%)", img:"./bg/park-moonlight.png" },
+    study:    { css:"linear-gradient(165deg,#09090b,#181510)", img:"./bg/crown-prince-study.png" }
   },
   /* music loops: drop mp3 paths in src; engine skips nulls gracefully */
   music: {
@@ -235,7 +236,7 @@ characters: [
     {jp:"あなたには期待しているのですよ。", en:"I have expectations of you, you know."}
   ],
   intro: [
-    {bg:"night"},{music:"tension"},
+    {bg:"study"},{music:"tension"},
     {who:"n", say:"A candlelit study, deep in the palace. Maps, letters, and a chessboard mid-game. The Archduke smiles like a man who has already won."},
     {who:"archduke", say:"ようこそ。ちょうど、王の話をしていたところです。", en:"Welcome. We were just discussing the King."},
     {quiz:{form:"caus", word:"する", jp:"王には、退位を＿＿。", en:"I will make the King abdicate. (する → causative)"}},
@@ -263,13 +264,13 @@ characters: [
       {who:"n", say:"💘 The Scheming Archduke has fallen for you. (This was NOT in his plans.)"}
     ],
     friend: [
-      {bg:"night"},
+      {bg:"study"},
       {who:"archduke", say:"Adequate. A few blunders, but the board survived."},
       {who:"archduke", say:"I keep useful people close. Consider yourself… kept close."},
       {who:"n", say:"🤝 The Archduke names you a trusted associate."}
     ],
     fail: [
-      {bg:"night"},
+      {bg:"study"},
       {who:"archduke", say:"…A piece that cannot hold its square endangers the whole board."},
       {who:"archduke", say:"I dislike wasting potential. One more game, apprentice. Do not disappoint me twice."},
       {who:"n", say:"💔 The Archduke returns to his chessboard. (One more chance remains.)"}

@@ -1592,7 +1592,7 @@ main:has(#s-home.on) {
   width: calc(100% + 20px);
   height: calc(100% + 20px);
   z-index: 1;
-  filter: blur(6px) brightness(0.75);
+  filter: blur(3px) brightness(0.8);
   transition: background 1s ease;
   background: linear-gradient(165deg, #09090b, #181510);
 }
@@ -1612,7 +1612,7 @@ main:has(#s-home.on) {
   transition: opacity 0.5s ease;
   animation: vnFloat 4.5s ease-in-out infinite;
 }
-.vn-sprite img { height: 46vh; max-height: 380px; width: auto; object-fit: contain; }
+.vn-sprite img { height: 56vh; max-height: 460px; width: auto; object-fit: contain; }
 .vn-sprite.left { left: 50%; transform: translateX(-50%); }
 
 @keyframes vnFloat {
