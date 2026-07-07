@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#FCFBF7">
+<meta name="theme-color" content="#0d0a1a">
 <title>活用! Katsuyo — Daily Japanese Battles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.3/dist/hanzi-writer.min.js"></script>
 <script src="./kanji-data.js"></script>
@@ -16,32 +16,169 @@
 </head>
 <body>
 <div id="app">
+
   <main>
     <!-- ============ HOME ============ -->
-    <section id="s-home" class="screen on" style="padding: 0; margin: 0; height: calc(100dvh - 58px - env(safe-area-inset-bottom)); position: relative; overflow: hidden; display: flex; flex-direction: column;">
-      <!-- The 3 slices container spanning 100% of s-home height and width -->
-      <div class="otome-menu-container" id="otomeMenu" style="flex: 1; margin: 0; border-radius: 0; gap: 0; overflow: hidden; display: flex; flex-direction: row;">
-        <!-- Populated dynamically via JS -->
+    <section id="s-home" class="screen on">
+      <!-- Hidden functional elements required by app logic -->
+      <span id="todayDate" style="display:none"></span>
+      <span id="attemptBadge" style="display:none">2 tries left</span>
+      <span id="kAttemptBadge" style="display:none">2 tries left</span>
+      <div id="dailyForms" style="display:none"></div>
+      <div id="dailyBestLine" style="display:none"></div>
+      <div id="kDailyBestLine" style="display:none"></div>
+      <div id="kanjiPreview" style="display:none"></div>
+      <div id="stTotal" style="display:none">0</div>
+      <div id="stAcc" style="display:none">–</div>
+      <div id="stRank" style="display:none">–</div>
+      <div id="miniBoard" style="display:none"></div>
+      <button id="goGroup" style="display:none"></button>
+      <button id="btnDaily" style="display:none">Play the sprint ▶</button>
+      <button id="btnKanjiDaily" style="display:none">Draw today's kanji ▶</button>
+
+      <!-- ============ CHARACTER SELECT SLICES ============ -->
+      <div class="char-select-screen" id="charSelectScreen">
+        <!-- Decorative title crest -->
+        <div class="char-select-crest">
+          <div class="crest-line"></div>
+          <div class="crest-title">
+            <span class="crest-jp">活用<em>!</em></span>
+            <span class="crest-en">Choose your Companion</span>
+          </div>
+          <div class="crest-line"></div>
+        </div>
+
+        <div class="char-slices">
+          <!-- Slice 1 — Hana -->
+          <div class="char-slice" id="sliceHana" role="button" tabindex="0" data-char="hana" aria-label="Play with Hana">
+            <div class="slice-bg slice-bg-1"></div>
+            <div class="slice-particles">
+              <span class="particle p1">✦</span>
+              <span class="particle p2">✧</span>
+              <span class="particle p3">❋</span>
+              <span class="particle p4">✦</span>
+            </div>
+            <div class="slice-content">
+              <div class="slice-sigil">花</div>
+              <div class="slice-figure">🌸</div>
+              <div class="slice-info">
+                <div class="slice-name">Hana</div>
+                <div class="slice-role">The Scholar</div>
+                <div class="slice-tagline">Gentle · Wise</div>
+              </div>
+              <!-- Debug Mode Status Toggle -->
+              <div class="slice-dbg-panel" style="display:none; margin-top:10px; gap:6px; justify-content:center; z-index:5;">
+                <button class="slice-dbg-btn" data-act="love" style="padding:4px 8px; font-size:11px; background:rgba(207,165,122,0.15); border:1px solid var(--gold); color:var(--gold); border-radius:4px; cursor:pointer;">Love</button>
+                <button class="slice-dbg-btn" data-act="friend" style="padding:4px 8px; font-size:11px; background:rgba(79,130,212,0.15); border:1px solid #7cb5ec; color:#7cb5ec; border-radius:4px; cursor:pointer;">Friend</button>
+                <button class="slice-dbg-btn" data-act="bw" style="padding:4px 8px; font-size:11px; background:rgba(217,83,79,0.15); border:1px solid #d9534f; color:#d9534f; border-radius:4px; cursor:pointer;">Fail</button>
+              </div>
+              <div class="slice-cta">Begin ›</div>
+            </div>
+            <div class="slice-shimmer"></div>
+          </div>
+
+          <!-- Slice 2 — Ren (centre, slightly wider) -->
+          <div class="char-slice char-slice--center" id="sliceRen" role="button" tabindex="0" data-char="ren" aria-label="Play with Ren">
+            <div class="slice-bg slice-bg-2"></div>
+            <div class="slice-particles">
+              <span class="particle p1">✦</span>
+              <span class="particle p2">❋</span>
+              <span class="particle p3">✧</span>
+              <span class="particle p4">✦</span>
+              <span class="particle p5">✧</span>
+            </div>
+            <div class="slice-content">
+              <div class="slice-sigil">恋</div>
+              <div class="slice-figure">🗡️</div>
+              <div class="slice-info">
+                <div class="slice-name">Ren</div>
+                <div class="slice-role">The Guardian</div>
+                <div class="slice-tagline">Bold · Loyal</div>
+              </div>
+              <!-- Debug Mode Status Toggle -->
+              <div class="slice-dbg-panel" style="display:none; margin-top:10px; gap:6px; justify-content:center; z-index:5;">
+                <button class="slice-dbg-btn" data-act="love" style="padding:4px 8px; font-size:11px; background:rgba(207,165,122,0.15); border:1px solid var(--gold); color:var(--gold); border-radius:4px; cursor:pointer;">Love</button>
+                <button class="slice-dbg-btn" data-act="friend" style="padding:4px 8px; font-size:11px; background:rgba(79,130,212,0.15); border:1px solid #7cb5ec; color:#7cb5ec; border-radius:4px; cursor:pointer;">Friend</button>
+                <button class="slice-dbg-btn" data-act="bw" style="padding:4px 8px; font-size:11px; background:rgba(217,83,79,0.15); border:1px solid #d9534f; color:#d9534f; border-radius:4px; cursor:pointer;">Fail</button>
+              </div>
+              <div class="slice-cta">Begin ›</div>
+            </div>
+            <div class="slice-shimmer"></div>
+          </div>
+
+          <!-- Slice 3 — Sora -->
+          <div class="char-slice" id="sliceSora" role="button" tabindex="0" data-char="sora" aria-label="Play with Sora">
+            <div class="slice-bg slice-bg-3"></div>
+            <div class="slice-particles">
+              <span class="particle p1">✧</span>
+              <span class="particle p2">✦</span>
+              <span class="particle p3">✦</span>
+              <span class="particle p4">❋</span>
+            </div>
+            <div class="slice-content">
+              <div class="slice-sigil">空</div>
+              <div class="slice-figure">🌙</div>
+              <div class="slice-info">
+                <div class="slice-name">Sora</div>
+                <div class="slice-role">The Mystic</div>
+                <div class="slice-tagline">Elusive · Deep</div>
+              </div>
+              <!-- Debug Mode Status Toggle -->
+              <div class="slice-dbg-panel" style="display:none; margin-top:10px; gap:6px; justify-content:center; z-index:5;">
+                <button class="slice-dbg-btn" data-act="love" style="padding:4px 8px; font-size:11px; background:rgba(207,165,122,0.15); border:1px solid var(--gold); color:var(--gold); border-radius:4px; cursor:pointer;">Love</button>
+                <button class="slice-dbg-btn" data-act="friend" style="padding:4px 8px; font-size:11px; background:rgba(79,130,212,0.15); border:1px solid #7cb5ec; color:#7cb5ec; border-radius:4px; cursor:pointer;">Friend</button>
+                <button class="slice-dbg-btn" data-act="bw" style="padding:4px 8px; font-size:11px; background:rgba(217,83,79,0.15); border:1px solid #d9534f; color:#d9534f; border-radius:4px; cursor:pointer;">Fail</button>
+              </div>
+              <div class="slice-cta">Begin ›</div>
+            </div>
+            <div class="slice-shimmer"></div>
+          </div>
+        </div>
+
+        <!-- Bottom ornament -->
+        <div class="char-select-bottom">
+          <div class="bottom-rune">✦ &nbsp; 毎日の挑戦 &nbsp; ✦</div>
+        </div>
       </div>
     </section>
 
     <!-- ============ PRACTICE ============ -->
     <section id="s-practice" class="screen">
-      <h1 class="big">Practice <span style="color:var(--ai)">練習</span></h1>
-      <p class="sub">Untimed conjugation drills. Every answer comes with the rule.</p>
-      <div class="sect-label">Verb forms</div>
-      <div class="chips" id="chipsVerb"></div>
-      <div class="sect-label">Adjective forms</div>
-      <div class="chips" id="chipsAdj"></div>
-      <div class="sect-label">How many questions</div>
-      <div class="chips" id="chipsLen">
-        <button class="chip" data-len="10">10</button>
-        <button class="chip on" data-len="15">15</button>
-        <button class="chip" data-len="25">25</button>
+      <h1 class="hub-title">Training <em>· 修練の間</em></h1>
+      <p class="sub" style="margin-bottom:14px;">The Archduke expects perfection. Drill in the practice hall — the arcana remembers what you forget, and brings it back at the right moment. ✦</p>
+
+      <div class="card">
+        <div class="eyebrow">⚔ Spell-sign training · Kanji</div>
+        <p class="sub" style="margin-bottom:12px;">Cast signs from memory, spell-circle and all. <b style="color:var(--gold)">✦ Weakest</b> uses spaced repetition to summon the kanji you're about to forget.</p>
+        <div class="seg" id="ktCount"><button data-n="5" class="on">5 signs</button><button data-n="10">10</button><button data-n="20">20</button></div>
+        <div class="seg" id="ktSrc"><button data-l="" class="on">✦ Weakest</button><button data-l="5">N5</button><button data-l="4">N4</button></div>
+        <button class="btn gold" id="btnTrainK">Enter the practice hall ▶</button>
       </div>
-      <div style="height:18px"></div>
-      <button class="btn" id="btnPractice">Start drilling ▶</button>
-      <p class="note" style="text-align:center">Looking for kanji practice? That lives in the 書 tab.</p>
+
+      <div class="card">
+        <div class="eyebrow">📜 Declaration simulator · Grammar</div>
+        <p class="sub" style="margin-bottom:12px;">Re-live the court's own lines and answer with the exact form each noble would use. Leave every form unselected and the arcana picks your weakest.</p>
+        <div class="seg" id="ftCount"><button data-n="5" class="on">5 lines</button><button data-n="10">10</button><button data-n="15">15</button></div>
+        <div class="sect-label">Verb forms</div>
+        <div class="chips" id="chipsVerb"></div>
+        <div class="sect-label">Adjective forms</div>
+        <div class="chips" id="chipsAdj"></div>
+        <div style="height:14px"></div>
+        <button class="btn gold" id="btnTrainF">Begin declarations ▶</button>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">⚡ Classic drill</div>
+        <p class="sub" style="margin-bottom:12px;">Untimed multiple choice on the forms selected above, with the full rule after every answer.</p>
+        <div class="sect-label">How many questions</div>
+        <div class="chips" id="chipsLen">
+          <button class="chip" data-len="10">10</button>
+          <button class="chip on" data-len="15">15</button>
+          <button class="chip" data-len="25">25</button>
+        </div>
+        <div style="height:14px"></div>
+        <button class="btn" id="btnPractice">Start drilling ▶</button>
+      </div>
     </section>
 
     <!-- ============ KANJI ============ -->
@@ -161,9 +298,6 @@
     </section>
   </main>
 
-  <footer>
-    <p>Kanji stroke data from <b>KanjiVG</b> (© Ulrich Apel, CC BY-SA 3.0) via hanzi-writer. 活用! is a fan-made study tool.</p>
-  </footer>
 
   <nav>
     <button class="tab on" data-s="home"><span class="kj">今</span><span class="en">Today</span></button>
@@ -175,102 +309,55 @@
 </div>
 
 <!-- ============ SPRINT GAME OVERLAY ============ -->
-<!-- ============ VISUAL NOVEL DAILY CHALLENGE OVERLAY ============ -->
 <div id="game" class="overlay">
-  <!-- Close Button -->
-  <button class="g-quit" id="btnQuit" style="position: absolute; top: calc(env(safe-area-inset-top) + 12px); left: 16px; z-index: 50; background: none; font-size: 24px; color: var(--ink2); cursor: pointer; border: none; font-weight: bold;">✕</button>
+  <!-- Dynamic Background Wrapper -->
+  <div class="game-bg bg-classroom" id="gameBg"></div>
 
-  <!-- HUD/Top stats bar -->
-  <div class="vn-hud" id="vnHud" style="position: absolute; top: calc(env(safe-area-inset-top) + 12px); right: 16px; z-index: 50; display: flex; align-items: center; gap: 12px;">
-    <div class="vn-lives" id="vnLives" style="display: none; font-size: 16px;">❤️ ❤️</div>
-    <div class="vn-score" id="vnScore" style="font-family: var(--disp); font-weight: 900; font-size: 18px;">0 pts</div>
-  </div>
-
-  <!-- STAGE 1: KANJI CLASSROOM -->
-  <div class="vn-panel vn-classroom" id="pnlClassroom" style="display: none; flex-direction: column; height: 100%; justify-content: center; padding: 20px 18px calc(env(safe-area-inset-bottom) + 18px); gap: 16px;">
-    <div class="teacher-container glass-panel" style="padding: 16px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.3);">
-      <img src="teacher_sensei.jpg" class="teacher-portrait" alt="Sensei" style="width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--ai); object-fit: cover; box-shadow: 0 4px 15px rgba(42,75,141,0.25);">
-      <div class="teacher-speech-box" style="width: 100%;">
-        <div class="teacher-name" style="font-family: var(--disp); font-weight: 900; font-size: 14px; color: var(--ai); margin-bottom: 4px;">👩‍🏫 Teacher Selene</div>
-        <div class="teacher-text" id="teacherText" style="font-size: 13.5px; line-height: 1.5; color: var(--ink);">Welcome to the Academy...</div>
-      </div>
-    </div>
-    <div class="canvas-card glass-panel" id="classCanvasCard" style="display: none; padding: 18px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.3); text-align: center;">
-      <div class="canvas-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <span class="badge" id="classKanjiBadge" style="background: var(--ai); color: white;">Spell #1</span>
-        <span class="tries-count" id="classTriesCount" style="font-size: 11px; font-weight: bold; color: var(--ink2);">Attempts: 0/5</span>
-      </div>
-      <h2 class="canvas-title" id="classKanjiMean" style="font-family: var(--disp); font-weight: 900; font-size: 24px; margin: 4px 0 12px;">water</h2>
-      <div class="canvas-box" id="classWriterBox" style="width: 180px; height: 180px; margin: 0 auto 12px; background: rgba(255,255,255,0.4); border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.3);"></div>
-      <div class="canvas-footer" style="display: flex; gap: 8px; justify-content: center;">
-        <button class="btn ghost btn-sm" id="btnClassReset" style="flex: 1; padding: 10px;">Reset</button>
-        <button class="btn btn-sm" id="btnClassNext" style="flex: 1; padding: 10px;" disabled>Next</button>
-      </div>
-    </div>
-    <button class="btn" id="btnClassroomStart" style="margin: 0 auto; width: 100%; max-width: 220px;">Begin Study ▶</button>
-  </div>
-
-  <!-- STAGE 2: STORY DIALOGUE -->
-  <div class="vn-panel vn-story" id="pnlStory" style="display: none; flex-direction: column; height: 100%;">
-    <div class="otome-character-area">
-      <div class="otome-character-card">
-        <div class="otome-char-bubble" id="charBubble"></div>
-        <div class="otome-char-silhouette" id="storySilhouette">👦</div>
-        <div class="otome-char-name" id="storyName">Alistair</div>
-      </div>
-    </div>
-    <div class="g-body" style="justify-content: flex-end; padding-bottom: calc(env(safe-area-inset-bottom) + 16px); gap: 12px;">
-      <div class="qcard" id="qcard" style="margin-bottom: 4px; cursor: pointer; background: rgba(255,255,255,0.25); border: 1.5px solid rgba(255,255,255,0.4);">
-        <div class="otome-speaker-plate" id="storySpeaker">Alistair</div>
-        <div id="qDialogue" class="otome-dialogue-text"></div>
-      </div>
-      <div class="choices" id="choices"></div>
+  <!-- Background character placeholder -->
+  <div class="otome-character-area">
+    <div class="otome-character-card">
+      <div class="otome-char-bubble" id="charBubble"></div>
+      <img class="otome-char-portrait" id="gameCharImg" src="./placeholder.png" alt="Character Portrait">
+      <div class="otome-char-name" id="gameCharName" style="display:none;">Katsuyo-kun</div>
     </div>
   </div>
 
-  <!-- STAGE 3: BATTLE SPELLCASTING -->
-  <div class="vn-panel vn-battle" id="pnlBattle" style="display: none; flex-direction: column; height: 100%;">
-    <div class="otome-character-area" style="top: 10%; bottom: 42%;">
-      <div class="otome-character-card" style="height: 220px; width: 140px;">
-        <div class="otome-char-bubble" id="battleCharBubble" style="top: -60px; right: -40px;"></div>
-        <div class="otome-char-silhouette" id="battleSilhouette" style="font-size: 60px;">👦</div>
-        <div class="otome-char-name" id="battleName">Alistair</div>
-      </div>
-    </div>
-    <div class="g-body" style="justify-content: flex-end; padding-bottom: calc(env(safe-area-inset-bottom) + 16px); gap: 12px;">
-      <div class="glass-panel" style="padding: 16px; border-radius: 18px; margin-bottom: 4px; background: rgba(255,255,255,0.25); border: 1.5px solid rgba(255,255,255,0.4);">
-        <p class="sub" id="battleIntroText" style="margin-bottom: 12px; font-size: 13.5px; color: var(--ink); line-height: 1.5;"></p>
-        <div class="row" style="align-items: center; justify-content: center; gap: 16px;">
-          <div class="canvas-box" id="battleWriterBox" style="width: 140px; height: 140px; background: rgba(255,255,255,0.4); border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.3);"></div>
-          <div style="flex: 1;">
-            <span class="badge" style="background: var(--ai); color: white; display: inline-block; margin-bottom: 4px;" id="battleSpellBadge">Cast spell</span>
-            <h3 style="font-family: var(--disp); font-weight: 900; font-size: 20px; margin: 0; color: var(--ink);" id="battleSpellMean">water</h3>
-            <p style="font-size: 11px; color: var(--ink2); margin-top: 4px;">Draw from memory. Mistakes cost lives.</p>
-            <button class="btn ghost btn-sm" id="btnBattleReset" style="margin-top: 10px; padding: 6px 12px; font-size: 12px;">Reset</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- STAGE 4: ENDING/RESULTS -->
-  <div class="vn-panel vn-results" id="pnlResults" style="display: none; flex-direction: column; height: 100%; justify-content: center; padding: 20px 18px calc(env(safe-area-inset-bottom) + 18px);">
-    <div class="card glass-panel" style="border: 2px solid var(--ai); text-align: center; padding: 24px; border-radius: 24px; background: rgba(255,255,255,0.25); border: 1.5px solid rgba(255,255,255,0.4);">
-      <div class="ending-emoji" id="resEndingEmoji" style="font-size: 64px; margin-bottom: 12px;">💔</div>
-      <h2 class="canvas-title" id="resEndingTitle" style="font-family: var(--disp); font-weight: 900; font-size: 24px; margin-bottom: 8px;">Neglect Ending</h2>
-      <p class="sub" id="resEndingDesc" style="font-size: 14px; line-height: 1.6; margin-bottom: 20px; font-style: italic; color: var(--ink2);"></p>
+  <div class="g-top">
+    <button class="g-quit" id="btnQuit">✕</button>
+    <div class="timerwrap" id="timerwrap"><div id="timerbar"></div></div>
+    <div class="g-score" id="gScore">0</div>
+  </div>
+  <div class="g-combo" id="gCombo"></div>
+  <div class="g-body">
+    <div class="qcard" id="qcard">
+      <div id="count"><div class="n" id="countN">3</div></div>
+      <div class="stamp" id="stamp">正解</div>
+      <div class="floatpts" id="floatpts">+100</div>
       
-      <div class="res-grid" style="margin: 16px 0; background: rgba(255,255,255,0.3); border-radius: 14px; padding: 12px;">
-        <div class="stat"><div class="v" id="resTotalScore" style="color:var(--ai);">0</div><div class="k">Points</div></div>
-        <div class="stat"><div class="v" id="resPerfectKanji" style="color:var(--matcha);">0</div><div class="k">Perfect Spells</div></div>
-        <div class="stat"><div class="v" id="resGrammarMistakes" style="color:var(--shu);">0</div><div class="k">Grammar Fails</div></div>
+      <!-- Unified Otome Speaker and Dialogue text -->
+      <div class="otome-speaker-plate" id="gameSpeakerName">先生</div>
+      <div id="gameDialogueText" class="otome-dialogue-text"></div>
+      
+      <!-- Dialogue progression indicator -->
+      <div class="otome-tap-hint" id="gameTapHint">
+        <span class="otome-tap-jp">タップして続ける</span>
+        <span class="otome-tap-blink">▼</span>
       </div>
 
-      <div class="row" style="gap: 10px;">
-        <button class="btn ghost" id="btnVnResHome" style="flex: 1;">Home</button>
-        <button class="btn" id="btnVnResAgain" style="flex: 1;">Play Again</button>
+      <!-- Hidden standard elements for compatibility -->
+      <div class="otome-compat-hidden">
+        <div><span class="q-form" id="qForm">て形</span><div class="q-form-en" id="qFormEn">te-form</div></div>
+        <div class="q-word" id="qWord">飲む</div>
+        <div class="q-kana" id="qKana">のむ</div>
+        <div class="q-mean" id="qMean">to drink</div>
+        <div class="q-type"><span class="badge" id="qType">godan</span> <span id="qSpk"></span></div>
       </div>
+
+      <div class="explain" id="explain"></div>
     </div>
+    <div class="choices" id="choices"></div>
+    <button class="btn nextbtn" id="btnNext">Next →</button>
   </div>
 </div>
 
@@ -290,6 +377,7 @@
     <div class="writer-wrap"><div class="writer-box" id="kWriterBox"><div class="stamp" id="kStamp">正解</div></div></div>
     <div class="k-feedback" id="kFeedback"></div>
     <button class="hintbtn" id="kHint">👁 Reveal outline — 0 pts, comes back later</button>
+    <button class="hintbtn skipbtn" id="kSkip" style="display:none; margin-top:6px;">⏩ Skip Kanji</button>
     <p class="note" style="text-align:center; margin-top:4px;">Draw each stroke in order. 3 mistakes reveals the shadow — then that kanji returns at the end for a second try from memory.</p>
   </div>
 </div>
@@ -318,6 +406,38 @@
       <button class="mode-btn" id="mRecall">Recall</button>
     </div>
     <p class="note" style="text-align:center;">Watch the stroke order, trace over the outline, then draw it from memory. Recall with ≤2 mistakes = mastered ⭐</p>
+  </div>
+</div>
+
+<!-- ============ VN OVERLAY (otome engine stage) ============ -->
+<div id="vn" class="overlay">
+  <div class="vn-bg" id="vnBg"></div>
+  <div class="vn-stage">
+    <div class="g-top">
+      <button class="g-quit" id="vnQuit">✕</button>
+      <div style="flex:1"></div>
+      <div class="g-score" id="vnScore" style="color:#fff; text-shadow:0 1px 8px rgba(0,0,0,.5);">0</div>
+    </div>
+    <div class="vn-hearts" id="vnHearts">❤️❤️</div>
+    <div class="vn-sprite" id="vnSprite">👑</div>
+    <div class="vn-yell" id="vnYell"></div>
+    <div style="flex:1"></div>
+    <div class="vn-kcards" id="vnKcards" style="display:none;"></div>
+    <div class="vn-writer-area" id="vnWriterArea" style="display:none;">
+      <div class="writer-box" id="vnWriterBox"><div class="stamp" id="vnStamp">正解</div></div>
+      <div class="k-feedback" id="vnWFeedback"></div>
+      <button class="hintbtn skipbtn" id="vnSkip" style="display:none; margin-top:6px;">⏩ Skip Kanji</button>
+    </div>
+    <div class="vn-bottom">
+      <div class="vn-quiz-jp" id="vnQuizJp" style="display:none;"></div>
+      <div class="vn-choices" id="vnChoices" style="display:none;"></div>
+      <div class="vn-dialog" id="vnDialog">
+        <div class="vn-name" id="vnName">???</div>
+        <div class="vn-text" id="vnText"></div>
+        <div class="vn-next" id="vnNext">▼</div>
+      </div>
+    </div>
+    <div class="vn-ending" id="vnEnding"><div class="card" id="vnEndCard"></div></div>
   </div>
 </div>
 

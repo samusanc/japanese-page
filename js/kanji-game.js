@@ -2,16 +2,7 @@ import { state } from './state.js';
 import { LS, $, escapeHtml, todayStr, mulberry32, hashStr, shuffle, toast } from './helpers.js';
 import { speak, beep } from './audio.js';
 import { bePostScore } from './config.js';
-async function appShowScreen(screenId) {
-  const app = await import('./app.js');
-  app.showScreen(screenId);
-}
-
-async function appBumpStreak() {
-  const app = await import('./app.js');
-  app.bumpStreak();
-}
-
+import { showScreen, bumpStreak } from './app.js';
 import { makeWriter, isMastered, setKprog, readingChips } from './kanji-logic.js';
 
 let kWriter = null;
@@ -71,6 +62,9 @@ export function failCurrent(reason) {
   $("#kFeedback").className = "k-feedback bad";
   $("#kHint").disabled = true;
   
+  const skipBtn = $("#kSkip");
+  if (skipBtn) skipBtn.style.display = "block";
+  
   if (isMastered(state.KG.cur.k.c)) {
     setKprog(state.KG.cur.k.c, { rc: false });
     toast(state.KG.cur.k.c + " dropped from mastered — win it back!");
@@ -90,6 +84,8 @@ export function nextKanji() {
   }
   state.KG.mistakes = 0;
   state.KG.revealed = false;
+  const skipBtn = $("#kSkip");
+  if (skipBtn) skipBtn.style.display = "block";
   const { k, requeue } = state.KG.cur;
   renderKProgress();
   $("#kMean").textContent = k.m + (requeue ? "  (round 2!)" : "");
@@ -163,7 +159,7 @@ export async function endKanjiDaily(quit) {
   } else {
     state.dayRec.kB = Math.max(state.dayRec.kB, score);
     LS.set("day:" + todayStr(), state.dayRec);
-    appBumpStreak();
+    bumpStreak();
     if (state.beReady) {
       const ok = await bePostScore("kanji", state.dayRec.kB);
       postLine = ok ? (state.profile?.g ? `Posted to squad <b>${state.profile.g}</b> ✓` : "Saved online ✓") : "Couldn't reach the server — saved on this device.";
@@ -192,15 +188,27 @@ export async function endKanjiDaily(quit) {
   again.disabled = !state.debugMode && left <= 0;
   again.textContent = state.debugMode ? "Draw again (debug) ▶" : (left > 0 ? "Use last try ▶" : "No tries left");
   again.onclick = () => {
-    appShowScreen("home");
+    showScreen("home");
     startKanjiDaily();
   };
-  appShowScreen("result");
+  showScreen("result");
   state.KG = null;
 }
 
 export function initKanjiGameUI() {
-  const kh = $("#kHint"); if (kh) kh.addEventListener("click", () => failCurrent("hint"));
-  const kq = $("#kQuit"); if (kq) kq.addEventListener("click", () => { if (state.KG && !state.KG.over) endKanjiDaily(true); });
-  const bkd = $("#btnKanjiDaily"); if (bkd) bkd.addEventListener("click", startKanjiDaily);
+  $("#kHint").addEventListener("click", () => failCurrent("hint"));
+  $("#kQuit").addEventListener("click", () => { if (state.KG && !state.KG.over) endKanjiDaily(true); });
+  $("#btnKanjiDaily").addEventListener("click", startKanjiDaily);
+  
+  const skipBtn = $("#kSkip");
+  if (skipBtn) {
+    skipBtn.addEventListener("click", () => {
+      if (!state.KG || state.KG.over || !state.KG.cur) return;
+      const { k, requeue } = state.KG.cur;
+      state.KG.done.push({ c: k.c, m: k.m, mistakes: state.KG.mistakes, pts: 0, revealed: true, requeue });
+      state.KG.results = state.KG.done;
+      skipBtn.style.display = "none";
+      nextKanji();
+    });
+  }
 }

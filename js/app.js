@@ -1,13 +1,13 @@
 import { state } from './state.js';
 import { CONFIG, beInit, beSaveProfile, bePostScore, fetchBoard } from './config.js';
 import { VERBS, ADJS, FORMS, FORM, SENTENCES } from './data.js';
-import { LS, $, $$, escapeHtml, todayStr, yesterdayStr, toast, mulberry32, hashStr, shuffle } from './helpers.js';
+import { LS, $, $$, escapeHtml, todayStr, yesterdayStr, toast, hashStr } from './helpers.js';
 import { initAudioUI, speak, spkBtn } from './audio.js';
-import { initSprintGameUI, startVnGame } from './sprint-game.js';
-import { CHARACTERS } from './stories.js';
+import { initSprintGameUI, startDaily } from './sprint-game.js';
 import { initKanjiGameUI, dailyKanjiSet } from './kanji-game.js';
 import { initKanjiStudioUI, renderKanjiTab } from './kanji-logic.js';
 import { answer } from './engine.js';
+import { initVnEvents, startRoute, statusOf, todayRoster, charState, CHAR, startTraining, setCharState } from './otome-route.js';
 
 export function showScreen(id) {
   $$(".screen").forEach(s => s.classList.remove("on"));
@@ -15,109 +15,141 @@ export function showScreen(id) {
   if (scr) scr.classList.add("on");
   $$(".tab").forEach(t => t.classList.toggle("on", t.dataset.s === id));
   window.scrollTo({ top: 0 });
-  
-  const header = $("header");
-  if (header) {
-    header.style.display = id === "home" ? "none" : "flex";
-  }
-  
   if (id === "home") renderHome();
   if (id === "group") renderGroup();
   if (id === "kanji") renderKanjiTab();
 }
 
 export function renderHome() {
-  const td = $("#todayDate");
-  if (td) td.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+  $("#todayDate").textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
   
-  const CHAR_KEYS = ["prince", "knight", "earl", "archduke", "duchess"];
-  const seedRnd = mulberry32(hashStr(todayStr() + "char-seed"));
-  const activeChars = shuffle(CHAR_KEYS, seedRnd).slice(0, 3);
+  const sLeft = 2 - state.dayRec.sU;
+  const b1 = $("#attemptBadge");
+  b1.textContent = state.debugMode ? "∞ tries (debug)" : (sLeft > 0 ? `${sLeft} ${sLeft === 1 ? "try" : "tries"} left` : "Done today");
+  b1.className = "badge " + (state.debugMode ? "shu" : (sLeft > 0 ? "shu" : "gold"));
+  $("#btnDaily").disabled = !state.debugMode && sLeft <= 0;
+  $("#btnDaily").textContent = (state.debugMode || sLeft > 0) ? "Play the sprint ▶" : "Come back tomorrow 🌙";
+  $("#dailyBestLine").innerHTML = state.dayRec.sB > 0 ? `Your best today: <b style="color:var(--ai)">${state.dayRec.sB} pts</b>` : "";
   
-  // Safe load of day record
-  state.dayRec = LS.get("day:" + todayStr()) || { chars: {}, totalScore: 0 };
-  if (!state.dayRec.chars) state.dayRec.chars = {};
+  const df = $("#dailyForms");
+  df.innerHTML = "";
   
-  activeChars.forEach(cid => {
-    if (!state.dayRec.chars[cid]) {
-      state.dayRec.chars[cid] = { status: "playable", triesLeft: 2, score: 0 };
+  const dailySeedForms = () => {
+    const DAILY_FORM_POOL = ["te","ta","nai","masu","tai","pot","vol","ba","tara","imp","aneg","apast","ate"];
+    const r = () => {
+      let h = hashStr(todayStr() + "forms");
+      let a = (h + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    const a = DAILY_FORM_POOL.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(r() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
     }
+    return a.slice(0, 5);
+  };
+  
+  dailySeedForms().forEach(fid => {
+    const s = document.createElement("span");
+    s.className = "chip-sm";
+    s.textContent = FORM[fid].jp;
+    df.appendChild(s);
   });
-  LS.set("day:" + todayStr(), state.dayRec);
+
+  const kLeft = 2 - state.dayRec.kU;
+  const b2 = $("#kAttemptBadge");
+  b2.textContent = state.debugMode ? "∞ tries (debug)" : (kLeft > 0 ? `${kLeft} ${kLeft === 1 ? "try" : "tries"} left` : "Done today");
+  b2.className = "badge " + (state.debugMode ? "ink" : (kLeft > 0 ? "ink" : "gold"));
+  $("#btnKanjiDaily").disabled = !state.debugMode && kLeft <= 0;
+  $("#btnKanjiDaily").textContent = (state.debugMode || kLeft > 0) ? "Draw today's kanji ▶" : "Come back tomorrow 🌙";
+  $("#kDailyBestLine").innerHTML = state.dayRec.kB > 0 ? `Your best today: <b style="color:var(--ai)">${state.dayRec.kB} pts</b>` : "";
   
-  const totalScore = Object.values(state.dayRec.chars).reduce((sum, c) => sum + (c.score || 0), 0);
-  state.dayRec.totalScore = totalScore;
-  state.dayRec.sB = totalScore;
-  state.dayRec.kB = totalScore;
-  
-  const dtb = $("#dailyTotalBadge");
-  if (dtb) dtb.textContent = state.debugMode ? "∞ tries (debug)" : `${totalScore} pts today`;
-  
-  const om = $("#otomeMenu");
-  if (om) {
-    om.innerHTML = "";
-    activeChars.forEach((cid, idx) => {
-      const charData = CHARACTERS[cid];
-      const rec = state.dayRec.chars[cid] || { status: "playable", triesLeft: 2, score: 0 };
-      
-      const slice = document.createElement("div");
-      slice.className = "otome-menu-slice";
-      if (rec.status === "completed") {
-        slice.classList.add("vn-completed-gold");
-      }
-      
-      // Style diagonal colors for a translucent crystal look
-      const red = parseInt(charData.color.slice(1,3), 16);
-      const green = parseInt(charData.color.slice(3,5), 16);
-      const blue = parseInt(charData.color.slice(5,7), 16);
-      slice.style.background = `linear-gradient(135deg, rgba(${red}, ${green}, ${blue}, 0.35) 0%, rgba(35, 38, 47, 0.2) 100%)`;
-      slice.style.backdropFilter = "blur(8px)";
-      slice.style.webkitBackdropFilter = "blur(8px)";
-      
-      // Silhouette filters
-      let filtersClass = "";
-      if (rec.status === "failed") filtersClass = "vn-failed-bw";
-      
-      let badgeHTML = "";
-      if (rec.status === "completed") {
-        badgeHTML = `<span class="badge gold">Completed 💖</span>`;
-      } else if (rec.status === "failed" && rec.triesLeft <= 0 && !state.debugMode) {
-        badgeHTML = `<span class="badge" style="background:var(--line); color:var(--ink2);">0 tries left 💔</span>`;
-      } else {
-        badgeHTML = `<span class="badge ${rec.triesLeft === 1 ? "shu" : "ink"}">${state.debugMode ? "∞" : rec.triesLeft} ${rec.triesLeft === 1 ? "try" : "tries"} left</span>`;
-      }
-      
-      slice.innerHTML = `
-        <div class="otome-menu-slice-content ${filtersClass}">
-          <div class="otome-menu-slice-name">${charData.emoji} ${charData.fullName}</div>
-          <div class="otome-menu-slice-title">${charData.title}</div>
-          <div style="font-size: 11px; margin-top: 4px; opacity: 0.85;">Best Score: ${rec.score} pts</div>
-        </div>
-        ${badgeHTML}
-      `;
-      
-      slice.addEventListener("click", () => {
-        if (rec.status !== "completed" && rec.triesLeft <= 0 && !state.debugMode) {
-          toast("No tries left for " + charData.name + " today");
-          return;
-        }
-        startVnGame(cid);
-      });
-      
-      om.appendChild(slice);
-    });
-  }
+  const kp = $("#kanjiPreview");
+  kp.innerHTML = "";
+  dailyKanjiSet().forEach(k => {
+    const d = document.createElement("div");
+    d.className = "kp" + (state.dayRec.kU > 0 ? "" : " hidden-k");
+    d.textContent = k.c;
+    kp.appendChild(d);
+  });
   
   renderStreak();
   renderStatsStrip();
   renderMiniBoard();
+
+  // Dynamically update homepage slices with today's roster
+  const roster = todayRoster();
+  const slices = $$(".char-slice");
+  
+  roster.forEach((charId, idx) => {
+    const ch = CHAR[charId];
+    const slice = slices[idx];
+    if (slice && ch) {
+      slice.dataset.char = charId;
+      const nameEl = slice.querySelector(".slice-name");
+      const roleEl = slice.querySelector(".slice-role");
+      const tagEl = slice.querySelector(".slice-tagline");
+      const figEl = slice.querySelector(".slice-figure");
+      const bgEl = slice.querySelector(".slice-bg");
+      
+      if (nameEl) nameEl.textContent = ch.name;
+      if (roleEl) roleEl.textContent = ch.title;
+      if (tagEl) tagEl.textContent = ch.tagline;
+      if (ch.img) {
+        slice.style.setProperty('--char-img', `url('${ch.img}')`);
+      } else {
+        slice.style.setProperty('--char-img', 'none');
+      }
+      slice.style.setProperty('--char-accent-glow', ch.accent + '22');
+      slice.style.setProperty('--char-accent-glow-hi', ch.accent + '55');
+      if (bgEl) {
+        bgEl.style.background = "";
+      }
+      
+      const cs = charState(charId);
+      
+      // Update filter status classes on the card slice
+      slice.classList.remove("st-love", "st-friend", "st-fail", "st-uncompleted");
+      if (cs.st === "love") {
+        slice.classList.add("st-love");
+      } else if (cs.st === "friend") {
+        slice.classList.add("st-friend");
+      } else if (cs.st === "bw") {
+        slice.classList.add("st-fail");
+      } else {
+        slice.classList.add("st-uncompleted");
+      }
+      
+      // Toggle debug panel display based on state.debugMode
+      const dbgPanel = slice.querySelector(".slice-dbg-panel");
+      if (dbgPanel) {
+        dbgPanel.style.display = state.debugMode ? "flex" : "none";
+      }
+
+      const ctaEl = slice.querySelector(".slice-cta");
+      if (ctaEl) {
+        if (cs.st === "love") {
+          ctaEl.textContent = "💘 Yours";
+        } else if (cs.st === "friend") {
+          ctaEl.textContent = "🤝 Friend";
+        } else if (cs.st === "bw") {
+          ctaEl.textContent = "Retry ✦";
+        } else {
+          ctaEl.textContent = "Begin ›";
+        }
+      }
+    }
+  });
 }
 
 export function renderStreak() {
   const s = LS.get("streak");
-  const val = (s && (s.last === todayStr() || s.last === yesterdayStr())) ? s.c : 0;
-  const sn = $("#streakN"); if (sn) sn.textContent = val;
-  const hsn = $("#homeStreakN"); if (hsn) hsn.textContent = val;
+  const el = $("#streakN");
+  if (el) {
+    el.textContent = (s && (s.last === todayStr() || s.last === yesterdayStr())) ? s.c : 0;
+  }
 }
 
 export function bumpStreak() {
@@ -131,23 +163,18 @@ export function bumpStreak() {
 }
 
 export async function renderStatsStrip() {
-  const acc = $("#stAcc");
-  const rnk = $("#stRank");
-  const tot = $("#stTotal");
-  if (!acc && !rnk && !tot) return;
   const st = LS.get("stats") || { r: 0, w: 0 };
-  if (acc) acc.textContent = (st.r + st.w) > 0 ? Math.round(100 * st.r / (st.r + st.w)) + "%" : "–";
+  $("#stAcc").textContent = (st.r + st.w) > 0 ? Math.round(100 * st.r / (st.r + st.w)) + "%" : "–";
   const rows = await fetchBoard();
   const seas = rows.slice().sort((a, b) => b.total - a.total);
   const meIdx = seas.findIndex(x => x.pid === (state.uid || state.profile?.pid));
-  if (rnk) rnk.textContent = (state.beReady && state.profile?.g && meIdx >= 0) ? "#" + (meIdx + 1) : "–";
+  $("#stRank").textContent = (state.beReady && state.profile?.g && meIdx >= 0) ? "#" + (meIdx + 1) : "–";
   const mine = rows.find(x => x.pid === (state.uid || state.profile?.pid));
-  if (tot) tot.textContent = mine ? mine.total : 0;
+  $("#stTotal").textContent = mine ? mine.total : 0;
 }
 
 export async function renderMiniBoard() {
   const el = $("#miniBoard");
-  if (!el) return;
   if (!state.beReady || !state.profile?.g) {
     el.innerHTML = state.beReady
       ? '<div class="empty">Join a squad to battle your friends.</div>'
@@ -165,14 +192,10 @@ export function lbRow(r, i, mode) {
   const sc = mode === "today" ? r.today : r.total;
   const me = r.pid === (state.uid || state.profile?.pid);
   const brk = mode === "today" ? `⚡${r.dS || 0} ・ ✍️${r.dK || 0}` : "";
-  const isRizzler = i === 0 && mode === "today";
-  const nameHTML = isRizzler 
-    ? `<span class="who rizzler-glow">${escapeHtml(r.n)} 👑 <span class="rizzler-title">Amazing Rizzler</span>${me ? " (you)" : ""}</span>`
-    : `<span class="who">${escapeHtml(r.n)}${me ? " (you)" : ""}</span>`;
-  return `<div class="row-lb ${me ? "me" : ""} ${isRizzler ? "rizzler-row" : ""}">
+  return `<div class="row-lb ${me ? "me" : ""}">
     <div class="rank ${i === 0 ? "r1" : ""}">${i === 0 ? "👑" : i + 1}</div>
     <div class="ava">${r.e}</div>
-    <div class="nm">${nameHTML}${brk ? `<span class="brk">${brk}</span>` : ""}</div>
+    <div class="nm"><span class="who">${escapeHtml(r.n)}${me ? " (you)" : ""}</span>${brk ? `<span class="brk">${brk}</span>` : ""}</div>
     <div class="sc">${sc}</div></div>`;
 }
 
@@ -286,6 +309,52 @@ export function openOnb(edit) {
   initSprintGameUI();
   initKanjiGameUI();
   initKanjiStudioUI();
+  initVnEvents();
+
+  $$("[data-char]").forEach(slice => {
+    slice.addEventListener("click", (e) => {
+      e.stopPropagation();
+      
+      const clickedDebug = e.target.closest(".slice-dbg-btn");
+      if (clickedDebug) {
+        e.preventDefault();
+        const action = clickedDebug.dataset.act; // "love", "friend", "bw"
+        const charId = slice.dataset.char;
+        setCharState(charId, { st: action, played: todayStr() });
+        renderCompanions();
+        slice.classList.remove("expanded");
+        slice.style.filter = "";
+        return;
+      }
+      
+      const clickedCta = e.target.closest(".slice-cta");
+      
+      if (clickedCta) {
+        slice.style.transition = "flex .45s cubic-bezier(0.4,0,0.2,1), border-color .1s, box-shadow .1s, filter .15s";
+        slice.style.filter = "grayscale(0) blur(0px) brightness(1.5)";
+        const charId = slice.dataset.char;
+        setTimeout(() => {
+          slice.style.filter = "";
+          slice.classList.remove("expanded");
+          startRoute(charId);
+        }, 220);
+      } else {
+        if (!slice.classList.contains("expanded")) {
+          $$("[data-char]").forEach(s => s.classList.remove("expanded"));
+          slice.classList.add("expanded");
+        } else {
+          slice.classList.remove("expanded");
+        }
+      }
+    });
+  });
+
+  const screenHome = $("#s-home");
+  if (screenHome) {
+    screenHome.addEventListener("click", () => {
+      $$("[data-char]").forEach(s => s.classList.remove("expanded"));
+    });
+  }
 
   $$(".tab").forEach(t => t.addEventListener("click", () => showScreen(t.dataset.s)));
   const gg = $("#goGroup");
@@ -397,17 +466,42 @@ export function openOnb(edit) {
   buildChips();
   buildLearn();
   buildOnb();
+
+  ["ktCount", "ktSrc", "ftCount"].forEach(id => {
+    const el = $("#" + id);
+    if (el) {
+      el.querySelectorAll("button").forEach(btn => btn.addEventListener("click", () => {
+        el.querySelectorAll("button").forEach(x => x.classList.remove("on"));
+        btn.classList.add("on");
+      }));
+    }
+  });
+
+  const btnTrainK = $("#btnTrainK");
+  if (btnTrainK) {
+    btnTrainK.addEventListener("click", () => {
+      const n = +($("#ktCount .on")?.dataset.n || 5);
+      const l = $("#ktSrc .on")?.dataset.l || "";
+      startTraining("kanji", { n, lvl: l ? +l : null });
+    });
+  }
+
+  const btnTrainF = $("#btnTrainF");
+  if (btnTrainF) {
+    btnTrainF.addEventListener("click", () => {
+      const n = +($("#ftCount .on")?.dataset.n || 5);
+      const sel = $$("#chipsVerb .chip.on, #chipsAdj .chip.on").map(c => c.dataset.f);
+      startTraining("forms", { n, forms: sel });
+    });
+  }
   
-  state.profile = LS.get("profile") || { pid: "player-" + Math.random().toString(36).slice(2, 6), n: "Student", e: "🔮" };
-  LS.set("profile", state.profile);
+  state.profile = LS.get("profile");
   state.dayRec = LS.get("day:" + todayStr()) || { sU: 0, sB: 0, kU: 0, kB: 0 };
   
   renderHome();
+  if (!state.profile) openOnb(false);
   
-  beInit().then(async (ok) => {
-    if (ok && state.profile) {
-      await beSaveProfile();
-      renderHome();
-    }
-  });
+  const ok = await beInit();
+  if (ok && state.profile) await beSaveProfile();
+  renderHome();
 })();
