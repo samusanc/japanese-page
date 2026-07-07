@@ -1743,18 +1743,30 @@ main:has(#s-home.on) {
 @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
 @keyframes hb { 0% { opacity: 1; transform: translateY(0) scale(.6); } 100% { opacity: 0; transform: translateY(-90px) scale(1.4); } }
 
-/* Companion Select Status Filters (only apply when collapsed, clear when expanded) */
-.char-slice.st-uncompleted:not(.expanded) {
+/* Companion Select Status Filters (explicitly declared on expanded to avoid browser flash bugs) */
+.char-slice.st-uncompleted {
   filter: grayscale(1) blur(4px) brightness(0.7);
 }
-.char-slice.st-love:not(.expanded) {
-  filter: none;
+.char-slice.st-uncompleted.expanded {
+  filter: grayscale(0) blur(0px) brightness(1);
 }
-.char-slice.st-friend:not(.expanded) {
-  filter: blur(4px) brightness(0.85);
+.char-slice.st-love {
+  filter: grayscale(0) blur(0px) brightness(1);
 }
-.char-slice.st-fail:not(.expanded) {
-  filter: grayscale(1) brightness(0.8);
+.char-slice.st-love.expanded {
+  filter: grayscale(0) blur(0px) brightness(1);
+}
+.char-slice.st-friend {
+  filter: grayscale(0) blur(4px) brightness(0.85);
+}
+.char-slice.st-friend.expanded {
+  filter: grayscale(0) blur(0px) brightness(1);
+}
+.char-slice.st-fail {
+  filter: grayscale(1) blur(0px) brightness(0.8);
+}
+.char-slice.st-fail.expanded {
+  filter: grayscale(0) blur(0px) brightness(1);
 }
 
 

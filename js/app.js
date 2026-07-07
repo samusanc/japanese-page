@@ -331,7 +331,7 @@ export function openOnb(edit) {
       
       if (clickedCta) {
         slice.style.transition = "flex .45s cubic-bezier(0.4,0,0.2,1), border-color .1s, box-shadow .1s, filter .15s";
-        slice.style.filter = "brightness(1.5)";
+        slice.style.filter = "grayscale(0) blur(0px) brightness(1.5)";
         const charId = slice.dataset.char;
         setTimeout(() => {
           slice.style.filter = "";
