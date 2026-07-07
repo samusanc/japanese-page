@@ -564,6 +564,19 @@ async function vnStep(k, mode) {
     $("#vnNext").style.visibility = "hidden";
     $("#vnWFeedback").textContent = "";
     
+    let mistakes = 0, revealed = false, skipped = false;
+    const skipBtn = $("#vnSkip");
+    if (skipBtn) {
+      skipBtn.style.display = "none";
+      skipBtn.onclick = () => {
+        skipped = true;
+        skipBtn.style.display = "none";
+        const r = VN && VN._res;
+        if (VN) VN._res = null;
+        if (r) r({ totalMistakes: 99 });
+      };
+    }
+    
     const s = await new Promise(res => {
       VN._res = res;
       const w = makeWriter($("#vnWriterBox"), k.c, { showOutline: mode === "trace" });
@@ -571,15 +584,33 @@ async function vnStep(k, mode) {
         leniency: 1.25,
         showHintAfterMisses: mode === "trace" ? 3 : 999,
         onMistake: () => {
-          $("#vnWFeedback").textContent = "✕ order & direction, apprentice!";
-          $("#vnWFeedback").className = "k-feedback bad";
+          if (!VN || VN.quit) return;
           beep("no");
+          if (mode === "trace") {
+            $("#vnWFeedback").textContent = "✕ order & direction, apprentice!";
+            $("#vnWFeedback").className = "k-feedback bad";
+          } else {
+            mistakes++;
+            if (mistakes >= 3 && !revealed) {
+              revealed = true;
+              w.showOutline();
+              $("#vnWFeedback").textContent = "Trace the guide!";
+              $("#vnWFeedback").className = "k-feedback bad";
+              if (skipBtn) skipBtn.style.display = "block";
+            } else if (!revealed) {
+              $("#vnWFeedback").textContent = `✕ ${3 - mistakes} ${3 - mistakes === 1 ? "miss" : "misses"} before the shadow`;
+              $("#vnWFeedback").className = "k-feedback bad";
+            }
+          }
         },
         onCorrectStroke: () => {
-          $("#vnWFeedback").textContent = "✓";
-          $("#vnWFeedback").className = "k-feedback";
+          if (mode === "trace" || !revealed) {
+            $("#vnWFeedback").textContent = "✓";
+            $("#vnWFeedback").className = "k-feedback";
+          }
         },
         onComplete: x => {
+          if (skipBtn) skipBtn.style.display = "none";
           const r = VN && VN._res;
           if (VN) VN._res = null;
           if (r) r(x);
@@ -590,6 +621,11 @@ async function vnStep(k, mode) {
     vnCheck();
     area.style.display = "none";
     $("#vnSprite").style.opacity = 1;
+    
+    if (skipped) {
+      if (mode === "recall") srsBump("ksrs", k.c, false);
+      break;
+    }
     
     if (s.totalMistakes <= 2) {
       const pts = s.totalMistakes === 0 ? 15 : 8;
