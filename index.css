@@ -1024,7 +1024,8 @@ footer p { font-size: 10px; color: var(--ink3); line-height: 1.6; font-style: it
   cursor: pointer;
   transition: flex .45s cubic-bezier(0.4,0,0.2,1),
               border-color .3s ease,
-              box-shadow .3s ease;
+              box-shadow .3s ease,
+              filter .3s ease;
   min-width: 0;
 }
 
@@ -1741,5 +1742,19 @@ main:has(#s-home.on) {
 @keyframes yellpop { 0% { opacity: 0; transform: scale(.7); } 10% { opacity: 1; transform: scale(1.04); } 16% { transform: scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: scale(.95); } }
 @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
 @keyframes hb { 0% { opacity: 1; transform: translateY(0) scale(.6); } 100% { opacity: 0; transform: translateY(-90px) scale(1.4); } }
+
+/* Companion Select Status Filters */
+.char-slice.st-uncompleted {
+  filter: grayscale(1) blur(4px) brightness(0.7);
+}
+.char-slice.st-love {
+  filter: none;
+}
+.char-slice.st-friend {
+  filter: blur(4px) brightness(0.85);
+}
+.char-slice.st-fail {
+  filter: grayscale(1) brightness(0.8);
+}
 
 

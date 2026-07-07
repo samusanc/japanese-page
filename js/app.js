@@ -7,7 +7,7 @@ import { initSprintGameUI, startDaily } from './sprint-game.js';
 import { initKanjiGameUI, dailyKanjiSet } from './kanji-game.js';
 import { initKanjiStudioUI, renderKanjiTab } from './kanji-logic.js';
 import { answer } from './engine.js';
-import { initVnEvents, startRoute, statusOf, todayRoster, charState, CHAR, startTraining } from './otome-route.js';
+import { initVnEvents, startRoute, statusOf, todayRoster, charState, CHAR, startTraining, setCharState } from './otome-route.js';
 
 export function showScreen(id) {
   $$(".screen").forEach(s => s.classList.remove("on"));
@@ -109,6 +109,25 @@ export function renderHome() {
       }
       
       const cs = charState(charId);
+      
+      // Update filter status classes on the card slice
+      slice.classList.remove("st-love", "st-friend", "st-fail", "st-uncompleted");
+      if (cs.st === "love") {
+        slice.classList.add("st-love");
+      } else if (cs.st === "friend") {
+        slice.classList.add("st-friend");
+      } else if (cs.st === "bw") {
+        slice.classList.add("st-fail");
+      } else {
+        slice.classList.add("st-uncompleted");
+      }
+      
+      // Toggle debug panel display based on state.debugMode
+      const dbgPanel = slice.querySelector(".slice-dbg-panel");
+      if (dbgPanel) {
+        dbgPanel.style.display = state.debugMode ? "flex" : "none";
+      }
+
       const ctaEl = slice.querySelector(".slice-cta");
       if (ctaEl) {
         if (cs.st === "love") {
@@ -295,6 +314,19 @@ export function openOnb(edit) {
   $$("[data-char]").forEach(slice => {
     slice.addEventListener("click", (e) => {
       e.stopPropagation();
+      
+      const clickedDebug = e.target.closest(".slice-dbg-btn");
+      if (clickedDebug) {
+        e.preventDefault();
+        const action = clickedDebug.dataset.act; // "love", "friend", "bw"
+        const charId = slice.dataset.char;
+        setCharState(charId, { st: action, played: todayStr() });
+        renderCompanions();
+        slice.classList.remove("expanded");
+        slice.style.filter = "";
+        return;
+      }
+      
       const clickedCta = e.target.closest(".slice-cta");
       
       if (clickedCta) {

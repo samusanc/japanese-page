@@ -50,7 +50,7 @@
 
         <div class="char-slices">
           <!-- Slice 1 — Hana -->
-          <button class="char-slice" id="sliceHana" data-char="hana" aria-label="Play with Hana">
+          <div class="char-slice" id="sliceHana" role="button" tabindex="0" data-char="hana" aria-label="Play with Hana">
             <div class="slice-bg slice-bg-1"></div>
             <div class="slice-particles">
               <span class="particle p1">✦</span>
@@ -66,13 +66,19 @@
                 <div class="slice-role">The Scholar</div>
                 <div class="slice-tagline">Gentle · Wise</div>
               </div>
+              <!-- Debug Mode Status Toggle -->
+              <div class="slice-dbg-panel" style="display:none; margin-top:10px; gap:6px; justify-content:center; z-index:5;">
+                <button class="slice-dbg-btn" data-act="love" style="padding:4px 8px; font-size:11px; background:rgba(207,165,122,0.15); border:1px solid var(--gold); color:var(--gold); border-radius:4px; cursor:pointer;">Love</button>
+                <button class="slice-dbg-btn" data-act="friend" style="padding:4px 8px; font-size:11px; background:rgba(79,130,212,0.15); border:1px solid #7cb5ec; color:#7cb5ec; border-radius:4px; cursor:pointer;">Friend</button>
+                <button class="slice-dbg-btn" data-act="bw" style="padding:4px 8px; font-size:11px; background:rgba(217,83,79,0.15); border:1px solid #d9534f; color:#d9534f; border-radius:4px; cursor:pointer;">Fail</button>
+              </div>
               <div class="slice-cta">Begin ›</div>
             </div>
             <div class="slice-shimmer"></div>
-          </button>
+          </div>
 
           <!-- Slice 2 — Ren (centre, slightly wider) -->
-          <button class="char-slice char-slice--center" id="sliceRen" data-char="ren" aria-label="Play with Ren">
+          <div class="char-slice char-slice--center" id="sliceRen" role="button" tabindex="0" data-char="ren" aria-label="Play with Ren">
             <div class="slice-bg slice-bg-2"></div>
             <div class="slice-particles">
               <span class="particle p1">✦</span>
@@ -89,13 +95,19 @@
                 <div class="slice-role">The Guardian</div>
                 <div class="slice-tagline">Bold · Loyal</div>
               </div>
+              <!-- Debug Mode Status Toggle -->
+              <div class="slice-dbg-panel" style="display:none; margin-top:10px; gap:6px; justify-content:center; z-index:5;">
+                <button class="slice-dbg-btn" data-act="love" style="padding:4px 8px; font-size:11px; background:rgba(207,165,122,0.15); border:1px solid var(--gold); color:var(--gold); border-radius:4px; cursor:pointer;">Love</button>
+                <button class="slice-dbg-btn" data-act="friend" style="padding:4px 8px; font-size:11px; background:rgba(79,130,212,0.15); border:1px solid #7cb5ec; color:#7cb5ec; border-radius:4px; cursor:pointer;">Friend</button>
+                <button class="slice-dbg-btn" data-act="bw" style="padding:4px 8px; font-size:11px; background:rgba(217,83,79,0.15); border:1px solid #d9534f; color:#d9534f; border-radius:4px; cursor:pointer;">Fail</button>
+              </div>
               <div class="slice-cta">Begin ›</div>
             </div>
             <div class="slice-shimmer"></div>
-          </button>
+          </div>
 
           <!-- Slice 3 — Sora -->
-          <button class="char-slice" id="sliceSora" data-char="sora" aria-label="Play with Sora">
+          <div class="char-slice" id="sliceSora" role="button" tabindex="0" data-char="sora" aria-label="Play with Sora">
             <div class="slice-bg slice-bg-3"></div>
             <div class="slice-particles">
               <span class="particle p1">✧</span>
@@ -111,10 +123,16 @@
                 <div class="slice-role">The Mystic</div>
                 <div class="slice-tagline">Elusive · Deep</div>
               </div>
+              <!-- Debug Mode Status Toggle -->
+              <div class="slice-dbg-panel" style="display:none; margin-top:10px; gap:6px; justify-content:center; z-index:5;">
+                <button class="slice-dbg-btn" data-act="love" style="padding:4px 8px; font-size:11px; background:rgba(207,165,122,0.15); border:1px solid var(--gold); color:var(--gold); border-radius:4px; cursor:pointer;">Love</button>
+                <button class="slice-dbg-btn" data-act="friend" style="padding:4px 8px; font-size:11px; background:rgba(79,130,212,0.15); border:1px solid #7cb5ec; color:#7cb5ec; border-radius:4px; cursor:pointer;">Friend</button>
+                <button class="slice-dbg-btn" data-act="bw" style="padding:4px 8px; font-size:11px; background:rgba(217,83,79,0.15); border:1px solid #d9534f; color:#d9534f; border-radius:4px; cursor:pointer;">Fail</button>
+              </div>
               <div class="slice-cta">Begin ›</div>
             </div>
             <div class="slice-shimmer"></div>
-          </button>
+          </div>
         </div>
 
         <!-- Bottom ornament -->
