@@ -22,41 +22,74 @@ export function audioId(text) {
 const _audioEls = {};
 
 export function ttsFallback(text) {
+  const time = new Date().toISOString().slice(11, 23);
+  console.log(`[Audio Debug ${time}] ttsFallback("${text}") called`);
   try {
-    if (!window.speechSynthesis) return;
+    if (!window.speechSynthesis) {
+      console.log(`[Audio Debug ${time}] ttsFallback: window.speechSynthesis not supported`);
+      return;
+    }
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "ja-JP";
     u.rate = 0.92;
     const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith("ja"));
+    console.log(`[Audio Debug ${time}] ttsFallback: voice found=${v ? v.name : "none"}`);
     if (v) u.voice = v;
+    console.log(`[Audio Debug ${time}] ttsFallback: calling speechSynthesis.cancel()`);
     speechSynthesis.cancel();
+    console.log(`[Audio Debug ${time}] ttsFallback: calling speechSynthesis.speak()`);
     speechSynthesis.speak(u);
-  } catch (e) {}
+  } catch (e) {
+    console.log(`[Audio Debug ${time}] ttsFallback error:`, e);
+  }
 }
 
 export function speak(text) {
-  if (!state.sndOn || !text) return;
+  const time = new Date().toISOString().slice(11, 23);
+  console.log(`[Audio Debug ${time}] speak("${text}") called`);
+  if (!state.sndOn) {
+    console.log(`[Audio Debug ${time}] speak: sound is disabled (state.sndOn=false), ignoring`);
+    return;
+  }
+  if (!text) {
+    console.log(`[Audio Debug ${time}] speak: text is empty, ignoring`);
+    return;
+  }
   const id = audioId(text);
   let a = _audioEls[id];
-  if (a === "bad") return ttsFallback(text);
+  console.log(`[Audio Debug ${time}] speak: id="${id}", cachedStatus=${a ? (a === "bad" ? "bad" : "AudioObject") : "none"}`);
+  if (a === "bad") {
+    console.log(`[Audio Debug ${time}] speak: cached status is bad, routing to ttsFallback`);
+    return ttsFallback(text);
+  }
   if (!a) {
-    a = new Audio(CONFIG.AUDIO_BASE + id + ".mp3");
+    const src = CONFIG.AUDIO_BASE + id + ".mp3";
+    console.log(`[Audio Debug ${time}] speak: creating new Audio element for "${src}"`);
+    a = new Audio(src);
     a.preload = "auto";
-    a.addEventListener("error", () => {
+    a.addEventListener("error", (e) => {
+      const etime = new Date().toISOString().slice(11, 23);
+      console.log(`[Audio Debug ${etime}] ERROR EVENT fired on Audio element for id="${id}" (text="${text}")`);
       _audioEls[id] = "bad";
       ttsFallback(text);
     });
     _audioEls[id] = a;
   }
   try {
+    console.log(`[Audio Debug ${time}] speak: calling speechSynthesis.cancel() to abort active speech`);
     speechSynthesis && speechSynthesis.cancel();
-  } catch (e) {}
+  } catch (e) {
+    console.log(`[Audio Debug ${time}] speak: speechSynthesis.cancel() error:`, e);
+  }
   a.currentTime = 0;
+  console.log(`[Audio Debug ${time}] speak: calling audio.play() for id="${id}"`);
   const pr = a.play();
   if (pr && pr.catch) {
     pr.catch((err) => {
-      // Only fallback if play was blocked by autoplay permission issues
+      const ctime = new Date().toISOString().slice(11, 23);
+      console.log(`[Audio Debug ${ctime}] play().catch triggered for id="${id}". Error Name: "${err ? err.name : 'unknown'}", Message: "${err ? err.message : 'none'}"`);
       if (err && err.name === "NotAllowedError") {
+        console.log(`[Audio Debug ${ctime}] play().catch: NotAllowedError detected, calling ttsFallback`);
         ttsFallback(text);
       }
     });
@@ -70,6 +103,8 @@ export function spkBtn(text, big) {
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-say]");
   if (b) {
+    const time = new Date().toISOString().slice(11, 23);
+    console.log(`[Audio Debug ${time}] Click event on data-say button: "${b.dataset.say}"`);
     e.stopPropagation();
     speak(b.dataset.say);
   }
@@ -103,6 +138,8 @@ export function initAudioUI() {
 
 let actx = null;
 export function beep(type) {
+  const time = new Date().toISOString().slice(11, 23);
+  console.log(`[Audio Debug ${time}] beep("${type}") called`);
   try {
     actx = actx || new (window.AudioContext || window.webkitAudioContext)();
     const t = actx.currentTime;
@@ -130,5 +167,7 @@ export function beep(type) {
     } else if (type === "tick") {
       play(880, 0, 0.05, 0.06);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.log(`[Audio Debug ${time}] beep error:`, e);
+  }
 }
