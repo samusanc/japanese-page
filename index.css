@@ -1743,17 +1743,17 @@ main:has(#s-home.on) {
 @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
 @keyframes hb { 0% { opacity: 1; transform: translateY(0) scale(.6); } 100% { opacity: 0; transform: translateY(-90px) scale(1.4); } }
 
-/* Companion Select Status Filters */
-.char-slice.st-uncompleted {
+/* Companion Select Status Filters (only apply when collapsed, clear when expanded) */
+.char-slice.st-uncompleted:not(.expanded) {
   filter: grayscale(1) blur(4px) brightness(0.7);
 }
-.char-slice.st-love {
+.char-slice.st-love:not(.expanded) {
   filter: none;
 }
-.char-slice.st-friend {
+.char-slice.st-friend:not(.expanded) {
   filter: blur(4px) brightness(0.85);
 }
-.char-slice.st-fail {
+.char-slice.st-fail:not(.expanded) {
   filter: grayscale(1) brightness(0.8);
 }
 
