@@ -58,7 +58,7 @@ export function statusOf(ch, roster) {
 function vnBgSet(id) {
   const b = OTOME.assets.bg[id];
   if (!b) return;
-  $("#vnBg").style.background = b.img ? `url(${b.img}) center/cover no-repeat` : b.css;
+  $("#vn").style.background = b.img ? `url(${b.img}) center/cover no-repeat` : b.css;
 }
 
 function vnMusicPlay(id) {
@@ -107,9 +107,21 @@ function vnWho(who) {
 
 function updHud() {
   $("#vnScore").textContent = VN.score;
-  $("#vnHearts").style.display = VN.training ? "none" : "";
-  if (!VN.training) {
-    $("#vnHearts").textContent = "❤️".repeat(Math.max(0, VN.lives)) + "🖤".repeat(2 - Math.max(0, VN.lives));
+  const el = $("#vnHearts");
+  if (el) {
+    el.style.display = VN.training ? "none" : "flex";
+    if (!VN.training) {
+      const pct = (VN.lives / 2) * 100;
+      const label = VN.lives === 2 ? "⚜️ Wards: Stable" : (VN.lives === 1 ? "⚡ Wards: Fractured" : "💔 Wards: Broken");
+      el.innerHTML = `
+        <div class="royal-bar-container">
+          <div class="royal-bar-label">${label}</div>
+          <div class="royal-bar-frame">
+            <div class="royal-bar-fill" style="width: ${Math.max(0, pct)}%;"></div>
+          </div>
+        </div>
+      `;
+    }
   }
 }
 
@@ -739,7 +751,7 @@ function burstHearts() {
   for (let i = 0; i < 12; i++) {
     const h = document.createElement("div");
     h.className = "heartburst";
-    h.textContent = pick(["💖", "💘", "✨", "💗"]);
+    h.textContent = pick(["⚜️", "👑", "✨", "✦", "💖"]);
     h.style.left = (10 + Math.random() * 80) + "%";
     h.style.top = (35 + Math.random() * 40) + "%";
     h.style.animationDelay = (Math.random() * 0.9) + "s";
