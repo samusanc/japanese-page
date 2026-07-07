@@ -1613,34 +1613,24 @@ main:has(#s-home.on) {
 }
 
 .vn-stage { position: relative; flex: 1; display: flex; flex-direction: column; z-index: 2; overflow: hidden; }
-.vn-sprite-container {
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  position: relative;
-  overflow: visible;
-  z-index: 2;
-  pointer-events: none;
-}
 .vn-sprite {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 95px; /* rest slightly behind the 110px dialogue box */
+  z-index: 2;
   font-size: 120px;
   line-height: 1;
   filter: drop-shadow(0 12px 28px rgba(0,0,0,0.65));
   transition: opacity 0.5s ease;
   animation: vnFloat 4.5s ease-in-out infinite;
-  margin-bottom: -15px; /* Overlap dialogue box slightly */
 }
 .vn-sprite img { height: 65vh; max-height: 540px; width: auto; object-fit: contain; }
-.vn-sprite.left { left: auto; transform: none; }
+.vn-sprite.left { left: 50%; transform: translateX(-50%); }
 
 @keyframes vnFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -8px); }
 }
 
 .vn-hearts {
