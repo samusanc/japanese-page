@@ -22,7 +22,7 @@ export const OTOME = {
 assets: {
   /* backgrounds: css gradient fallback; set img:"assets/xxx.jpg" to use art */
   bg: {
-    academy:  { css:"linear-gradient(168deg,#120D1F 0%,#241B36 48%,#57431E 135%)", img:null },
+    academy:  { css:"linear-gradient(168deg,#120D1F 0%,#241B36 48%,#57431E 135%)", img:"./bg/academy-crest.png" },
     ballroom: { css:"linear-gradient(160deg,#3a2455 0%,#7b4b8f 50%,#d9a0c0 100%)", img:null },
     garden:   { css:"linear-gradient(165deg,#1f4d43 0%,#4e8a6a 55%,#c9e6b8 100%)", img:null },
     night:    { css:"linear-gradient(170deg,#0A0814 0%,#1B1738 55%,#3A3168 110%)", img:null },
