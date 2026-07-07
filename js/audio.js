@@ -42,6 +42,10 @@ export function speak(text) {
   if (!a) {
     a = new Audio(CONFIG.AUDIO_BASE + id + ".mp3");
     a.preload = "auto";
+    a.addEventListener("error", () => {
+      _audioEls[id] = "bad";
+      ttsFallback(text);
+    });
     _audioEls[id] = a;
   }
   try {
@@ -50,9 +54,11 @@ export function speak(text) {
   a.currentTime = 0;
   const pr = a.play();
   if (pr && pr.catch) {
-    pr.catch(() => {
-      _audioEls[id] = "bad";
-      ttsFallback(text);
+    pr.catch((err) => {
+      // Only fallback if play was blocked by autoplay permission issues
+      if (err && err.name === "NotAllowedError") {
+        ttsFallback(text);
+      }
     });
   }
 }
