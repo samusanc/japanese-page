@@ -1,0 +1,15 @@
+/* ---- Results ---- */
+.res-score { text-align: center; padding: 10px 0 4px; }
+.res-score .n {
+  font-family: var(--disp); font-weight: 700; font-size: 64px;
+  background: linear-gradient(135deg, var(--sapphire), var(--amethyst));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1; filter: drop-shadow(0 0 20px var(--sapphire-glow));
+}
+.res-score .k { font-family: var(--disp); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--ink3); }
+.res-grid { display: flex; gap: 10px; margin: 16px 0; }
+.wordlist { max-height: 220px; overflow-y: auto; margin-top: 8px; }
+.wl-row { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 14px; }
+.wl-row .a { font-family: var(--jp); font-weight: 700; }
+.wl-row.bad .a { color: var(--rose); }
+.wl-row.good .a { color: var(--emerald); }
