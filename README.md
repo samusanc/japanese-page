@@ -4,16 +4,21 @@ A mobile-first web app for practicing **Japanese conjugation** (て-form, ない
 
 ## What's in the box
 
-| File | What it is |
+| Path | What it is |
 |---|---|
-| `index.html` | The whole app (UI + game logic + Supabase client + audio engine) |
-| `kanji-data.js` | Stroke data for all 250 N5/N4 kanji (bundled, works offline) |
-| `audio-manifest.json` | Every text the app can speak (1,230 clips) with its filename |
-| `generate_audio.py` | Batch script: synthesizes all clips with Azure TTS into `audio/` |
+| `src/main.js` | Composition root — boots core services + every feature module |
+| `src/core/` | Services: navigation, storage, backend, daily scores, audio engine… |
+| `src/modules/` | One folder per feature: otome VN engine, sprint, kanji daily/dictionary, home, squad, learn, practice — each owns its JS + HTML fragment + CSS |
+| `content/` | Pure game data: characters, scenes, grammar, balance numbers, JSDoc schema + validator. Add characters/scenes here, never touch the engine |
+| `public/` | Served as-is: voice mp3s, backgrounds, sprites, kanji stroke data |
+| `scripts/build-audio-manifest.mjs` | Regenerates `audio-manifest.json` from the content |
+| `generate_audio_edge.py` | Synthesizes missing voice clips with free edge-tts |
 | `supabase-schema.sql` | Database tables, security policies, fair-play trigger |
-| `README.md` | This file |
+| `CLAUDE.md` | Architecture guide (import rules, invariants, how to add content) |
 
-The app **works immediately in solo mode** — just open `index.html` in a browser. Scores save to your device. To unlock squads and shared leaderboards, connect Supabase (free, ~5 minutes):
+**Development:** `npm install`, then `npm run dev`. Run tests with `npm test`. Open the app with `?debug=1` for the Eruda mobile console + verbose logs.
+
+The app **works immediately in solo mode** — scores save to your device. To unlock squads and shared leaderboards, connect Supabase (free, ~5 minutes):
 
 ## Backend setup (Supabase)
 
@@ -27,37 +32,24 @@ The app **works immediately in solo mode** — just open `index.html` in a brows
 
 **3. Enable anonymous sign-in** — go to **Authentication → Sign In / Providers** and switch on **Anonymous sign-ins**. Players get a device-bound identity with zero signup friction (no emails, no passwords).
 
-**4. Connect the app** — in the dashboard go to **Project Settings → API** and copy the **Project URL** and the **anon public** key. Open `index.html` and paste them into the `CONFIG` block near the top:
+**4. Connect the app** — in the dashboard go to **Project Settings → API** and copy the **Project URL** and the **anon public** key into the `CONFIG` block at the top of `src/core/backend.js`.
 
-```js
-const CONFIG = {
-  SUPABASE_URL: "https://yourproject.supabase.co",
-  SUPABASE_ANON_KEY: "eyJhbGciOi..."
-};
-```
-
-**5. Deploy (GitHub Pages)** — since you're hosting on GitHub Pages:
-   1. Create a repo and put `index.html`, `kanji-data.js`, and the `audio/` folder (see below) at its root
-   2. Repo → **Settings → Pages** → Source: *Deploy from a branch* → `main` / root → Save
-   3. Your app is live at `https://yourname.github.io/reponame/` in ~a minute
+**5. Deploy (GitHub Pages)** — push to `main`. The GitHub Actions workflow (`.github/workflows/deploy.yml`) runs the tests, builds with Vite and deploys `dist/` to Pages automatically (enable **Settings → Pages → Source: GitHub Actions** once). Your app is live at `https://yourname.github.io/reponame/`.
 
 Send the URL to your friends. On the Squad tab, one person taps **Create squad code** and shares the 5-letter code; everyone else joins with it. Add the site to your phone's home screen (Share → Add to Home Screen) for an app-like experience.
 
-## Audio setup (Azure TTS)
+## Audio setup (free edge-tts)
 
-The app speaks everything: every verb/adjective in every conjugated form, every kanji reading, and an example sentence for each grammar form. Clips are pre-generated once with **Azure neural TTS** (ja-JP-NanamiNeural — the most natural Japanese voice) and served as static files from your GitHub Pages repo. Until the clips exist, the app automatically falls back to your phone's built-in Japanese voice, so audio works day one either way.
+The app speaks everything: every verb/adjective in every conjugated form, every kanji reading, example sentences and the otome characters' lines. Clips are pre-generated with **Microsoft Edge's free neural TTS** (no API keys) and served as static files. Until a clip exists, the app automatically falls back to your phone's built-in Japanese voice, so audio works day one either way.
 
-**One-time generation (~10 minutes):**
-1. Azure portal → Create resource → **Speech service**. The **free F0 tier** is more than enough: the entire manifest is ~4,800 characters against a 500,000-character monthly free quota.
-2. From the resource's *Keys and Endpoint* page, copy **Key 1** and the **Region**.
-3. Run the batch script next to `audio-manifest.json`:
-   ```bash
-   pip install requests
-   AZURE_SPEECH_KEY=your_key AZURE_SPEECH_REGION=your_region python3 generate_audio.py
-   ```
-4. It writes 1,230 small MP3s (~15–25 MB total) into `audio/`. Commit that folder to your Pages repo next to `index.html`. Done — the app finds each clip by a hash of its text, so no code changes are needed.
+**Generation (incremental — only missing clips are synthesized):**
+```bash
+npm run audio:manifest          # regenerate the manifest from the game content
+pip install edge-tts
+python generate_audio_edge.py   # writes mp3s into public/audio/
+```
 
-The script skips files that already exist, so it's safe to re-run after adding words. Want a male voice? `AZURE_TTS_VOICE=ja-JP-KeitaNeural python3 generate_audio.py`. The full list of sentences/words being voiced is human-readable inside `audio-manifest.json`. A 🔊 toggle in the app header mutes everything.
+Each otome character has their own voice (`voice:` in `content/otome/characters/*.js` — voice name, rate, pitch); their lines land in `public/audio/<character>/`, shared clips stay flat. Commit `public/audio/` and the deploy picks it up. The full list of voiced text is human-readable in `audio-manifest.json`. A 🔊 toggle in the app mutes everything.
 
 ## How the game works
 

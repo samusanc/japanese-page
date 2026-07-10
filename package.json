@@ -1,0 +1,25 @@
+{
+  "name": "katsuyo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "活用! Katsuyo — Daily Japanese Battles",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "audio:manifest": "vite-node scripts/build-audio-manifest.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "vite": "^7.3.0",
+    "vite-node": "^6.0.0",
+    "vitest": "^4.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.2",
+    "hanzi-writer": "^3.7.3"
+  }
+}

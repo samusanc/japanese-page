@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Prevent scaling and double-tap zoom for native-app feel on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <title>Neon Match: Speed Memory Game</title>
+  <meta name="description" content="A fast-paced Japanese-Spanish memory matching game with a dynamic neon layout.">
+  
+  <!-- Manifest for PWA -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon.png">
+  <meta name="theme-color" content="#0a0a16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <!-- Premium Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- START SCREEN -->
+    <section id="start-screen" class="screen active">
+      <div class="header-logo">
+        <h1 class="logo-text">NEON<span class="highlight">MATCH</span></h1>
+        <p class="subtitle">JA-ES SPEED CHALLENGE</p>
+      </div>
+      
+      <div class="rules-card">
+        <h3>How to Play</h3>
+        <ul>
+          <li>Review 5 cards before starting the speed matching challenge.</li>
+          <li>Match the upper <span class="es-highlight">Spanish (Red)</span> card with its lower <span class="ja-highlight">Japanese (Green)</span> pair.</li>
+          <li>Both card decks are at the top, dealt directly by the cyber opponent.</li>
+          <li>You have <strong>3 seconds per card</strong> to clear the entire board (no timer reset on single matches).</li>
+          <li>Clearing the board unlocks a new review session to expand your deck (+5 pairs).</li>
+          <li>Spaced repetition appearance weights prioritize cards you missed, skipped, or left on the table!</li>
+        </ul>
+      </div>
+      
+      <button id="btn-learn" class="btn btn-primary" aria-label="Learn New Cards" style="margin-bottom: 12px;">LEARN (New Cards)</button>
+      <button id="btn-practice" class="btn btn-primary" aria-label="Practice Learned Cards" style="background: linear-gradient(135deg, var(--ja-color) 0%, #00b359 100%); box-shadow: 0 4px 15px rgba(0, 179, 89, 0.4);">PRACTICE</button>
+      <div class="menu-secondary-buttons" style="display: flex; gap: 12px; width: 100%; max-width: 300px; margin-top: 12px; margin-bottom: 20px;">
+        <button id="btn-progress" class="btn btn-secondary" aria-label="View Progress" style="flex: 1; margin: 0; padding: 12px 16px; font-size: 0.9rem;">PROGRESS</button>
+        <button id="btn-reset-progress" class="btn btn-secondary" aria-label="Reset Progress" style="flex: 1; margin: 0; padding: 12px 16px; font-size: 0.85rem; border-color: rgba(255, 51, 51, 0.2); color: #ff6666;">RESET PROGRESS</button>
+      </div>
+    </section>
+    
+    <!-- REVIEW SCREEN -->
+    <section id="review-screen" class="screen">
+      <div class="review-header">
+        <h2 class="review-title">REVIEW CARD</h2>
+        <p id="review-counter" class="review-subtitle">Card 1 of 5</p>
+      </div>
+      
+      <div class="review-cards-container">
+        <!-- Spanish Card (Red) -->
+        <div class="review-card spanish-review">
+          <span class="review-card-label">SPANISH</span>
+          <span id="review-es-text" class="review-card-text">Word ES</span>
+        </div>
+        <!-- Japanese Card (Green) -->
+        <div class="review-card japanese-review">
+          <span class="review-card-label">JAPANESE</span>
+          <span id="review-ja-text" class="review-card-text">Word JA</span>
+        </div>
+      </div>
+      
+      <div class="review-actions">
+        <button id="btn-next-review" class="btn btn-primary" aria-label="Next Card">NEXT CARD</button>
+      </div>
+    </section>
+    
+    <!-- PLAY SCREEN -->
+    <section id="play-screen" class="screen">
+      <header class="game-header">
+        <div class="score-container">
+          <div class="score-box">
+            <span class="label">SCORE</span>
+            <span id="score-val" class="value">0</span>
+          </div>
+          <div class="score-box">
+            <span class="label">BEST</span>
+            <span id="best-val" class="value">0</span>
+          </div>
+        </div>
+        
+        <div class="header-controls">
+          <button id="btn-mute" class="icon-btn" aria-label="Toggle Sound">
+            <!-- Speaker Icon -->
+            <svg id="svg-sound-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+              <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.063.922-2.063 2.063v4.875c0 1.141.922 2.062 2.063 2.062h1.932l4.5 4.5c.944.945 2.56.276 2.56-1.06V4.06zM17.78 9.22a.75.75 0 10-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 101.06-1.06L20.56 12l1.72-1.72a.75.75 0 00-1.06-1.06l-1.72 1.72-1.72-1.72z" />
+            </svg>
+            <svg id="svg-sound-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 hidden">
+              <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.063.922-2.063 2.063v4.875c0 1.141.922 2.062 2.063 2.062h1.932l4.5 4.5c.944.945 2.56.276 2.56-1.06V4.06z" />
+              <path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.26 2.5-4.02zM16 4.75C19.24 5.57 21.5 8.5 21.5 12s-2.26 6.43-5.5 7.25v-1.54c2.39-.75 4-2.99 4-5.71s-1.61-4.96-4-5.71V4.75z" />
+            </svg>
+          </button>
+          <button id="btn-quit" class="btn-quit" aria-label="Quit Game">QUIT</button>
+        </div>
+      </header>
+      
+      <!-- Timer Section -->
+      <div class="timer-area">
+        <div class="timer-bar-bg">
+          <div id="timer-bar-fill" class="timer-bar-fill"></div>
+        </div>
+        <div class="timer-text-container">
+          <span id="timer-text" class="timer-text">0.0s</span>
+        </div>
+      </div>
+      
+      <!-- Card Deck Board with Dealer Area and Grids -->
+      <main id="game-board" class="board-container" aria-label="Game Board">
+        
+        <!-- Dealer Area (Top) -->
+        <div class="dealer-area">
+          <!-- 9:16 Opponent Avatar Box -->
+          <div class="opponent-box">
+            <img src="opponent.png" alt="Opponent Dealer" class="opponent-img">
+          </div>
+          <!-- Side-by-Side Decks -->
+          <div class="decks-box">
+            <div id="es-deck" class="deck spanish-deck" aria-label="Spanish Deck">
+              <div class="deck-card c1"></div>
+              <div class="deck-card c2"></div>
+              <div class="deck-card c3"></div>
+            </div>
+            <div id="ja-deck" class="deck japanese-deck" aria-label="Japanese Deck">
+              <div class="deck-card c1"></div>
+              <div class="deck-card c2"></div>
+              <div class="deck-card c3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upper Spanish Grid -->
+        <div class="zone spanish-zone">
+          <div id="es-grid" class="grid-container spanish-grid"></div>
+        </div>
+        
+        <!-- Arena Divider Line -->
+        <div class="zone-divider"></div>
+        
+        <!-- Lower Japanese Grid -->
+        <div class="zone japanese-zone">
+          <div id="ja-grid" class="grid-container japanese-grid"></div>
+        </div>
+      </main>
+
+      <!-- Level Clear / Expand Deck Modal Dialog -->
+      <div id="expand-modal" class="modal-overlay">
+        <div class="modal-card">
+          <h3 class="modal-title">CHALLENGE CLEARED!</h3>
+          <p id="modal-desc" class="modal-desc">You successfully matched all cards!</p>
+          <div class="modal-actions">
+            <button id="btn-expand-deck" class="btn btn-primary">REVIEW 5 MORE</button>
+            <button id="btn-modal-menu" class="btn btn-secondary">MAIN MENU</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- GAME OVER SCREEN -->
+    <section id="game-over-screen" class="screen">
+      <div class="game-over-logo">
+        <h2 class="game-over-title">GAME OVER</h2>
+        <p class="game-over-subtitle">Time Ran Out!</p>
+      </div>
+      
+      <div class="results-card">
+        <div class="result-row">
+          <span class="result-label">FINAL SCORE</span>
+          <span id="final-score" class="result-val">0</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">MAX CARDS MATCHED</span>
+          <span id="matched-pairs" class="result-val">0</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">PEAK BOARD SIZE</span>
+          <span id="peak-cards" class="result-val">0</span>
+        </div>
+      </div>
+      
+      <div class="game-over-actions">
+        <button id="btn-restart" class="btn btn-primary" aria-label="Play Again">PLAY AGAIN</button>
+        <button id="btn-menu" class="btn btn-secondary" aria-label="Main Menu">MAIN MENU</button>
+      </div>
+    </section>
+    
+    <!-- PROGRESS MODAL -->
+    <div id="progress-modal" class="modal-overlay">
+      <div class="modal-card progress-card">
+        <h3 class="modal-title">DECK PROGRESS</h3>
+        
+        <div class="progress-stats">
+          <div class="stat-box">
+            <span class="stat-num" id="prog-num-learned">0</span>
+            <span class="stat-lbl">Learned</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-num" id="prog-num-missing">0</span>
+            <span class="stat-lbl">Remaining</span>
+          </div>
+        </div>
+
+        <div class="deck-list-container">
+          <div class="deck-list-header">
+            <span>Card Pair / Weight</span>
+          </div>
+          <div id="deck-list" class="deck-list">
+            <!-- Dynamically populated card rows -->
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button id="btn-close-progress" class="btn btn-primary">CLOSE</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>
+  <script src="app.js"></script>
+</body>
+</html>

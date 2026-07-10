@@ -1,0 +1,17 @@
+{
+  "name": "Neon Match Speed Game",
+  "short_name": "Neon Match",
+  "description": "Fast-paced memory matching game with Japanese and Spanish cards.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070714",
+  "theme_color": "#0a0a16",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}
