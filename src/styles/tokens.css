@@ -1,0 +1,63 @@
+/* ====================================================
+   KATSUYO — Fantasy Aristocratic Crystal UI
+   ==================================================== */
+:root {
+  /* Palette — warm midnight crystal (luxury black & gold) */
+  --bg:          #0a0a0c; /* pure deep luxury black */
+  --bg2:         #121215; /* obsidian black */
+  --surface:     rgba(18, 18, 21, 0.32); /* translucent obsidian black */
+  --surface-md:  rgba(18, 18, 21, 0.52);
+  --surface-hi:  rgba(18, 18, 21, 0.75);
+  --glass-border:rgba(207, 165, 122, 0.15); /* translucent gold border */
+  --glass-border-hi:rgba(207, 165, 122, 0.35); /* bright gold border */
+
+  /* Warm accents */
+  --gold:        #cfa57a; /* royal warm gold */
+  --gold-glow:   rgba(207, 165, 122, 0.3);
+  --rose:        #b58c5c; /* burnished gold / bronze */
+  --rose-glow:   rgba(181, 140, 92, 0.3);
+  --crimson:     #5c3c3c;
+  --crimson-glow:rgba(92, 60, 60, 0.3);
+  --sapphire:    #cfa57a; /* gold theme override */
+  --sapphire-glow:rgba(207, 165, 122, 0.35);
+  --amethyst:    #9c7b56;
+  --amethyst-glow:rgba(156, 123, 86, 0.3);
+  --emerald:     #82a67d;
+  --emerald-glow:rgba(130, 166, 125, 0.3);
+
+  /* Warm text colors */
+  --ink:    #fbf9f5;
+  --ink2:   #cfc7b8;
+  --ink3:   #8c8273;
+
+  /* Geometry */
+  --r:    16px;
+  --r-lg: 24px;
+
+  /* Shadows & Glows */
+  --shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.3);
+  --glow-s: 0 0 16px var(--sapphire-glow), 0 0 40px rgba(122,156,207,0.15);
+  --glow-a: 0 0 16px var(--amethyst-glow), 0 0 40px rgba(140,103,138,0.1);
+  --glow-g: 0 0 16px var(--gold-glow), 0 0 40px rgba(207,165,122,0.15);
+
+  /* Typography */
+  --disp: 'Cinzel', 'Cormorant Garamond', 'Noto Sans JP', serif;
+  --deco: 'Cinzel Decorative', 'Cinzel', serif;
+  --body: 'Cormorant Garamond', 'Noto Sans JP', serif;
+  --jp:   'Noto Sans JP', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { margin:0; padding:0; }body {
+  font-family: var(--body);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(207,165,122,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 90%, rgba(181,140,92,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 50% at 10% 70%, rgba(207,165,122,0.06) 0%, transparent 50%);
+  min-height: 100dvh;
+  touch-action: manipulation;
+  -webkit-font-smoothing: antialiased;
+}

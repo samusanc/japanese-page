@@ -1,0 +1,113 @@
+<div id="cards" class="overlay">
+
+  <!-- ══════ START · the Prince's parlor ══════ -->
+  <div class="cd-panel" id="cdStart">
+    <button class="g-quit cd-corner-btn" id="cdClose" aria-label="leave the table">✕</button>
+    <div class="cd-host">
+      <div class="cd-host-icon">🃏</div>
+      <div class="cd-host-name" id="cdHostName"></div>
+      <div class="cd-host-title" id="cdHostTitle"></div>
+      <p class="cd-host-line" id="cdHostLine"></p>
+    </div>
+
+    <div class="cd-setup card">
+      <span class="eyebrow">Choose your deck</span>
+      <div class="cd-decks" id="cdDecks"></div>
+
+      <span class="eyebrow" style="margin-top:14px;display:block;">Table</span>
+      <div class="cd-seg" id="cdType">
+        <button data-t="vocab">Vocabulary <span class="lv">ES ⇄ 日本語</span></button>
+        <button data-t="kanji">Kanji <span class="lv">読み ⇄ 漢字</span></button>
+      </div>
+      <div id="cdFuriWrap" style="margin-top:8px;">
+        <button class="cd-toggle" id="cdFuri">ふりがな ON</button>
+      </div>
+
+      <div class="cd-start-row">
+        <button class="btn gold" id="cdLearn">🂠 New deal</button>
+        <button class="btn" id="cdPractice">♠ Play your hand</button>
+      </div>
+      <div class="cd-best-row">
+        <button class="cd-toggle" id="cdLedger">📜 Ledger</button>
+        <span class="cd-best">Best pot: <b id="cdBest">0</b> 🪙</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ REVIEW · the Prince deals new cards ══════ -->
+  <div class="cd-panel" id="cdReview">
+    <div class="cd-deal-head">
+      <span class="cd-host-icon sm">🃏</span>
+      <p class="cd-host-line" id="cdDealLine"></p>
+      <span class="cd-review-count" id="cdReviewCount"></span>
+    </div>
+    <div class="cd-review-card">
+      <span class="cd-pip tl">⚜</span><span class="cd-pip br">⚜</span>
+      <div class="cd-review-ja" id="cdReviewJa"></div>
+      <div class="cd-review-prompt" id="cdReviewPrompt"></div>
+    </div>
+    <button class="btn gold" id="cdReviewNext">NEXT CARD ▶</button>
+  </div>
+
+  <!-- ══════ PLAY · the table ══════ -->
+  <div class="cd-panel" id="cdPlay">
+    <div class="g-top">
+      <button class="g-quit" id="cdQuit" aria-label="fold">✕</button>
+      <div class="timerwrap cd-timerwrap"><div id="cdTimerFill"></div></div>
+      <span class="cd-timer-text" id="cdTimerText"></span>
+      <div class="cd-chips">🪙 <span id="cdChips">0</span><span class="cd-chip-float" id="cdChipFloat"></span></div>
+    </div>
+    <div class="cd-table">
+      <div class="cd-row-label">— the offer —</div>
+      <div class="cd-zone">
+        <div class="cd-deckpile" id="cdTopDeck"><span>🂠</span></div>
+        <div class="cd-grid" id="cdTopGrid"></div>
+      </div>
+      <div class="cd-divider"><span>⚜</span></div>
+      <div class="cd-zone">
+        <div class="cd-deckpile" id="cdBotDeck"><span>🂠</span></div>
+        <div class="cd-grid" id="cdBotGrid"></div>
+      </div>
+      <div class="cd-row-label">— your hand —</div>
+    </div>
+  </div>
+
+  <!-- ══════ GAME OVER ══════ -->
+  <div class="cd-panel" id="cdOver">
+    <div class="cd-host">
+      <div class="cd-host-icon">🃏</div>
+      <p class="cd-host-line" id="cdOverLine"></p>
+    </div>
+    <div class="card cd-over-card">
+      <div class="cd-final"><span class="n" id="cdFinalChips">0</span><span class="k">royal chips won</span></div>
+      <div class="cd-final-sub">Biggest table: <b id="cdFinalPeak">0</b> cards</div>
+      <div class="cd-start-row">
+        <button class="btn gold" id="cdOverAgain">Double or nothing ▶</button>
+        <button class="btn" id="cdOverMenu">Back to the parlor</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- level-clear modal -->
+  <div class="cd-modal" id="cdLevelModal">
+    <div class="card cd-modal-card">
+      <div class="cd-host-icon sm">🃏</div>
+      <p class="cd-host-line" id="cdLevelLine"></p>
+      <button class="btn gold" id="cdLevelNext"></button>
+      <button class="btn" id="cdLevelMenu">Leave the table</button>
+    </div>
+  </div>
+
+  <!-- ledger modal -->
+  <div class="cd-modal" id="cdLedgerModal">
+    <div class="card cd-modal-card cd-ledger">
+      <div class="cd-ledger-head">
+        <span class="eyebrow">The Prince's ledger</span>
+        <button class="g-quit" id="cdLedgerClose">✕</button>
+      </div>
+      <div class="cd-ledger-stats">Won: <b id="cdLedgerWon">0</b> · Still in his deck: <b id="cdLedgerLeft">0</b></div>
+      <div class="cd-ledger-list" id="cdLedgerList"></div>
+      <button class="cd-toggle" id="cdLedgerReset">Reset this deck's progress</button>
+    </div>
+  </div>
+</div>
