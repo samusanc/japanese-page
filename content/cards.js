@@ -9,6 +9,9 @@ export const CARDS_HOST = {
   title: "The Gambler Prince",
   tagline: "Third in line for the throne — first at every card table.",
   icon: "🃏",
+  img: "./sprites/tyril.png",
+  /** Table backdrop (drawn dimmed behind the whole game). */
+  bg: "./bg/crown-prince-study.png",
   colors: { accent: "#E0B457", accent2: "#F5E3B8" },
   lines: {
     welcome: "Sit, apprentice. Words are my cards — and the table never lies.",

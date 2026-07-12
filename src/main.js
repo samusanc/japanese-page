@@ -18,6 +18,7 @@ import { loadDayRec } from '@core/daily.js';
 import { beInit, beSaveProfile } from '@core/backend.js';
 import { initAudioUI } from '@core/audio/ui.js';
 import { configureAudio } from '@core/audio/engine.js';
+import { initPwa } from '@core/pwa.js';
 import * as results from '@core/results.js';
 import { BALANCE } from '@content/balance.js';
 import { MUSIC, AMBIENCE, SFX } from '@content/otome/index.js';
@@ -67,6 +68,7 @@ import * as practice from '@modules/practice/index.js';
   squad.init();
   learn.init();
   practice.init();
+  initPwa();
 
   state.profile = LS.get("profile");
   loadDayRec();

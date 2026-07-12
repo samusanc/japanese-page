@@ -3,9 +3,11 @@
    ══════════════════════════════════════════════════════════ */
 
 #cards.overlay {
+  /* --cd-bg is set from content (CARDS_HOST.bg) at init — dimmed study backdrop */
   background:
     radial-gradient(ellipse at 50% -10%, rgba(224,180,87,0.10), transparent 55%),
-    linear-gradient(170deg, #120D1F 0%, #1B1430 55%, #241B36 100%);
+    linear-gradient(170deg, rgba(18,13,31,0.86) 0%, rgba(27,20,48,0.88) 55%, rgba(36,27,54,0.92) 100%),
+    var(--cd-bg, linear-gradient(170deg, #120D1F, #241B36)) center / cover no-repeat fixed;
 }
 
 .cd-panel {
@@ -16,18 +18,99 @@
   padding: max(14px, env(safe-area-inset-top)) 14px calc(env(safe-area-inset-bottom) + 14px);
 }
 .cd-panel.on { display: flex; }
+/* start/over panels can outgrow small screens with the big portrait */
+#cdStart, #cdOver { overflow-y: auto; }
+
+/* short screens: raise the desk so the card grids keep room to breathe */
+@media (max-height: 720px) {
+  #cdPlay .cd-dealer { height: 46%; width: min(290px, 88vw); }
+  .cd-desk { top: 38%; }
+  .cd-host-portrait { width: 150px; height: 172px; }
+}
 
 .cd-corner-btn { position: absolute; top: max(12px, env(safe-area-inset-top)); right: 12px; z-index: 5; }
 
-/* ---- host ---- */
-.cd-host { text-align: center; padding: 26px 12px 10px; }
+/* ---- host (transparent sprite cutout, no frame) ---- */
+.cd-host { text-align: center; padding: 14px 12px 6px; }
+.cd-host-portrait {
+  position: relative; width: 190px; height: 216px; margin: 0 auto;
+  animation: cdHostFloat 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 8px 22px rgba(0,0,0,0.55)) drop-shadow(0 0 24px rgba(224,180,87,0.30));
+}
+/* soft candlelight pool behind him */
+.cd-host-portrait::before {
+  content: ""; position: absolute; inset: -8% -18%;
+  background: radial-gradient(ellipse at 50% 42%, rgba(224,180,87,0.20), transparent 62%);
+  z-index: -1;
+}
+.cd-host-portrait img { width: 100%; height: 100%; object-fit: contain; object-position: bottom; display: block; }
+.cd-host-portrait img[src=""] { display: none; }
+.cd-host-portrait .cd-host-icon {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  z-index: -1; /* emoji fallback behind the sprite; visible only when img hidden */
+}
 .cd-host-icon {
   font-size: 56px; line-height: 1;
   filter: drop-shadow(0 0 18px rgba(224,180,87,0.45));
-  animation: cdHostFloat 4s ease-in-out infinite;
 }
 .cd-host-icon.sm { font-size: 30px; }
-@keyframes cdHostFloat { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
+@keyframes cdHostFloat { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-6px) rotate(1deg); } }
+
+/* ---- the play stage: a LARGE dealer looming behind his desk ---- */
+.cd-stage { position: relative; flex: 1; min-height: 0; }
+
+#cdPlay .cd-dealer {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: min(340px, 92vw);
+  height: 52%;                 /* his lower half disappears behind the desk */
+  z-index: 1; pointer-events: none;
+  animation: cdDealerFloat 4.5s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 26px rgba(224,180,87,0.22));
+}
+#cdPlay .cd-dealer::before {
+  content: ""; position: absolute; inset: -4% -20%;
+  background: radial-gradient(ellipse at 50% 38%, rgba(224,180,87,0.18), transparent 60%);
+  z-index: -1;
+}
+#cdPlay .cd-dealer img {
+  width: 100%; height: 100%; display: block;
+  object-fit: cover; object-position: top center;  /* big head & torso; crop is hidden by the desk */
+}
+@keyframes cdDealerFloat { from { transform: translateX(-50%) translateY(0); } to { transform: translateX(-50%) translateY(-5px); } }
+
+/* the desk he deals from — covers the sprite from the waist down */
+.cd-desk {
+  position: absolute; left: -6px; right: -6px; bottom: -2px; top: 44%;
+  display: flex; flex-direction: column;
+  border-radius: 22px 22px 0 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(224,180,87,0.08), transparent 55%),
+    linear-gradient(180deg, rgba(38,28,58,0.95) 0%, rgba(22,16,38,0.96) 100%);
+  border: 1.5px solid rgba(224,180,87,0.45);
+  border-bottom: none;
+  box-shadow: 0 -10px 32px rgba(0,0,0,0.55), inset 0 2px 0 rgba(255,255,255,0.07);
+  padding: 20px 8px 4px;
+  z-index: 2;
+}
+/* his decks and nameplate sit ON the desk edge */
+.cd-desk .cd-deckpile { position: absolute; top: -30px; z-index: 3; }
+.cd-desk .cd-deckpile.offer { left: 14px; }
+.cd-desk .cd-deckpile.hand { right: 14px; }
+.cd-dealer-plate {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  white-space: nowrap; text-align: center; z-index: 3;
+  font-family: var(--disp); font-size: 8px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 3px 12px; border-radius: 999px;
+  background: rgba(13,10,26,0.85); color: #F5E3B8;
+  border: 1px solid rgba(224,180,87,0.45);
+}
+
+/* review screen keeps a mid-size floating cutout */
+.cd-dealer.sm {
+  position: relative; width: 92px; height: 118px; margin: 0 auto 4px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 14px rgba(224,180,87,0.25));
+}
+.cd-dealer.sm img { width: 100%; height: 100%; object-fit: contain; object-position: bottom; display: block; }
 .cd-host-name {
   font-family: var(--disp); font-weight: 900; font-size: 24px; margin-top: 8px;
   background: linear-gradient(135deg, #E0B457, #F5E3B8);
@@ -37,7 +120,7 @@
 .cd-host-line { font-style: italic; color: var(--ink2); font-size: 13.5px; margin: 10px auto 0; max-width: 420px; line-height: 1.5; }
 
 /* ---- start / setup ---- */
-.cd-setup { margin: 10px auto 0; width: min(440px, 100%); }
+.cd-setup { margin: 8px auto 0; width: min(440px, 100%); flex-shrink: 0; }
 .cd-decks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 .cd-deck-btn {
   font-family: var(--disp); font-weight: 600; font-size: 12.5px; text-align: left;
@@ -115,31 +198,91 @@
 .cd-chip-float.go { animation: cdChipUp .8s ease forwards; }
 @keyframes cdChipUp { 0% { opacity: 0; transform: translateY(4px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-22px); } }
 
-.cd-table { flex: 1; display: flex; flex-direction: column; min-height: 0; gap: 4px; }
-.cd-row-label { text-align: center; font-family: var(--disp); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink3); opacity: .8; }
-.cd-zone { flex: 1; display: flex; gap: 8px; min-height: 0; align-items: stretch; }
-.cd-divider { display: flex; align-items: center; gap: 10px; color: rgba(224,180,87,0.5); font-size: 11px; }
+.cd-table { flex: 1; display: flex; flex-direction: column; min-height: 0; gap: 3px; }
+.cd-row-label { text-align: center; font-family: var(--disp); font-size: 8px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink3); opacity: .75; }
+.cd-divider { display: flex; align-items: center; gap: 10px; color: rgba(224,180,87,0.5); font-size: 10px; }
 .cd-divider::before, .cd-divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(224,180,87,0.35), transparent); }
-.cd-deckpile {
-  width: 44px; flex-shrink: 0; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center; font-size: 26px;
-  background: repeating-linear-gradient(135deg, #241B36 0 6px, #1B1430 6px 12px);
-  border: 1px solid rgba(224,180,87,0.35);
-  box-shadow: 2px 2px 0 rgba(224,180,87,0.15), 4px 4px 0 rgba(224,180,87,0.08);
+.cd-grid { flex: 1; display: grid; gap: 6px; align-content: center; min-height: 0; }
+
+/* ---- the Prince's two decks: fanned 3-card piles ---- */
+.cd-deckpile { position: relative; width: 52px; height: 70px; flex-shrink: 0; perspective: 800px; }
+.cd-deckpile i {
+  position: absolute; inset: 0; border-radius: 9px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(224,180,87,0.16), transparent 62%),
+    repeating-linear-gradient(45deg, #241B36 0 8px, #1E1630 8px 16px);
+  border: 1.5px solid rgba(224,180,87,0.5);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.45), inset 0 0 0 2px rgba(18,13,31,0.9);
 }
-.cd-deckpile.shuffling { animation: cdShuffle .7s ease; }
-@keyframes cdShuffle {
-  0%,100% { transform: none; }
-  20% { transform: translateX(-4px) rotate(-4deg); }
-  40% { transform: translateX(4px) rotate(4deg); }
-  60% { transform: translateX(-3px) rotate(-2deg); }
-  80% { transform: translateX(3px) rotate(2deg); }
+.cd-deckpile i::after {
+  content: "👑"; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; opacity: .75; filter: drop-shadow(0 0 5px rgba(224,180,87,0.6));
 }
-.cd-grid { flex: 1; display: grid; gap: 8px; align-content: center; min-height: 0; }
+.cd-deckpile.offer i { border-color: rgba(224,131,110,0.55); }
+.cd-deckpile.offer i::after { content: "⚜"; color: #E0836E; font-size: 16px; filter: drop-shadow(0 0 5px rgba(224,131,110,0.6)); }
+.cd-deckpile .c1 { transform: translate(-4px, -2px) rotate(-3deg); }
+.cd-deckpile .c2 { transform: translate(0, 0) rotate(1deg); }
+.cd-deckpile .c3 { transform: translate(4px, 2px) rotate(3deg); z-index: 5; }
+/* the good shuffle: the fan riffles apart and back (from the original) */
+.cd-deckpile.shuffling .c1 { animation: cdShufC1 .7s ease-in-out infinite; }
+.cd-deckpile.shuffling .c2 { animation: cdShufC2 .7s ease-in-out infinite; }
+.cd-deckpile.shuffling .c3 { animation: cdShufC3 .7s ease-in-out infinite; }
+@keyframes cdShufC1 {
+  0%, 100% { transform: translate(-4px, -2px) rotate(-3deg); }
+  50% { transform: translate(-20px, 0px) rotate(-15deg); }
+}
+@keyframes cdShufC2 {
+  0%, 100% { transform: translate(0, 0) rotate(1deg); }
+  50% { transform: translate(0, 3px) rotate(0deg); }
+}
+@keyframes cdShufC3 {
+  0%, 100% { transform: translate(4px, 2px) rotate(3deg); }
+  50% { transform: translate(20px, -1px) rotate(15deg); }
+}
+
+/* ---- stacking royal chips (side view, they pile up as you win) ---- */
+.cd-chiptray {
+  position: absolute; left: 10px; bottom: calc(env(safe-area-inset-bottom) + 8px);
+  display: flex; gap: 7px; align-items: flex-end;
+  height: 84px; pointer-events: none; z-index: 6;
+}
+.cd-stack { position: relative; width: 38px; height: 84px; }
+.cd-chip {
+  position: absolute; width: 38px; height: 13px; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 28%, var(--chip-hi), var(--chip) 68%);
+  border: 1px solid rgba(0,0,0,0.45);
+  box-shadow: inset 0 -4px 2px rgba(0,0,0,0.35), inset 0 2px 2px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.5);
+}
+.cd-chip::before {
+  content: ""; position: absolute; inset: 2px 5px; border-radius: 50%;
+  border: 2px dashed rgba(255,255,255,0.5); opacity: .8;
+}
+.cd-chip.gold     { --chip: #C99937; --chip-hi: #F0D48A; }
+.cd-chip.ruby     { --chip: #A93443; --chip-hi: #E27A88; }
+.cd-chip.emerald  { --chip: #2F7D5B; --chip-hi: #7CC9A4; }
+.cd-chip.sapphire { --chip: #31589E; --chip-hi: #84A9E8; }
+.cd-chip.drop { animation: cdChipDrop .45s cubic-bezier(.2,1.5,.4,1); }
+@keyframes cdChipDrop {
+  0% { transform: translateY(-48px) scale(1.15); opacity: 0; }
+  40% { opacity: 1; }
+  70% { transform: translateY(2px) scale(1); }
+  100% { transform: translateY(0); }
+}
+.cd-stack-more {
+  position: absolute; bottom: 0; font-family: var(--disp); font-weight: 700;
+  font-size: 12px; color: #F5E3B8; text-shadow: 0 0 8px rgba(224,180,87,0.6);
+  align-self: flex-end;
+}
+.cd-overtray {
+  position: relative; display: flex; gap: 8px; justify-content: center; align-items: flex-end;
+  height: 90px; margin: 8px 0 2px;
+}
+.cd-overtray .cd-stack { height: 90px; }
 
 /* ---- the cards ---- */
 .cd-card {
-  position: relative; min-height: 56px; padding: 0;
+  position: relative; min-height: 48px; padding: 0;
   border: none; background: none;
   perspective: 600px;
   transition: transform .15s ease;
@@ -176,12 +319,12 @@
 .cd-pip.br { bottom: 4px; right: 6px; transform: rotate(180deg); }
 
 .cd-prompt-text {
-  font-size: clamp(10.5px, 2.9vw, 13.5px); font-weight: 600; text-align: center;
-  line-height: 1.25; overflow-wrap: break-word; max-height: 100%; overflow: hidden;
+  font-size: clamp(10px, 2.7vw, 12.5px); font-weight: 600; text-align: center;
+  line-height: 1.22; overflow-wrap: break-word; max-height: 100%; overflow: hidden;
   color: #4A3B60;
 }
-.cd-furi { font-family: var(--jp); font-size: 9.5px; color: #8A7856; line-height: 1.1; }
-.cd-ja { font-family: var(--jp); font-weight: 800; font-size: clamp(15px, 4.6vw, 22px); line-height: 1.15; text-align: center; }
+.cd-furi { font-family: var(--jp); font-size: 9px; color: #8A7856; line-height: 1.1; }
+.cd-ja { font-family: var(--jp); font-weight: 800; font-size: clamp(14px, 4.2vw, 20px); line-height: 1.15; text-align: center; }
 
 .cd-card.selected .cd-front {
   border-color: #E0B457;

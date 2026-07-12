@@ -4,14 +4,14 @@
   <div class="cd-panel" id="cdStart">
     <button class="g-quit cd-corner-btn" id="cdClose" aria-label="leave the table">✕</button>
     <div class="cd-host">
-      <div class="cd-host-icon">🃏</div>
+      <div class="cd-host-portrait"><img id="cdHostImg" alt=""><span class="cd-host-icon" id="cdHostIcon">🃏</span></div>
       <div class="cd-host-name" id="cdHostName"></div>
       <div class="cd-host-title" id="cdHostTitle"></div>
       <p class="cd-host-line" id="cdHostLine"></p>
     </div>
 
     <div class="cd-setup card">
-      <span class="eyebrow">Choose your deck</span>
+      <span class="eyebrow">Choose your decks <span style="opacity:.6;text-transform:none;letter-spacing:0;">(mix as many as you like)</span></span>
       <div class="cd-decks" id="cdDecks"></div>
 
       <span class="eyebrow" style="margin-top:14px;display:block;">Table</span>
@@ -37,7 +37,7 @@
   <!-- ══════ REVIEW · the Prince deals new cards ══════ -->
   <div class="cd-panel" id="cdReview">
     <div class="cd-deal-head">
-      <span class="cd-host-icon sm">🃏</span>
+      <div class="cd-dealer sm"><img id="cdDealImg" alt=""></div>
       <p class="cd-host-line" id="cdDealLine"></p>
       <span class="cd-review-count" id="cdReviewCount"></span>
     </div>
@@ -49,7 +49,7 @@
     <button class="btn gold" id="cdReviewNext">NEXT CARD ▶</button>
   </div>
 
-  <!-- ══════ PLAY · the table ══════ -->
+  <!-- ══════ PLAY · the Prince's table ══════ -->
   <div class="cd-panel" id="cdPlay">
     <div class="g-top">
       <button class="g-quit" id="cdQuit" aria-label="fold">✕</button>
@@ -57,29 +57,36 @@
       <span class="cd-timer-text" id="cdTimerText"></span>
       <div class="cd-chips">🪙 <span id="cdChips">0</span><span class="cd-chip-float" id="cdChipFloat"></span></div>
     </div>
-    <div class="cd-table">
-      <div class="cd-row-label">— the offer —</div>
-      <div class="cd-zone">
-        <div class="cd-deckpile" id="cdTopDeck"><span>🂠</span></div>
-        <div class="cd-grid" id="cdTopGrid"></div>
+
+    <!-- the dealer looms large behind his desk; the decks sit on its edge -->
+    <div class="cd-stage">
+      <div class="cd-dealer"><img id="cdDealerImg" alt=""></div>
+      <div class="cd-desk">
+        <div class="cd-deckpile offer" id="cdTopDeck" aria-label="offer deck"><i class="c1"></i><i class="c2"></i><i class="c3"></i></div>
+        <span class="cd-dealer-plate" id="cdDealerPlate"></span>
+        <div class="cd-deckpile hand" id="cdBotDeck" aria-label="hand deck"><i class="c1"></i><i class="c2"></i><i class="c3"></i></div>
+        <div class="cd-table">
+          <div class="cd-row-label">— the offer —</div>
+          <div class="cd-grid" id="cdTopGrid"></div>
+          <div class="cd-divider"><span>⚜</span></div>
+          <div class="cd-grid" id="cdBotGrid"></div>
+          <div class="cd-row-label">— your hand —</div>
+        </div>
       </div>
-      <div class="cd-divider"><span>⚜</span></div>
-      <div class="cd-zone">
-        <div class="cd-deckpile" id="cdBotDeck"><span>🂠</span></div>
-        <div class="cd-grid" id="cdBotGrid"></div>
-      </div>
-      <div class="cd-row-label">— your hand —</div>
     </div>
+
+    <div class="cd-chiptray" id="cdChipTray" aria-hidden="true"></div>
   </div>
 
   <!-- ══════ GAME OVER ══════ -->
   <div class="cd-panel" id="cdOver">
     <div class="cd-host">
-      <div class="cd-host-icon">🃏</div>
+      <div class="cd-host-portrait"><img id="cdOverImg" alt=""><span class="cd-host-icon" id="cdOverIcon">🃏</span></div>
       <p class="cd-host-line" id="cdOverLine"></p>
     </div>
     <div class="card cd-over-card">
       <div class="cd-final"><span class="n" id="cdFinalChips">0</span><span class="k">royal chips won</span></div>
+      <div class="cd-overtray" id="cdOverTray" aria-hidden="true"></div>
       <div class="cd-final-sub">Biggest table: <b id="cdFinalPeak">0</b> cards</div>
       <div class="cd-start-row">
         <button class="btn gold" id="cdOverAgain">Double or nothing ▶</button>
@@ -107,7 +114,7 @@
       </div>
       <div class="cd-ledger-stats">Won: <b id="cdLedgerWon">0</b> · Still in his deck: <b id="cdLedgerLeft">0</b></div>
       <div class="cd-ledger-list" id="cdLedgerList"></div>
-      <button class="cd-toggle" id="cdLedgerReset">Reset this deck's progress</button>
+      <button class="cd-toggle" id="cdLedgerReset">Reset this table's progress</button>
     </div>
   </div>
 </div>

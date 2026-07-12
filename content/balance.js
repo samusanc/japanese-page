@@ -20,8 +20,12 @@ export const BALANCE = {
     writing: {
       missesBeforeReveal: 3,
       attemptsPerStep: 5,
-      battleLeniency: 1.2,
-      traceLeniency: 1.25
+      /** Stroke-match forgiveness (1 = hanzi-writer default) — raised so
+       *  drawing smaller/bigger than the template still counts. */
+      battleLeniency: 1.5,
+      traceLeniency: 1.5,
+      /** Misses on ONE stroke before its soft guide animation plays. */
+      hintAfterMisses: 3
     },
 
     route: {

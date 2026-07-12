@@ -21,4 +21,5 @@ export const SRS_INTERVALS_MS = B.srsIntervalsMs;
 
 export const PLATE_INK = THEME.plateInk;
 export const OTOME_WRITER_STYLE = THEME.hanzi;
+export const HANZI_DEMO_STROKE = THEME.hanziDemoStroke;
 export const SPARKLE = THEME.particles;

@@ -82,8 +82,27 @@ describe('app boot', () => {
     expect(document.querySelector('#cdStart').classList.contains('on')).toBe(true);
     expect(document.querySelector('#cdHostName').textContent).not.toBe('');
     expect(document.querySelectorAll('#cdDecks .cd-deck-btn').length).toBe(6);
+    // the dealer is dressed: portrait + name plate + backdrop
+    expect(document.querySelector('#cdDealerImg').getAttribute('src')).toContain('sprites/');
+    expect(document.querySelector('#cdDealerPlate').textContent).not.toBe('');
     document.querySelector('#cdClose').click();
     expect(document.querySelector('#cards').classList.contains('on')).toBe(false);
+  });
+
+  it('deck picker supports selecting multiple levels at once', () => {
+    document.querySelector('#btnCards').click();
+    const btns = [...document.querySelectorAll('#cdDecks .cd-deck-btn')];
+    expect(btns.filter(b => b.classList.contains('on')).length).toBe(1);
+    btns[1].click(); // add a second level
+    const after = [...document.querySelectorAll('#cdDecks .cd-deck-btn')];
+    expect(after.filter(b => b.classList.contains('on')).length).toBe(2);
+    after[0].click(); // deselect the first
+    const final = [...document.querySelectorAll('#cdDecks .cd-deck-btn')];
+    expect(final.filter(b => b.classList.contains('on')).length).toBe(1);
+    final.find(b => b.classList.contains('on')).click(); // can't remove the last one
+    expect([...document.querySelectorAll('#cdDecks .cd-deck-btn')]
+      .filter(b => b.classList.contains('on')).length).toBe(1);
+    document.querySelector('#cdClose').click();
   });
 
   it('sprint launches from the home button and quit lands on results', async () => {

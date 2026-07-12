@@ -147,3 +147,21 @@
 #count.on { display: flex; }
 #count .n { font-family: var(--disp); font-weight: 700; font-size: 110px; color: var(--sapphire); animation: pop .8s ease; text-shadow: var(--glow-s); }
 @keyframes pop { 0%{transform:scale(.3);opacity:0;}30%{transform:scale(1.15);opacity:1;}100%{transform:scale(1);} }
+
+/* ---- Rune bloom: the player's kanji ink ignites like a cast spell ---- */
+path.hw-ink { transition: stroke .5s ease; }
+path.hw-ink.bloom {
+  stroke: var(--bloom-color, #F5E3B8) !important;
+  animation: inkBloom 1.05s ease forwards;
+}
+@keyframes inkBloom {
+  0%   { filter: none; }
+  35%  { filter: drop-shadow(0 0 10px var(--bloom-glow)) drop-shadow(0 0 24px var(--bloom-glow)); }
+  100% { filter: drop-shadow(0 0 5px var(--bloom-glow)) drop-shadow(0 0 12px var(--bloom-glow)); }
+}
+svg.bloom-flash { animation: runeFlash .8s cubic-bezier(.2,.9,.3,1); transform-origin: 50% 50%; }
+@keyframes runeFlash {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}

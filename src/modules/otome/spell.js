@@ -2,12 +2,12 @@ import { $, escapeHtml } from '@core/dom.js';
 import { pick } from '@core/util.js';
 import { speak } from '@core/audio/voice.js';
 import { beep } from '@core/audio/sfx.js';
-import { makeWriter } from '@modules/kanji/writer.js';
+import { makeWriter, keepInk, bloomInk, strokeGuide } from '@modules/kanji/writer.js';
 import { ctx, vnCheck } from './context.js';
 import { TEACHER } from '@content/otome/index.js';
 import { vnSay, updHud, vnYell, particleBurst } from './stage.js';
 import { srsBump } from './srs.js';
-import { SPELL_POINTS, CLASSROOM_POINTS, WRITING, OTOME_WRITER_STYLE } from './constants.js';
+import { SPELL_POINTS, CLASSROOM_POINTS, WRITING, OTOME_WRITER_STYLE, HANZI_DEMO_STROKE } from './constants.js';
 
 /** In-VN HanziWriter with the gold spellcasting palette. */
 function otomeWriter(box, char, opts) {
@@ -40,14 +40,17 @@ export async function castKanji(k, battle) {
     };
   }
 
+  let w;
+  const guide = strokeGuide(() => w);
   const sum = await new Promise(res => {
     vn._res = res;
-    const w = otomeWriter(box, k.c, { showOutline: false });
+    w = otomeWriter(box, k.c, { showOutline: false });
     w.quiz({
       leniency: WRITING.battleLeniency,
-      showHintAfterMisses: 999,
-      onMistake: () => {
+      showHintAfterMisses: WRITING.hintAfterMisses,
+      onMistake: d => {
         if (!ctx.vn || ctx.vn.quit) return;
+        guide.trackMistake(d);
         mistakes++;
         beep("no");
         vnYell();
@@ -57,8 +60,8 @@ export async function castKanji(k, battle) {
             vn.lives = Math.max(0, vn.lives - 1);
             updHud();
           }
-          w.showOutline();
-          $("#vnWFeedback").textContent = "The sign fades in softly — trace it!";
+          guide.reveal(); // one glowing stroke at a time, never the whole sign
+          $("#vnWFeedback").textContent = "Follow the glowing stroke!";
           $("#vnWFeedback").className = "k-feedback bad";
           if (skipBtn) skipBtn.style.display = "block";
         } else if (!revealed) {
@@ -67,7 +70,9 @@ export async function castKanji(k, battle) {
           $("#vnWFeedback").className = "k-feedback bad";
         }
       },
-      onCorrectStroke: () => {
+      onCorrectStroke: d => {
+        keepInk(box);
+        guide.trackCorrect(d);
         if (!revealed) {
           $("#vnWFeedback").textContent = "✓";
           $("#vnWFeedback").className = "k-feedback";
@@ -99,13 +104,14 @@ export async function castKanji(k, battle) {
     void stp.offsetWidth;
     stp.classList.add("hit");
     beep("ok");
+    bloomInk(box, { color: "#FFF6DE", glow: "rgba(233,200,104,1)" });
     box.classList.remove("cast");
     void box.offsetWidth;
     box.classList.add("cast");
     particleBurst(box, 18, true);
   }
 
-  await new Promise(r => setTimeout(r, 950));
+  await new Promise(r => setTimeout(r, sum.revealed ? 950 : 1500));
   $("#vnStamp").classList.remove("hit");
   box.classList.remove("cast");
   area.style.display = "none";
@@ -137,13 +143,28 @@ export async function vnWatch(k) {
 
   await new Promise(res => {
     ctx.vn._res = res;
-    const w = otomeWriter($("#vnWriterBox"), k.c, { showCharacter: true, showOutline: false, strokeAnimationSpeed: 1.05, delayBetweenStrokes: 240 });
+    const w = otomeWriter($("#vnWriterBox"), k.c, {
+      showCharacter: true, showOutline: false,
+      strokeColor: HANZI_DEMO_STROKE,
+      strokeAnimationSpeed: 1.05, delayBetweenStrokes: 240
+    });
+    const finish = () => {
+      area.removeEventListener("click", skip);
+      const r = ctx.vn && ctx.vn._res;
+      if (ctx.vn) ctx.vn._res = null;
+      if (r) r();
+    };
+    // tap the kanji to skip the demonstration
+    const skip = () => {
+      try {
+        w.pauseAnimation();
+        w.showCharacter({ duration: 150 });
+      } catch (e) {}
+      setTimeout(finish, 350);
+    };
+    area.addEventListener("click", skip);
     setTimeout(() => w.animateCharacter({
-      onComplete: () => setTimeout(() => {
-        const r = ctx.vn && ctx.vn._res;
-        if (ctx.vn) ctx.vn._res = null;
-        if (r) r();
-      }, 450)
+      onComplete: () => setTimeout(finish, 450)
     }), 250);
   });
 
@@ -183,14 +204,17 @@ export async function vnStep(k, mode) {
       };
     }
 
+    let w;
+    const guide = strokeGuide(() => w);
     const s = await new Promise(res => {
       vn._res = res;
-      const w = otomeWriter($("#vnWriterBox"), k.c, { showOutline: mode === "trace" });
+      w = otomeWriter($("#vnWriterBox"), k.c, { showOutline: mode === "trace" });
       w.quiz({
         leniency: WRITING.traceLeniency,
-        showHintAfterMisses: mode === "trace" ? WRITING.missesBeforeReveal : 999,
-        onMistake: () => {
+        showHintAfterMisses: WRITING.hintAfterMisses,
+        onMistake: d => {
           if (!ctx.vn || ctx.vn.quit) return;
+          guide.trackMistake(d);
           beep("no");
           if (mode === "trace") {
             $("#vnWFeedback").textContent = "✕ order & direction, apprentice!";
@@ -199,8 +223,8 @@ export async function vnStep(k, mode) {
             mistakes++;
             if (mistakes >= WRITING.missesBeforeReveal && !revealed) {
               revealed = true;
-              w.showOutline();
-              $("#vnWFeedback").textContent = "Trace the guide!";
+              guide.reveal(); // one glowing stroke at a time
+              $("#vnWFeedback").textContent = "Follow the glowing stroke!";
               $("#vnWFeedback").className = "k-feedback bad";
               if (skipBtn) skipBtn.style.display = "block";
             } else if (!revealed) {
@@ -210,7 +234,9 @@ export async function vnStep(k, mode) {
             }
           }
         },
-        onCorrectStroke: () => {
+        onCorrectStroke: d => {
+          keepInk($("#vnWriterBox"));
+          guide.trackCorrect(d);
           if (mode === "trace" || !revealed) {
             $("#vnWFeedback").textContent = "✓";
             $("#vnWFeedback").className = "k-feedback";
@@ -240,7 +266,11 @@ export async function vnStep(k, mode) {
       vn.score += pts;
       updHud();
       beep("ok");
+      area.style.display = "";
+      bloomInk($("#vnWriterBox"), { color: "#FFF6DE", glow: "rgba(233,200,104,1)" });
       particleBurst($("#vnWriterBox"), 10, true);
+      await new Promise(r => setTimeout(r, 1100));
+      area.style.display = "none";
       if (mode === "recall") srsBump("ksrs", k.c, a === 1);
       break;
     }

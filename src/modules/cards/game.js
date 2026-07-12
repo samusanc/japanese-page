@@ -41,22 +41,34 @@ const SND = {
 /* ---- module state ---- */
 let G = null;               // active run
 const deckCache = {};       // level id -> fetched json
-let deckId = LS.get("cards:deck") || "starter";
+let deckIds = LS.get("cards:decks") || ["starter"];   // multi-select
 let gameType = LS.get("cards:type") || "vocab";      // "vocab" | "kanji"
 let furigana = LS.get("cards:furigana") !== false;    // normal = kanji + mini reading
 
-const srsKey = () => `cards:srs:${deckId}:${gameType}`;
-const bestKey = () => `cards:best:${deckId}:${gameType}`;
+// SRS weights are shared across decks (entry keys are stable), so mixing
+// levels keeps your progress on every card.
+const srsKey = () => `cards:srs:${gameType}`;
+const bestKey = () => `cards:best:${gameType}`;
 
-/* ---- deck loading ---- */
-async function loadDeck() {
-  if (!deckCache[deckId]) {
-    const res = await fetch(`./vocab/${deckId}.json`);
-    if (!res.ok) throw new Error("deck fetch failed: " + deckId);
-    deckCache[deckId] = await res.json();
+/* ---- deck loading: union of every selected level ---- */
+async function loadPool() {
+  await Promise.all(deckIds.map(async id => {
+    if (deckCache[id]) return;
+    const res = await fetch(`./vocab/${id}.json`);
+    if (!res.ok) throw new Error("deck fetch failed: " + id);
+    deckCache[id] = await res.json();
+  }));
+  const seen = new Set();
+  const pool = [];
+  for (const id of deckIds) {
+    for (const e of (gameType === "kanji" ? deckCache[id].kanji : deckCache[id].vocab)) {
+      const k = entryKey(e);
+      if (!seen.has(k)) {
+        seen.add(k);
+        pool.push(e);
+      }
+    }
   }
-  const data = deckCache[deckId];
-  const pool = gameType === "kanji" ? data.kanji : data.vocab;
   return attachWeights(pool, LS.get(srsKey()) || {});
 }
 
@@ -74,6 +86,44 @@ export function openCards() {
   $("#cards").classList.add("on");
   renderStart();
   showPanel("Start");
+}
+
+/** One-time content dressing: backdrop, dealer portraits, name plate. */
+function dressTable() {
+  if (CARDS_HOST.bg) $("#cards").style.setProperty("--cd-bg", `url('${CARDS_HOST.bg}')`);
+  ["cdHostImg", "cdDealImg", "cdDealerImg", "cdOverImg"].forEach(id => {
+    const img = $("#" + id);
+    if (!img) return;
+    if (CARDS_HOST.img) img.src = CARDS_HOST.img;
+    else img.style.display = "none"; // fall back to the 🃏 icon behind it
+  });
+  $("#cdDealerPlate").textContent = CARDS_HOST.name;
+}
+
+/* ---- stacking chips: 10 per stack, a new colour per stack ---- */
+const CHIP_COLORS = ["gold", "ruby", "emerald", "sapphire"];
+const CHIPS_PER_STACK = 10;
+const MAX_STACKS = 5;
+
+function renderChipTray(el, chips, animateLast) {
+  const stacks = Math.ceil(chips / CHIPS_PER_STACK);
+  const shown = Math.min(stacks, MAX_STACKS);
+  let html = "";
+  for (let sIdx = 0; sIdx < shown; sIdx++) {
+    // when overflowing, show the LAST stacks so the newest chip is visible
+    const stackNo = stacks - shown + sIdx;
+    const inStack = Math.min(CHIPS_PER_STACK, chips - stackNo * CHIPS_PER_STACK);
+    const color = CHIP_COLORS[stackNo % CHIP_COLORS.length];
+    let chipsHtml = "";
+    for (let i = 0; i < inStack; i++) {
+      const isNewest = animateLast && stackNo === stacks - 1 && i === inStack - 1;
+      const jitter = ((stackNo * 7 + i * 3) % 5) - 2; // deterministic wobble
+      chipsHtml += `<i class="cd-chip ${color}${isNewest ? " drop" : ""}" style="bottom:${i * 6}px;left:${jitter}px;z-index:${i};"></i>`;
+    }
+    html += `<div class="cd-stack">${chipsHtml}</div>`;
+  }
+  if (stacks > MAX_STACKS) html = `<span class="cd-stack-more">+${(stacks - MAX_STACKS) * CHIPS_PER_STACK}</span>` + html;
+  el.innerHTML = html;
 }
 
 export function closeCards() {
@@ -97,11 +147,16 @@ function renderStart() {
   dl.innerHTML = "";
   CARD_DECKS.forEach(d => {
     const b = document.createElement("button");
-    b.className = "cd-deck-btn" + (d.id === deckId ? " on" : "");
+    b.className = "cd-deck-btn" + (deckIds.includes(d.id) ? " on" : "");
     b.innerHTML = `${escapeHtml(d.label)}<span class="lv">${escapeHtml(d.sub)}</span>`;
     b.addEventListener("click", () => {
-      deckId = d.id;
-      LS.set("cards:deck", deckId);
+      if (deckIds.includes(d.id)) {
+        if (deckIds.length === 1) return; // the Prince insists on at least one deck
+        deckIds = deckIds.filter(x => x !== d.id);
+      } else {
+        deckIds = [...deckIds, d.id];
+      }
+      LS.set("cards:decks", deckIds);
       renderStart();
     });
     dl.appendChild(b);
@@ -118,7 +173,7 @@ function renderStart() {
 async function newRun(mode) {
   let pool;
   try {
-    pool = await loadDeck();
+    pool = await loadPool();
   } catch (e) {
     toast("Couldn't load the deck — check your connection");
     return;
@@ -137,6 +192,7 @@ async function newRun(mode) {
     sel: null
   };
   $("#cdChips").textContent = "0";
+  renderChipTray($("#cdChipTray"), 0, false);
 
   if (mode === "practice") {
     const learned = learnedEntries(pool);
@@ -281,7 +337,7 @@ function fitGrids(n) {
   ["#cdTopGrid", "#cdBotGrid"].forEach(sel => {
     const grid = $(sel);
     grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-    const h = Math.max(56, Math.floor(((grid.clientHeight || 130) - 8 * (rows - 1)) / rows));
+    const h = Math.max(48, Math.floor(((grid.clientHeight || 120) - 6 * (rows - 1)) / rows));
     [...grid.children].forEach(c => { c.style.height = h + "px"; });
   });
 }
@@ -332,6 +388,8 @@ function matchFound(a, b) {
   G.chips += B.chipsPerMatch;
   $("#cdChips").textContent = G.chips;
   chipFloat();
+  renderChipTray($("#cdChipTray"), G.chips, true);
+  SND.chip();
   const best = LS.get(bestKey()) || 0;
   if (G.chips > best) {
     LS.set(bestKey(), G.chips);
@@ -428,16 +486,17 @@ function gameOver() {
   SND.over();
   applyRoundWeights();
   saveWeights();
-  $("#cdOverLine").textContent = CARDS_HOST.lines.lose;
+  $("#cdOverLine").textContent = G.chips >= 10 ? CARDS_HOST.lines.win : CARDS_HOST.lines.lose;
   $("#cdFinalChips").textContent = G.chips;
   $("#cdFinalPeak").textContent = G.peak;
+  renderChipTray($("#cdOverTray"), G.chips, false);
   showPanel("Over");
 }
 
 /* ---- ledger (progress) ---- */
 function showLedger() {
   SND.tap();
-  loadDeck().then(pool => {
+  loadPool().then(pool => {
     const learned = learnedEntries(pool);
     $("#cdLedgerWon").textContent = learned.length;
     $("#cdLedgerLeft").textContent = pool.length - learned.length;
@@ -455,6 +514,7 @@ function showLedger() {
 
 /* ---- wiring ---- */
 export function initGame() {
+  dressTable();
   $("#cdLearn").addEventListener("click", () => { SND.tap(); newRun("learn"); });
   $("#cdPractice").addEventListener("click", () => { SND.tap(); newRun("practice"); });
   $("#cdReviewNext").addEventListener("click", nextReviewCard);
@@ -493,9 +553,8 @@ export function initGame() {
   $("#cdLedger").addEventListener("click", showLedger);
   $("#cdLedgerClose").addEventListener("click", () => $("#cdLedgerModal").classList.remove("on"));
   $("#cdLedgerReset").addEventListener("click", () => {
-    if (confirm("Reset all won cards for this deck?")) {
+    if (confirm("Reset all won cards on this table?")) {
       LS.set(srsKey(), {});
-      delete deckCache[deckId];
       $("#cdLedgerModal").classList.remove("on");
       toast("The Prince shuffles a fresh deck 🃏");
     }

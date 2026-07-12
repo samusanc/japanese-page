@@ -6,7 +6,7 @@ import { speak } from '@core/audio/voice.js';
 import { beep } from '@core/audio/sfx.js';
 import { registerScreen } from '@core/screens.js';
 import { kanjiList } from '../data.js';
-import { makeWriter } from '../writer.js';
+import { makeWriter, keepInk, bloomInk, strokeGuide, QUIZ_LENIENCY, HINT_AFTER_MISSES } from '../writer.js';
 import { kprog, setKprog, isMastered } from '../progress.js';
 import { readingChips } from '../readings.js';
 
@@ -14,6 +14,7 @@ import { readingChips } from '../readings.js';
  *  with its three practice modes: watch / trace / recall. */
 
 let stWriter = null;
+const stGuide = strokeGuide(() => stWriter);
 let stKanji = null;
 let stMode = "trace";
 let stUsedHint = false;
@@ -79,23 +80,42 @@ function setStudioMode(mode) {
   $("#stHint").disabled = false;
   const box = $("#stWriterBox");
   if (mode === "watch") {
-    stWriter = makeWriter(box, stKanji.c, { showCharacter: true, showOutline: false, strokeAnimationSpeed: 1.1, delayBetweenStrokes: 260 });
+    stWriter = makeWriter(box, stKanji.c, { showCharacter: true, showOutline: false, strokeColor: "#23262F", strokeAnimationSpeed: 1.1, delayBetweenStrokes: 260 });
     const loop = () => { if (stMode === "watch" && $("#studio").classList.contains("on")) stWriter.animateCharacter({ onComplete: () => setTimeout(loop, 900) }); };
+    // tap the kanji to skip the demo; tap again to replay it
+    let skipped = false;
+    box.onclick = () => {
+      if (stMode !== "watch") return;
+      if (!skipped) {
+        skipped = true;
+        try {
+          stWriter.pauseAnimation();
+          stWriter.showCharacter({ duration: 150 });
+        } catch (e) {}
+        $("#stFeedback").textContent = "tap again to replay";
+      } else {
+        setStudioMode("watch");
+      }
+    };
     setTimeout(loop, 150);
     return;
   }
+  box.onclick = null;
+  stGuide.stop();
   stWriter = makeWriter(box, stKanji.c, { showOutline: mode === "trace" });
   stWriter.quiz({
-    leniency: 1.2,
-    showHintAfterMisses: mode === "recall" ? 999 : 3,
-    onMistake: () => {
+    leniency: QUIZ_LENIENCY,
+    showHintAfterMisses: HINT_AFTER_MISSES,
+    onMistake: d => {
+      stGuide.trackMistake(d);
       $("#stFeedback").textContent = "✕ not quite — stroke order & direction matter";
       $("#stFeedback").className = "k-feedback bad";
       beep("no");
     },
-    onCorrectStroke: () => { $("#stFeedback").textContent = "✓"; $("#stFeedback").className = "k-feedback"; },
+    onCorrectStroke: d => { keepInk(box); stGuide.trackCorrect(d); $("#stFeedback").textContent = "✓"; $("#stFeedback").className = "k-feedback"; },
     onComplete: sum => {
       beep("ok");
+      bloomInk(box);
       const stp = $("#stStamp");
       stp.classList.remove("hit"); void stp.offsetWidth; stp.classList.add("hit");
       const m = sum.totalMistakes;
@@ -140,9 +160,9 @@ export function init() {
   $("#stHint").addEventListener("click", () => {
     if (!stWriter || stMode !== "recall" || stUsedHint) return;
     stUsedHint = true;
-    stWriter.showOutline();
+    stGuide.reveal(); // guide one stroke at a time instead of the full outline
     $("#stHint").disabled = true;
-    $("#stFeedback").textContent = "Outline revealed — finish it, but this run won't count as mastered";
+    $("#stFeedback").textContent = "Follow the glowing stroke — this run won't count as mastered";
     $("#stFeedback").className = "k-feedback bad";
   });
 

@@ -7,7 +7,7 @@ import { beep } from '@core/audio/sfx.js';
 import { showScreen } from '@core/screens.js';
 import { commitDailyScore, saveDayRec } from '@core/daily.js';
 import { showResults } from '@core/results.js';
-import { makeWriter } from '../writer.js';
+import { makeWriter, keepInk, bloomInk, strokeGuide, QUIZ_LENIENCY, HINT_AFTER_MISSES } from '../writer.js';
 import { isMastered, setKprog } from '../progress.js';
 import { readingChips } from '../readings.js';
 import { dailyKanjiSet } from '../daily-set.js';
@@ -17,6 +17,7 @@ import { dailyKanjiSet } from '../daily-set.js';
 
 const TRIES_PER_DAY = 2;
 let kWriter = null;
+const kGuide = strokeGuide(() => kWriter);
 
 export function startKanjiDaily() {
   if (state.dayRec.kU >= TRIES_PER_DAY && !state.debugMode) {
@@ -57,12 +58,12 @@ function renderKProgress() {
 function failCurrent(reason) {
   if (!state.KG || state.KG.over || state.KG.revealed || !kWriter) return;
   state.KG.revealed = true;
-  kWriter.showOutline();
+  kGuide.reveal(); // shows only the stroke to draw next, not the whole kanji
   beep("no");
   if (navigator.vibrate) navigator.vibrate([50, 40, 50]);
   $("#kFeedback").textContent = reason === "hint"
-    ? "Outline revealed — trace it, it comes back at the end"
-    : "3 mistakes — trace the shadow, it comes back at the end";
+    ? "Follow the glowing stroke — it comes back at the end"
+    : "3 mistakes — follow the glowing strokes, it comes back at the end";
   $("#kFeedback").className = "k-feedback bad";
   $("#kHint").disabled = true;
 
@@ -99,11 +100,13 @@ function nextKanji() {
   $("#kFeedback").className = "k-feedback";
   $("#kHint").disabled = false;
 
+  kGuide.stop();
   kWriter = makeWriter($("#kWriterBox"), k.c, { showOutline: false });
   kWriter.quiz({
-    leniency: 1.2,
-    showHintAfterMisses: 999,
-    onMistake: () => {
+    leniency: QUIZ_LENIENCY,
+    showHintAfterMisses: HINT_AFTER_MISSES,
+    onMistake: d => {
+      kGuide.trackMistake(d);
       if (!state.KG || state.KG.revealed) return;
       state.KG.mistakes++;
       if (state.KG.mistakes >= 3) {
@@ -115,7 +118,9 @@ function nextKanji() {
       beep("no");
       if (navigator.vibrate) navigator.vibrate(40);
     },
-    onCorrectStroke: () => {
+    onCorrectStroke: d => {
+      keepInk($("#kWriterBox"));
+      kGuide.trackCorrect(d);
       if (!state.KG || state.KG.revealed) return;
       $("#kFeedback").textContent = "✓";
       $("#kFeedback").className = "k-feedback";
@@ -133,6 +138,7 @@ function nextKanji() {
       $("#kScore").textContent = state.KG.score;
       if (pts > 0) {
         beep("ok");
+        bloomInk($("#kWriterBox"));
         const stp = $("#kStamp");
         stp.classList.remove("hit");
         void stp.offsetWidth;
@@ -140,7 +146,7 @@ function nextKanji() {
         setTimeout(() => {
           stp.classList.remove("hit");
           if (state.KG && !state.KG.over) nextKanji();
-        }, 900);
+        }, 1500);
       } else {
         setTimeout(() => {
           if (state.KG && !state.KG.over) nextKanji();
