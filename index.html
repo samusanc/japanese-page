@@ -14,13 +14,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script>
-  // Eruda mobile debug console — only when the page is opened with ?debug=1
-  if (new URLSearchParams(location.search).has('debug')) {
-    var _eruda = document.createElement('script');
-    _eruda.src = 'https://cdn.jsdelivr.net/npm/eruda';
-    _eruda.onload = function () { eruda.init(); };
-    document.head.appendChild(_eruda);
-  }
+  // Eruda mobile debug console — loaded by default for mobile debugging
+  var _eruda = document.createElement('script');
+  _eruda.src = 'https://cdn.jsdelivr.net/npm/eruda';
+  _eruda.onload = function () { eruda.init(); };
+  document.head.appendChild(_eruda);
 </script>
 <title>活用! Katsuyo — Daily Japanese Battles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
