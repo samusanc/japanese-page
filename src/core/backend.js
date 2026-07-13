@@ -88,15 +88,19 @@ export function localBoardRow() {
   const d = state.dayRec;
   const month = monthStr();
   let total = 0;
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if (k && k.startsWith("katsuyo:day:" + month)) {
-      try {
-        const v = JSON.parse(localStorage.getItem(k));
-        total += (v.sB || 0) + (v.kB || 0);
-      } catch (e) {}
+  try {
+    if (typeof localStorage !== "undefined" && localStorage) {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith("katsuyo:day:" + month)) {
+          try {
+            const v = JSON.parse(localStorage.getItem(k));
+            total += (v.sB || 0) + (v.kB || 0);
+          } catch (e) {}
+        }
+      }
     }
-  }
+  } catch (e) {}
   return [{
     pid: state.profile?.pid || "me",
     n: state.profile?.n || "You",

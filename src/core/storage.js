@@ -2,6 +2,7 @@
 export const LS = {
   get(k) {
     try {
+      if (typeof localStorage === "undefined" || !localStorage) return null;
       const v = localStorage.getItem("katsuyo:" + k);
       return v ? JSON.parse(v) : null;
     } catch (e) {
@@ -10,6 +11,7 @@ export const LS = {
   },
   set(k, v) {
     try {
+      if (typeof localStorage === "undefined" || !localStorage) return;
       localStorage.setItem("katsuyo:" + k, JSON.stringify(v));
     } catch (e) {}
   }
