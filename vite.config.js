@@ -19,6 +19,7 @@ export default defineConfig({
       // Precache only the app shell; the heavy static data (voice mp3s,
       // vocab decks, art, kanji strokes) is cached at runtime on first use.
       workbox: {
+        mode: 'development',
         globPatterns: ['**/*.{js,css,html}', 'pwa-*.png', 'apple-touch-icon.png'],
         globIgnores: ['audio/**', 'vocab/**', 'bg/**', 'sprites/**', 'kanji-data.js'],
         navigateFallback: null,
