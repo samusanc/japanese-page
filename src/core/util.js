@@ -34,7 +34,17 @@ export function pick(arr, rnd) {
 
 export function resolveAsset(path) {
   if (!path) return "";
-  const base = import.meta.env.BASE_URL || "/";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  
+  let base = "/";
+  if (typeof window !== "undefined" && window.location) {
+    base = window.location.pathname;
+    if (!base.endsWith("/")) {
+      const idx = base.lastIndexOf("/");
+      base = base.substring(0, idx + 1);
+    }
+  }
+  
   const clean = path.startsWith("./") ? path.substring(2) : (path.startsWith("/") ? path.substring(1) : path);
   return base + clean;
 }
