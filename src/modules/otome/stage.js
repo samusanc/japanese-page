@@ -1,6 +1,6 @@
 import { state } from '@core/state.js';
 import { $, escapeHtml } from '@core/dom.js';
-import { pick } from '@core/util.js';
+import { pick, resolveAsset } from '@core/util.js';
 import { speak } from '@core/audio/voice.js';
 import { applySceneAudio } from '@core/audio/engine.js';
 import { ctx, vnCheck, vnTap } from './context.js';
@@ -25,7 +25,7 @@ export function applyScene(id) {
   const sc = SCENES[id];
   if (!sc) return;
   const bgEl = $("#vnBg");
-  bgEl.style.background = sc.img ? `url('${sc.img}') center/cover no-repeat` : sc.bg;
+  bgEl.style.background = sc.img ? `url('${resolveAsset(sc.img)}') center/cover no-repeat` : sc.bg;
   bgEl.style.setProperty("--vn-filter", sc.filter || "brightness(1)");
   bgEl.style.setProperty("--vn-vignette", sc.vignette || "none");
   setParticles(sc.particles);
@@ -43,13 +43,13 @@ export function vnSpriteSet(who) {
   let icon, img = null;
   if (who === "teacher") {
     icon = TEACHER.icon;
-    img = TEACHER.img;
+    img = resolveAsset(TEACHER.img);
   } else if (who === "you") {
     icon = state.profile?.e || "🌸";
   } else {
     const c = CHAR[who] || ctx.vn.ch;
     icon = c.icon;
-    img = c.sprites.default;
+    img = resolveAsset(c.sprites.default);
   }
   el.innerHTML = img ? `<img src="${img}" alt="">` : icon;
 }

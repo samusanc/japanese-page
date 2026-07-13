@@ -1,6 +1,6 @@
 import { LS } from '@core/storage.js';
 import { $, $$, escapeHtml, toast } from '@core/dom.js';
-import { shuffle } from '@core/util.js';
+import { shuffle, resolveAsset } from '@core/util.js';
 import { playRecipe } from '@core/audio/sfx.js';
 import { speak } from '@core/audio/voice.js';
 import { CARDS_HOST, CARD_DECKS, CARDS_BALANCE } from '@content/cards.js';
@@ -90,11 +90,11 @@ export function openCards() {
 
 /** One-time content dressing: backdrop, dealer portraits, name plate. */
 function dressTable() {
-  if (CARDS_HOST.bg) $("#cards").style.setProperty("--cd-bg", `url('${CARDS_HOST.bg}')`);
+  if (CARDS_HOST.bg) $("#cards").style.setProperty("--cd-bg", `url('${resolveAsset(CARDS_HOST.bg)}')`);
   ["cdHostImg", "cdDealImg", "cdDealerImg", "cdOverImg"].forEach(id => {
     const img = $("#" + id);
     if (!img) return;
-    if (CARDS_HOST.img) img.src = CARDS_HOST.img;
+    if (CARDS_HOST.img) img.src = resolveAsset(CARDS_HOST.img);
     else img.style.display = "none"; // fall back to the 🃏 icon behind it
   });
   $("#cdDealerPlate").textContent = CARDS_HOST.name;

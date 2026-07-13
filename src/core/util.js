@@ -31,3 +31,10 @@ export function shuffle(arr, rnd) {
 export function pick(arr, rnd) {
   return arr[Math.floor((rnd ? rnd() : Math.random()) * arr.length)];
 }
+
+export function resolveAsset(path) {
+  if (!path) return "";
+  const base = import.meta.env.BASE_URL || "/";
+  const clean = path.startsWith("./") ? path.substring(2) : (path.startsWith("/") ? path.substring(1) : path);
+  return base + clean;
+}

@@ -16,6 +16,7 @@ import { startKanjiDaily } from '@modules/kanji/daily/index.js';
 import { startSprint } from '@modules/sprint/index.js';
 import { startCards } from '@modules/cards/index.js';
 import { lbRow } from '@modules/squad/board.js';
+import { resolveAsset } from '@core/util.js';
 
 /** Home screen: daily cards, streak/stats strip, mini leaderboard and the
  *  character-select slices for today's otome roster. */
@@ -82,7 +83,7 @@ function renderCompanions() {
     if (roleEl) roleEl.textContent = ch.persona.title;
     if (tagEl) tagEl.textContent = ch.persona.tagline;
     if (ch.sprites.default) {
-      slice.style.setProperty('--char-img', `url('${ch.sprites.default}')`);
+      slice.style.setProperty('--char-img', `url('${resolveAsset(ch.sprites.default)}')`);
     } else {
       slice.style.setProperty('--char-img', 'none');
     }
