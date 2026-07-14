@@ -32,6 +32,7 @@ import * as home from '@modules/home/index.js';
 import * as squad from '@modules/squad/index.js';
 import * as learn from '@modules/learn/index.js';
 import * as practice from '@modules/practice/index.js';
+import * as maker from '@modules/maker/index.js';
 
 (async function boot() {
   // Dev-only: validate all game content and fail loudly on broken refs.
@@ -68,6 +69,7 @@ import * as practice from '@modules/practice/index.js';
   squad.init();
   learn.init();
   practice.init();
+  maker.init();
   initPwa();
 
   state.profile = LS.get("profile");

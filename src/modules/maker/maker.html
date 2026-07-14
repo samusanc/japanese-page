@@ -1,0 +1,233 @@
+<div class="maker-container">
+  <!-- HEADER -->
+  <header class="maker-header">
+    <span class="eyebrow">⚜ Magic Academy ⚜</span>
+    <h1>Visual Novel Scene Maker</h1>
+    <p class="sub">Design custom dialogues, branching choices, writing tasks, and card drills.</p>
+  </header>
+
+  <!-- SPLIT PANEL BUILDER -->
+  <div class="maker-builder">
+    
+    <!-- LEFT: TIMELINE & CONFIG -->
+    <div class="maker-panel config-panel">
+      
+      <!-- Starting setup -->
+      <div class="form-group row-group">
+        <div class="field">
+          <label for="smStartScene">Starting Background</label>
+          <select id="smStartScene" class="inp select-field">
+            <option value="academy">Academy Training Hall</option>
+            <option value="ballroom">Royal Ballroom</option>
+            <option value="garden">Enchanted Garden</option>
+            <option value="night">Forest at Night</option>
+            <option value="storm">Tempest Woods</option>
+            <option value="rose">Moonlit Rose Park</option>
+            <option value="study">Prince's Study</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="smStartChar">Starting Companion</label>
+          <select id="smStartChar" class="inp select-field">
+            <option value="prince">Prince Alberich</option>
+            <option value="knight">Sir Gareth</option>
+            <option value="earl">Earl Conrad</option>
+            <option value="archduke">Archduke Vesper</option>
+            <option value="duchess">Duchess Anastasia</option>
+            <option value="teacher">Archmage Corvina</option>
+            <option value="none">None / Narrator</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Steps Timeline List -->
+      <div class="timeline-container">
+        <span class="eyebrow">Scene Timeline Steps</span>
+        <div id="smTimelineList" class="timeline-list">
+          <!-- Dynamically populated step items -->
+          <div class="empty">No steps added yet. Add a step below to begin your script!</div>
+        </div>
+      </div>
+
+      <!-- Add Step Buttons -->
+      <div class="timeline-actions">
+        <button class="btn ghost-gold sm-btn" id="smAddSay">💬 Dialogue</button>
+        <button class="btn ghost-gold sm-btn" id="smAddChoices">🌿 Branching</button>
+        <button class="btn ghost-gold sm-btn" id="smAddKanji">🖌 Kanji</button>
+        <button class="btn ghost-gold sm-btn" id="smAddCards">🃏 Cards</button>
+      </div>
+
+      <!-- Play & Export Controls -->
+      <div class="global-actions">
+        <button class="btn gold btn-play" id="smPlay">Play Scene ▶</button>
+        <div class="row" style="margin-top: 10px; gap: 8px;">
+          <button class="btn ghost btn-export" id="smExport">Export JSON 💾</button>
+          <button class="btn ghost btn-import" id="smImport">Import JSON 📂</button>
+        </div>
+      </div>
+
+      <!-- Serialization Panel (Collapsible) -->
+      <div id="smPortPanel" class="port-panel" style="display:none; margin-top: 12px;">
+        <textarea id="smPortArea" class="inp text-area" placeholder="Paste scene JSON here..." style="font-family: monospace; font-size:11px; height: 100px; resize: vertical;"></textarea>
+        <div class="row" style="margin-top:6px; gap:6px;">
+          <button class="btn sm-btn" id="smPortApply">Apply</button>
+          <button class="btn ghost sm-btn" id="smPortClose">Cancel</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: DYNAMIC EDIT FORM -->
+    <div class="maker-panel edit-panel" id="smEditPanel">
+      <div class="empty-edit" id="smEmptyEdit">
+        <span style="font-size: 32px; display: block; margin-bottom: 8px;">✎</span>
+        Select a step from the timeline to edit its details.
+      </div>
+      
+      <!-- Dialogue Form (Initially Hidden) -->
+      <div class="edit-form" id="smFormSay" style="display:none;">
+        <span class="eyebrow">Edit Dialogue Step</span>
+        <div class="form-group">
+          <label for="smSayWho">Speaker</label>
+          <select id="smSayWho" class="inp select-field">
+            <option value="prince">Prince Alberich</option>
+            <option value="knight">Sir Gareth</option>
+            <option value="earl">Earl Conrad</option>
+            <option value="archduke">Archduke Vesper</option>
+            <option value="duchess">Duchess Anastasia</option>
+            <option value="teacher">Archmage Corvina</option>
+            <option value="n">Narrator</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="smSayJp">Dialogue (Japanese)</label>
+          <textarea id="smSayJp" class="inp text-area" placeholder="e.g. 私について来なさい。"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="smSayEn">Translation (English)</label>
+          <textarea id="smSayEn" class="inp text-area" placeholder="e.g. Follow me."></textarea>
+        </div>
+      </div>
+
+      <!-- Choices Form (Initially Hidden) -->
+      <div class="edit-form" id="smFormChoices" style="display:none;">
+        <span class="eyebrow">Edit Branching Choices</span>
+        <div class="form-group">
+          <label for="smChoiceJp">Prompt Question (Japanese)</label>
+          <input type="text" id="smChoiceJp" class="inp text-field" placeholder="e.g. 何と答える？">
+        </div>
+        <div class="form-group">
+          <label for="smChoiceEn">Prompt Question (Translation)</label>
+          <input type="text" id="smChoiceEn" class="inp text-field" placeholder="e.g. How do you respond?">
+        </div>
+        
+        <div class="choices-editor">
+          <span class="sub-eyebrow" style="margin-top: 10px; display:block;">Option Buttons</span>
+          <div id="smChoicesList">
+            <!-- Dynamic Choice Option Nodes -->
+          </div>
+          <button class="btn ghost-gold sm-btn" id="smAddChoiceOption" style="margin-top:8px; width: 100%;">+ Add Option</button>
+        </div>
+      </div>
+
+      <!-- Kanji Form (Initially Hidden) -->
+      <div class="edit-form" id="smFormKanji" style="display:none;">
+        <span class="eyebrow">Edit Kanji Spell-Sign Step</span>
+        <div class="form-group">
+          <label for="smKanjiChar">Target Kanji</label>
+          <input type="text" id="smKanjiChar" class="inp text-field" placeholder="e.g. 書" maxlength="2">
+          <p class="note">Enter a single Kanji character (e.g., 書, 新, 空, 花, 恋).</p>
+        </div>
+        <div class="form-group">
+          <label for="smKanjiMode">Drawing Mode</label>
+          <div class="seg" id="smKanjiModeSeg" style="margin-top: 6px;">
+            <button data-val="trace" class="on">Trace Guide</button>
+            <button data-val="recall">From Memory</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards Form (Initially Hidden) -->
+      <div class="edit-form" id="smFormCards" style="display:none;">
+        <span class="eyebrow">Edit Card Match Drill</span>
+        <div class="form-group">
+          <label for="smCardsDeck">Vocabulary Deck</label>
+          <select id="smCardsDeck" class="inp select-field">
+            <option value="starter">Starter / Basics</option>
+            <option value="elementary1">Elementary 1</option>
+            <option value="elementary2">Elementary 2</option>
+            <option value="preintermediate">Pre-Intermediate</option>
+            <option value="intermediate1">Intermediate 1</option>
+            <option value="intermediate2">Intermediate 2</option>
+          </select>
+          <p class="note">Plays a quick 3-card vocabulary matching drill during the preview.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ PREVIEW SANDBOX OVERLAY ============ -->
+<div id="makerPreview" class="overlay">
+  <div class="vn-bg" id="mpBg"></div>
+  
+  <div class="vn-stage">
+    
+    <!-- Top HUD -->
+    <div class="g-top">
+      <button class="g-quit" id="mpQuit" aria-label="exit preview">✕</button>
+      <div style="flex:1"></div>
+      <div class="g-score" id="mpScore">Preview Mode</div>
+    </div>
+    
+    <!-- Wards Status Bar -->
+    <div class="royal-bar-frame" id="mpHudWards" style="top: 50px;">
+      <div class="royal-bar-fill" style="width: 100%;"></div>
+      <span class="royal-bar-label">⚜️ Preview Ward</span>
+    </div>
+
+    <!-- Character Sprite -->
+    <div class="vn-sprite" id="mpSprite"></div>
+    <div class="vn-yell" id="mpYell"></div>
+    <div style="flex:1"></div>
+
+    <!-- Kanji Drawing Area -->
+    <div class="vn-writer-area" id="mpWriterArea" style="display:none;">
+      <div class="writer-box" id="mpWriterBox"><div class="stamp" id="mpStamp">正解</div></div>
+      <div class="k-feedback" id="mpWFeedback"></div>
+      <button class="hintbtn skipbtn" id="mpSkip" style="margin-top:6px;">⏩ Skip Kanji</button>
+    </div>
+
+    <!-- Custom Cards Matching Grid Overlay -->
+    <div class="maker-cards-overlay" id="mpCardsOverlay" style="display:none;">
+      <div class="maker-cards-wrap card">
+        <span class="eyebrow" id="mpCardsDeckName">Match the terms</span>
+        
+        <div class="maker-cards-grid">
+          <div class="cards-column" id="mpGridJa">
+            <!-- Japanese cards -->
+          </div>
+          <div class="cards-column" id="mpGridEn">
+            <!-- English/Spanish cards -->
+          </div>
+        </div>
+        
+        <p class="note" style="margin-top: 10px;">Select a Japanese word, then tap its translation to pair them.</p>
+      </div>
+    </div>
+
+    <!-- Dialogue Box and Next Button -->
+    <div class="vn-bottom">
+      <div class="vn-choices" id="mpChoices" style="display:none;"></div>
+      
+      <div class="vn-dialog" id="mpDialog">
+        <div class="vn-name" id="mpName">???</div>
+        <div class="vn-text" id="mpText"></div>
+        <div class="vn-next" id="mpNext">▼</div>
+      </div>
+    </div>
+
+  </div>
+</div>
