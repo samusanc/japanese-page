@@ -9,6 +9,7 @@ import { kanjiList } from '@modules/kanji/data.js';
 import { CHAR, SCENES } from '@content/otome/index.js';
 import { shuffle, resolveAsset } from '@core/util.js';
 import { playCardsMiniRound } from '@modules/cards/game.js';
+import { LS } from '@core/storage.js';
 
 /** Scene Maker: Builder and interactive preview player for custom visual novel scripts. */
 
@@ -109,13 +110,12 @@ function initBuilderEvents() {
   }
 
   // Load configuration from local storage if exists
-  const saved = localStorage.getItem("maker_scene");
+  const saved = LS.get("maker:scene");
   if (saved) {
     try {
-      const data = JSON.parse(saved);
-      currentSteps = data.steps || [];
-      selectedStartScene = data.startScene || "academy";
-      selectedStartChar = data.startChar || "prince";
+      currentSteps = saved.steps || [];
+      selectedStartScene = saved.startScene || "academy";
+      selectedStartChar = saved.startChar || "prince";
     } catch(e) {}
   }
 
@@ -129,7 +129,7 @@ function saveGlobalConfig() {
     startChar: selectedStartChar,
     steps: currentSteps
   };
-  localStorage.setItem("maker_scene", JSON.stringify(data));
+  LS.set("maker:scene", data);
 }
 
 function addStep(type) {
