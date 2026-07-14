@@ -16,16 +16,16 @@ let activeStepIndex = null;
 let editState = null; // Holds temporary uncommitted changes of the active step
 let selectedStartScene = "academy";
 let selectedStartChar = "prince";
-let blurEnabled = true;
 const deckCache = {};
 
 // Default step structures
 const DEFAULTS = {
-  say: () => ({ type: "say", char: selectedStartChar, bg: selectedStartScene, say: "挨拶を入力してください。", en: "Enter a greeting." }),
+  say: () => ({ type: "say", char: selectedStartChar, bg: selectedStartScene, blur: true, say: "挨拶を入力してください。", en: "Enter a greeting." }),
   choices: () => ({
     type: "choices",
     char: selectedStartChar,
     bg: selectedStartScene,
+    blur: true,
     jp: "どちらを選びますか？",
     en: "Which one do you choose?",
     options: [
@@ -33,8 +33,8 @@ const DEFAULTS = {
       { text: "沈黙する", reaction: "…なぜ黙っているのですか？", translation: "…Why are you silent?" }
     ]
   }),
-  kanji: () => ({ type: "kanji", char: selectedStartChar, bg: selectedStartScene, kanji: "書", mode: "trace" }),
-  cards: () => ({ type: "cards", char: selectedStartChar, bg: selectedStartScene, deck: "starter" })
+  kanji: () => ({ type: "kanji", char: selectedStartChar, bg: selectedStartScene, blur: true, kanji: "書", mode: "trace" }),
+  cards: () => ({ type: "cards", char: selectedStartChar, bg: selectedStartScene, blur: true, deck: "starter" })
 };
 
 /* ---- Screen Initialization ---- */
@@ -100,8 +100,10 @@ function initBuilderEvents() {
   const blurBtn = $("#smBlurToggle");
   if (blurBtn) {
     blurBtn.addEventListener("change", (e) => {
-      blurEnabled = e.target.checked;
-      saveGlobalConfig();
+      if (editState) {
+        editState.blur = e.target.checked;
+        checkUnsavedChanges();
+      }
     });
   }
 
@@ -113,11 +115,9 @@ function initBuilderEvents() {
       currentSteps = data.steps || [];
       selectedStartScene = data.startScene || "academy";
       selectedStartChar = data.startChar || "prince";
-      blurEnabled = data.blurEnabled !== false;
     } catch(e) {}
   }
 
-  if (blurBtn) blurBtn.checked = blurEnabled;
   renderCharPicker();
   renderBgPicker();
 }
@@ -126,7 +126,6 @@ function saveGlobalConfig() {
   const data = {
     startScene: selectedStartScene,
     startChar: selectedStartChar,
-    blurEnabled: blurEnabled,
     steps: currentSteps
   };
   localStorage.setItem("maker_scene", JSON.stringify(data));
@@ -143,6 +142,11 @@ function addStep(type) {
   showEditForm();
   renderCharPicker();
   renderBgPicker();
+  
+  const blurBtn = $("#smBlurToggle");
+  if (blurBtn) {
+    blurBtn.checked = editState.blur !== false;
+  }
   checkUnsavedChanges();
 }
 
@@ -186,6 +190,11 @@ function resetStepData() {
   showEditForm();
   renderCharPicker();
   renderBgPicker();
+  
+  const blurBtn = $("#smBlurToggle");
+  if (blurBtn) {
+    blurBtn.checked = editState.blur !== false;
+  }
   checkUnsavedChanges();
   beep("no");
 }
@@ -261,6 +270,11 @@ function renderTimeline() {
       showEditForm();
       renderCharPicker();
       renderBgPicker();
+      
+      const blurBtn = $("#smBlurToggle");
+      if (blurBtn) {
+        blurBtn.checked = editState.blur !== false;
+      }
       checkUnsavedChanges();
     });
 
@@ -308,11 +322,15 @@ function showEditForm() {
   $("#smFormCards").style.display = "none";
   $("#smEditActions").style.display = "none";
 
+  const blurContainer = $(".sm-toggle-container");
+  if (blurContainer) blurContainer.style.opacity = "0.3";
+
   if (activeStepIndex === null || !currentSteps[activeStepIndex] || !editState) {
     $("#smEmptyEdit").style.display = "flex";
     return;
   }
 
+  if (blurContainer) blurContainer.style.opacity = "1";
   $("#smEditActions").style.display = "flex";
 
   const step = editState;
@@ -491,7 +509,6 @@ function togglePort(mode) {
     const data = {
       startScene: selectedStartScene,
       startChar: selectedStartChar,
-      blurEnabled: blurEnabled,
       steps: currentSteps
     };
     area.value = JSON.stringify(data, null, 2);
@@ -511,17 +528,19 @@ function applyPort() {
     currentSteps = data.steps || [];
     selectedStartScene = data.startScene || "academy";
     selectedStartChar = data.startChar || "prince";
-    blurEnabled = data.blurEnabled !== false;
     activeStepIndex = currentSteps.length > 0 ? 0 : null;
     editState = currentSteps.length > 0 ? JSON.parse(JSON.stringify(currentSteps[0])) : null;
     
     saveGlobalConfig();
-    const blurBtn = $("#smBlurToggle");
-    if (blurBtn) blurBtn.checked = blurEnabled;
     renderTimeline();
     showEditForm();
     renderCharPicker();
     renderBgPicker();
+    
+    const blurBtn = $("#smBlurToggle");
+    if (blurBtn) {
+      blurBtn.checked = editState ? (editState.blur !== false) : true;
+    }
     togglePort(null);
     beep("ok");
   } catch (err) {
@@ -570,8 +589,8 @@ async function startPreview() {
       if (previewQuit) break;
       const step = currentSteps[i];
 
-      // Update background and character for each step dynamically
-      applyPreviewScene(step.bg);
+      // Update background (with step-level blur) and character dynamically
+      applyPreviewScene(step.bg, step.blur);
       previewSpriteSet(step.char);
 
       if (step.type === "say") {
@@ -624,7 +643,7 @@ async function startSinglePreview() {
 
   try {
     const step = editState;
-    applyPreviewScene(step.bg);
+    applyPreviewScene(step.bg, step.blur);
     previewSpriteSet(step.char);
 
     if (step.type === "say") {
@@ -650,12 +669,13 @@ function closePreview() {
   $("#mpCardsOverlay").style.display = "none";
 }
 
-function applyPreviewScene(id) {
+function applyPreviewScene(id, blurOverride) {
   const sc = SCENES[id] || { bg: "linear-gradient(168deg,#120D1F 0%,#241B36 48%,#57431E 135%)" };
   const el = $("#mpBg");
   if (el) {
     el.style.background = sc.img ? `url('${resolveAsset(sc.img)}') center/cover no-repeat` : sc.bg;
-    const blurAmt = blurEnabled ? "3px" : "0px";
+    const isBlurred = blurOverride !== false;
+    const blurAmt = isBlurred ? "3px" : "0px";
     el.style.filter = `blur(${blurAmt}) brightness(0.8) ${sc.filter || ""}`;
   }
 }
