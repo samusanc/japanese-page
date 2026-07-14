@@ -683,8 +683,9 @@ function applyPreviewScene(id, blurOverride) {
 function previewSpriteSet(charId) {
   const el = $("#mpSprite");
   if (!el) return;
-  if (charId === "n" || charId === "none") {
+  if (charId === "n" || charId === "none" || !charId) {
     el.style.opacity = 0;
+    el.innerHTML = "";
     return;
   }
   el.style.opacity = 1;
@@ -718,7 +719,8 @@ async function playPreviewSay(step) {
   const nameplate = $("#mpName");
   if (step.char === "n" || step.char === "none") {
     nameplate.style.display = "none";
-    $("#mpSprite").style.opacity = 0.4;
+    const spriteEl = $("#mpSprite");
+    if (spriteEl) { spriteEl.style.opacity = 0; spriteEl.innerHTML = ""; }
   } else {
     nameplate.style.display = "block";
     nameplate.textContent = charName(step.char);
