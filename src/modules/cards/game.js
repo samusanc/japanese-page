@@ -1,6 +1,7 @@
 import { LS } from '@core/storage.js';
 import { $, $$, escapeHtml, toast } from '@core/dom.js';
 import { shuffle, resolveAsset } from '@core/util.js';
+import { showScreen } from '@core/screens.js';
 import { playRecipe } from '@core/audio/sfx.js';
 import { speak } from '@core/audio/voice.js';
 import { CARDS_HOST, CARD_DECKS, CARDS_BALANCE } from '@content/cards.js';
@@ -51,21 +52,77 @@ const srsKey = () => `cards:srs:${gameType}`;
 const bestKey = () => `cards:best:${gameType}`;
 
 /* ---- deck loading: union of every selected level ---- */
+const MANUAL_TRANSLATIONS = {
+  "～よう日(月よう日）": "día de la semana (よう日)",
+  "よう日": "día de la semana (よう日)",
+  "百円": "cien yenes",
+  "千円": "mil yenes",
+  "一万円": "diez mil yenes",
+  "入っています": "estar dentro / estar incluido",
+  "旅行中": "durante el viaje / de viaje",
+  "子ども用": "para niños",
+  "家庭料理": "comida casera / cocina casera",
+  "文型": "patrón de frase / estructura gramatical",
+  "もう一度": "una vez más / otra vez",
+  "～県（埼玉県）": "prefectura (～県)",
+  "果てしない": "infinito / sin fin",
+  "月": "lunes / luna / mes",
+  "火": "martes / fuego",
+  "水": "miércoles / agua",
+  "木": "jueves / árbol",
+  "金": "viernes / oro / dinero",
+  "土": "sábado / tierra"
+};
+
+function cleanString(str) {
+  if (!str) return "";
+  return str.replace(/[（）()]/g, "")
+            .replace(/[な|に|の|ます|る|う]$/, "")
+            .trim();
+}
+
 async function loadPool() {
-  await Promise.all(deckIds.map(async id => {
+  const allDecks = ["starter", "elementary1", "elementary2", "preintermediate", "intermediate1", "intermediate2"];
+  await Promise.all(allDecks.map(async id => {
     if (deckCache[id]) return;
     const res = await fetch(`./vocab/${id}.json`);
     if (!res.ok) throw new Error("deck fetch failed: " + id);
     deckCache[id] = await res.json();
   }));
+
+  const globalVocab = [];
+  allDecks.forEach(id => {
+    if (deckCache[id]) globalVocab.push(...deckCache[id].vocab);
+  });
+
+  const cleanVocab = globalVocab.map(v => ({
+    ...v,
+    cleanJa: cleanString(v.ja),
+    cleanKana: cleanString(v.kana)
+  }));
+
   const seen = new Set();
   const pool = [];
   for (const id of deckIds) {
     for (const e of (gameType === "kanji" ? deckCache[id].kanji : deckCache[id].vocab)) {
-      const k = entryKey(e);
+      let item = { ...e };
+      if (gameType === "kanji") {
+        const manual = MANUAL_TRANSLATIONS[e.ja] || MANUAL_TRANSLATIONS[cleanString(e.ja)];
+        if (manual) {
+          item.es = manual;
+        } else {
+          const cleanKJa = cleanString(e.ja.split(/[（(]/)[0]);
+          const cleanKKana = cleanString(e.kana.split(/[（(]/)[0]);
+          const match = globalVocab.find(v => v.ja === e.ja || v.kana === e.kana)
+            || cleanVocab.find(v => v.cleanJa === cleanKJa || v.cleanKana === cleanKKana)
+            || globalVocab.find(v => v.ja.includes(cleanKJa) || v.kana.includes(cleanKKana));
+          item.es = match ? match.es : "";
+        }
+      }
+      const k = entryKey(item);
       if (!seen.has(k)) {
         seen.add(k);
-        pool.push(e);
+        pool.push(item);
       }
     }
   }
@@ -83,14 +140,13 @@ function showPanel(name) {
 }
 
 export function openCards() {
-  $("#cards").classList.add("on");
   renderStart();
   showPanel("Start");
 }
 
 /** One-time content dressing: backdrop, dealer portraits, name plate. */
 function dressTable() {
-  if (CARDS_HOST.bg) $("#cards").style.setProperty("--cd-bg", `url('${resolveAsset(CARDS_HOST.bg)}')`);
+  if (CARDS_HOST.bg) $("#s-cards").style.setProperty("--cd-bg", `url('${resolveAsset(CARDS_HOST.bg)}')`);
   ["cdHostImg", "cdDealImg", "cdDealerImg", "cdOverImg"].forEach(id => {
     const img = $("#" + id);
     if (!img) return;
@@ -133,7 +189,7 @@ export function closeCards() {
     saveWeights();
   }
   G = null;
-  $("#cards").classList.remove("on");
+  showScreen("home");
 }
 
 /* ---- start screen ---- */
@@ -228,7 +284,7 @@ function cardFaceHtml(e) {
 function showReviewCard() {
   const e = G.reviewQueue[G.reviewIdx];
   $("#cdReviewCount").textContent = `Card ${G.reviewIdx + 1} of ${G.reviewQueue.length}`;
-  $("#cdReviewPrompt").textContent = gameType === "kanji" ? e.kana : e.es;
+  $("#cdReviewPrompt").textContent = gameType === "kanji" ? `${e.kana} · ${e.es}` : e.es;
   $("#cdReviewJa").innerHTML = cardFaceHtml(e);
   $("#cdReviewNext").textContent = G.reviewIdx === G.reviewQueue.length - 1 ? "TO THE TABLE ▶" : "NEXT CARD ▶";
   speak(e.kana);
@@ -318,7 +374,7 @@ function makeCard({ p, i, side }) {
   const el = document.createElement("button");
   el.className = "cd-card " + (side === "top" ? "cd-prompt" : "cd-answer");
   const face = side === "top"
-    ? `<span class="cd-prompt-text">${escapeHtml(gameType === "kanji" ? p.kana : p.es)}</span>`
+    ? `<span class="cd-prompt-text">${escapeHtml(p.es)}</span>`
     : cardFaceHtml(p);
   el.innerHTML = `
     <span class="cd-inner">
@@ -502,7 +558,7 @@ function showLedger() {
     $("#cdLedgerLeft").textContent = pool.length - learned.length;
     $("#cdLedgerList").innerHTML = pool.map(e => {
       const isL = e.points !== null;
-      const sub = gameType === "kanji" ? e.kana : `${e.kana !== e.ja ? e.kana + " · " : ""}${e.es}`;
+      const sub = gameType === "kanji" ? `${e.kana} · ${e.es}` : `${e.kana !== e.ja ? e.kana + " · " : ""}${e.es}`;
       return `<div class="cd-ledger-row ${isL ? "won" : ""}">
         <div class="w"><span class="ja">${escapeHtml(e.ja)}</span><span class="sub">${escapeHtml(sub)}</span></div>
         <span class="badge ${isL ? "gold" : "ink"}">${isL ? e.points + " pts" : "🔒"}</span>

@@ -76,9 +76,9 @@ describe('app boot', () => {
     expect(document.querySelector('#miniBoard').textContent).toContain('Solo mode');
   });
 
-  it('the Royal Gamble table opens from the home button', () => {
-    document.querySelector('#btnCards').click();
-    expect(document.querySelector('#cards').classList.contains('on')).toBe(true);
+  it('the Royal Gamble table opens from the tab menu', () => {
+    document.querySelector('[data-s="cards"]').click();
+    expect(document.querySelector('#s-cards').classList.contains('on')).toBe(true);
     expect(document.querySelector('#cdStart').classList.contains('on')).toBe(true);
     expect(document.querySelector('#cdHostName').textContent).not.toBe('');
     expect(document.querySelectorAll('#cdDecks .cd-deck-btn').length).toBe(6);
@@ -86,11 +86,11 @@ describe('app boot', () => {
     expect(document.querySelector('#cdDealerImg').getAttribute('src')).toContain('sprites/');
     expect(document.querySelector('#cdDealerPlate').textContent).not.toBe('');
     document.querySelector('#cdClose').click();
-    expect(document.querySelector('#cards').classList.contains('on')).toBe(false);
+    expect(document.querySelector('#s-cards').classList.contains('on')).toBe(false);
   });
 
   it('deck picker supports selecting multiple levels at once', () => {
-    document.querySelector('#btnCards').click();
+    document.querySelector('[data-s="cards"]').click();
     const btns = [...document.querySelectorAll('#cdDecks .cd-deck-btn')];
     expect(btns.filter(b => b.classList.contains('on')).length).toBe(1);
     btns[1].click(); // add a second level

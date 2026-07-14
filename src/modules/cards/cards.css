@@ -2,12 +2,24 @@
    ROYAL GAMBLE — the Gambler Prince's card table
    ══════════════════════════════════════════════════════════ */
 
-#cards.overlay {
+#s-cards.screen {
   /* --cd-bg is set from content (CARDS_HOST.bg) at init — dimmed study backdrop */
   background:
     radial-gradient(ellipse at 50% -10%, rgba(224,180,87,0.10), transparent 55%),
     linear-gradient(170deg, rgba(18,13,31,0.86) 0%, rgba(27,20,48,0.88) 55%, rgba(36,27,54,0.92) 100%),
     var(--cd-bg, linear-gradient(170deg, #120D1F, #241B36)) center / cover no-repeat fixed;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  z-index: 10;
+  flex-direction: column;
+}
+#s-cards.screen.on {
+  display: flex !important;
 }
 
 .cd-panel {

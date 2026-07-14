@@ -14,7 +14,6 @@ import { dailyKanjiSet } from '@modules/kanji/daily-set.js';
 import { CHAR, charState, setCharState, todayRoster, startRoute } from '@modules/otome/index.js';
 import { startKanjiDaily } from '@modules/kanji/daily/index.js';
 import { startSprint } from '@modules/sprint/index.js';
-import { startCards } from '@modules/cards/index.js';
 import { lbRow } from '@modules/squad/board.js';
 import { resolveAsset } from '@core/util.js';
 
@@ -200,5 +199,4 @@ export function init() {
 
   $("#btnKanjiDaily").addEventListener("click", startKanjiDaily);
   $("#btnDaily").addEventListener("click", startSprint);
-  $("#btnCards").addEventListener("click", startCards);
 }
