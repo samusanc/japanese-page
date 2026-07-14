@@ -7,7 +7,7 @@ import { beep } from '@core/audio/sfx.js';
 import { makeWriter, keepInk, bloomInk, strokeGuide } from '@modules/kanji/writer.js';
 import { kanjiList } from '@modules/kanji/data.js';
 import { CHAR, SCENES } from '@content/otome/index.js';
-import { shuffle } from '@core/util.js';
+import { shuffle, resolveAsset } from '@core/util.js';
 
 /** Scene Maker: Builder and interactive preview player for custom visual novel scripts. */
 
@@ -425,13 +425,7 @@ function applyPreviewScene(id) {
   const sc = SCENES[id] || { bg: "linear-gradient(168deg,#120D1F 0%,#241B36 48%,#57431E 135%)" };
   const el = $("#mpBg");
   if (el) {
-    if (sc.img) {
-      el.style.backgroundImage = `url('${sc.img}')`;
-      el.style.background = "";
-    } else {
-      el.style.backgroundImage = "";
-      el.style.background = sc.bg;
-    }
+    el.style.background = sc.img ? `url('${resolveAsset(sc.img)}') center/cover no-repeat` : sc.bg;
     el.style.filter = sc.filter || "";
   }
 }
@@ -439,17 +433,22 @@ function applyPreviewScene(id) {
 function previewSpriteSet(charId) {
   const el = $("#mpSprite");
   if (!el) return;
-  const ch = CHAR[charId];
-  if (ch && ch.sprites && ch.sprites.default) {
-    el.style.display = "block";
-    el.style.backgroundImage = `url('${ch.sprites.default}')`;
-  } else if (charId === "teacher") {
-    el.style.display = "block";
-    el.style.backgroundImage = "url('./sprites/teacher.png')";
-  } else {
-    el.style.display = "none";
-    el.style.backgroundImage = "";
+  if (charId === "n") {
+    el.style.opacity = 0;
+    return;
   }
+  el.style.opacity = 1;
+  el.classList.toggle("left", charId === "teacher");
+  let imgUrl = null;
+  if (charId === "teacher") {
+    imgUrl = resolveAsset("./sprites/teacher.png");
+  } else {
+    const ch = CHAR[charId];
+    if (ch && ch.sprites && ch.sprites.default) {
+      imgUrl = resolveAsset(ch.sprites.default);
+    }
+  }
+  el.innerHTML = imgUrl ? `<img src="${imgUrl}" alt="">` : "🌸";
 }
 
 async function previewTap() {
