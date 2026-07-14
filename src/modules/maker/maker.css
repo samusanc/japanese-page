@@ -468,6 +468,32 @@
   text-overflow: ellipsis;
 }
 
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 16px;
+}
+
+.edit-actions .btn {
+  flex: 1;
+  font-size: 13px;
+  padding: 10px;
+}
+
+#smSaveStep.highlighted {
+  background: var(--gold);
+  color: #000;
+  box-shadow: 0 0 16px rgba(207, 165, 122, 0.6);
+  animation: makerGlowPulse 1.8s infinite;
+}
+
+@keyframes makerGlowPulse {
+  0%, 100% { box-shadow: 0 0 16px rgba(207, 165, 122, 0.5); }
+  50% { box-shadow: 0 0 24px rgba(207, 165, 122, 0.85); }
+}
+
 /* Mobile responsiveness stack */
 @media (max-width: 768px) {
   .maker-builder {

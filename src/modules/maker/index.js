@@ -13,15 +13,18 @@ import { shuffle, resolveAsset } from '@core/util.js';
 
 let currentSteps = [];
 let activeStepIndex = null;
+let editState = null; // Holds temporary uncommitted changes of the active step
 let selectedStartScene = "academy";
 let selectedStartChar = "prince";
 const deckCache = {};
 
 // Default step structures
 const DEFAULTS = {
-  say: () => ({ type: "say", who: "prince", say: "挨拶を入力してください。", en: "Enter a greeting." }),
+  say: () => ({ type: "say", char: selectedStartChar, bg: selectedStartScene, say: "挨拶を入力してください。", en: "Enter a greeting." }),
   choices: () => ({
     type: "choices",
+    char: selectedStartChar,
+    bg: selectedStartScene,
     jp: "どちらを選びますか？",
     en: "Which one do you choose?",
     options: [
@@ -29,8 +32,8 @@ const DEFAULTS = {
       { text: "沈黙する", reaction: "…なぜ黙っているのですか？", translation: "…Why are you silent?" }
     ]
   }),
-  kanji: () => ({ type: "kanji", kanji: "書", mode: "trace" }),
-  cards: () => ({ type: "cards", deck: "starter" })
+  kanji: () => ({ type: "kanji", char: selectedStartChar, bg: selectedStartScene, kanji: "書", mode: "trace" }),
+  cards: () => ({ type: "cards", char: selectedStartChar, bg: selectedStartScene, deck: "starter" })
 };
 
 /* ---- Screen Initialization ---- */
@@ -43,6 +46,7 @@ export function init() {
   }
   registerScreen("maker", () => {
     activeStepIndex = null;
+    editState = null;
     renderTimeline();
     showEditForm();
     renderCharPicker();
@@ -65,8 +69,11 @@ function initBuilderEvents() {
   $("#smPortApply").addEventListener("click", () => applyPort());
   $("#smPortClose").addEventListener("click", () => togglePort(null));
 
+  // Save Step & Reset buttons
+  $("#smSaveStep").addEventListener("click", () => saveStepData());
+  $("#smResetStep").addEventListener("click", () => resetStepData());
+
   // Edit Step Field Listeners (Say)
-  $("#smSayWho").addEventListener("change", (e) => updateActiveStep("who", e.target.value));
   $("#smSayJp").addEventListener("input", (e) => updateActiveStep("say", e.target.value));
   $("#smSayEn").addEventListener("input", (e) => updateActiveStep("en", e.target.value));
 
@@ -111,6 +118,257 @@ function saveGlobalConfig() {
   localStorage.setItem("maker_scene", JSON.stringify(data));
 }
 
+function addStep(type) {
+  const step = DEFAULTS[type]();
+  currentSteps.push(step);
+  activeStepIndex = currentSteps.length - 1;
+  editState = JSON.parse(JSON.stringify(step));
+  
+  saveGlobalConfig();
+  renderTimeline();
+  showEditForm();
+  renderCharPicker();
+  renderBgPicker();
+  checkUnsavedChanges();
+}
+
+function updateActiveStep(key, val) {
+  if (activeStepIndex === null || !editState) return;
+  editState[key] = val;
+  checkUnsavedChanges();
+}
+
+function checkUnsavedChanges() {
+  if (activeStepIndex === null || !currentSteps[activeStepIndex] || !editState) {
+    setSaveHighlight(false);
+    return;
+  }
+  const saved = JSON.stringify(currentSteps[activeStepIndex]);
+  const current = JSON.stringify(editState);
+  setSaveHighlight(saved !== current);
+}
+
+function setSaveHighlight(highlight) {
+  const btn = $("#smSaveStep");
+  if (btn) {
+    btn.classList.toggle("highlighted", highlight);
+  }
+}
+
+function saveStepData() {
+  if (activeStepIndex === null || !editState) return;
+  currentSteps[activeStepIndex] = JSON.parse(JSON.stringify(editState));
+  saveGlobalConfig();
+  renderTimeline();
+  checkUnsavedChanges();
+  beep("ok");
+}
+
+function resetStepData() {
+  if (activeStepIndex === null || !currentSteps[activeStepIndex]) return;
+  editState = JSON.parse(JSON.stringify(currentSteps[activeStepIndex]));
+  selectedStartChar = editState.char;
+  selectedStartScene = editState.bg;
+  showEditForm();
+  renderCharPicker();
+  renderBgPicker();
+  checkUnsavedChanges();
+  beep("no");
+}
+
+function addChoiceOption() {
+  if (activeStepIndex === null || !editState) return;
+  if (!editState.options) editState.options = [];
+  if (editState.options.length >= 4) return; // cap at 4 choices
+  
+  editState.options.push({
+    text: "選択肢 Text",
+    reaction: "リアクション dialogue.",
+    translation: "Reaction translation."
+  });
+  
+  renderChoicesFormList();
+  checkUnsavedChanges();
+}
+
+function getStepSnippet(step) {
+  const ch = CHAR[step.char];
+  const name = ch ? ch.persona.name : (step.char === "teacher" ? "Archmage Corvina" : "Narrator");
+  
+  if (step.type === "say") {
+    return `${name}: "${step.say || ''}"`;
+  }
+  if (step.type === "choices") return `Branch [${name}]: "${step.jp || ''}"`;
+  if (step.type === "kanji") return `Kanji Spell [${name}]: 「${step.kanji || ''}」 (${step.mode})`;
+  if (step.type === "cards") return `Cards Matching [${name}]: Deck ${step.deck}`;
+  return "";
+}
+
+function renderTimeline() {
+  const list = $("#smTimelineList");
+  list.innerHTML = "";
+  
+  if (currentSteps.length === 0) {
+    list.innerHTML = `<div class="empty">No steps added yet. Add a step below to begin your script!</div>`;
+    return;
+  }
+
+  currentSteps.forEach((step, idx) => {
+    const item = document.createElement("div");
+    item.className = `step-item${idx === activeStepIndex ? " active" : ""}`;
+    item.innerHTML = `
+      <span class="step-badge badge-${step.type}">${step.type}</span>
+      <span class="step-text" id="stepText-${idx}">${escapeHtml(getStepSnippet(step))}</span>
+      <div class="step-actions">
+        <button class="step-btn" data-act="up" data-idx="${idx}" title="Move Up">▲</button>
+        <button class="step-btn" data-act="down" data-idx="${idx}" title="Move Down">▼</button>
+        <button class="step-btn del" data-act="del" data-idx="${idx}" title="Delete">✕</button>
+      </div>
+    `;
+
+    item.addEventListener("click", (e) => {
+      const btn = e.target.closest(".step-btn");
+      if (btn) {
+        e.stopPropagation();
+        const action = btn.dataset.act;
+        const index = parseInt(btn.dataset.idx);
+        if (action === "up") moveStep(index, -1);
+        if (action === "down") moveStep(index, 1);
+        if (action === "del") deleteStep(index);
+        return;
+      }
+      
+      activeStepIndex = idx;
+      editState = JSON.parse(JSON.stringify(currentSteps[idx]));
+      selectedStartChar = editState.char;
+      selectedStartScene = editState.bg;
+      
+      renderTimeline();
+      showEditForm();
+      renderCharPicker();
+      renderBgPicker();
+      checkUnsavedChanges();
+    });
+
+    list.appendChild(item);
+  });
+}
+
+function moveStep(idx, dir) {
+  const target = idx + dir;
+  if (target < 0 || target >= currentSteps.length) return;
+  const temp = currentSteps[idx];
+  currentSteps[idx] = currentSteps[target];
+  currentSteps[target] = temp;
+  if (activeStepIndex === idx) activeStepIndex = target;
+  else if (activeStepIndex === target) activeStepIndex = idx;
+  
+  saveGlobalConfig();
+  renderTimeline();
+}
+
+function deleteStep(idx) {
+  currentSteps.splice(idx, 1);
+  if (activeStepIndex === idx) {
+    activeStepIndex = null;
+    editState = null;
+  } else if (activeStepIndex > idx) {
+    activeStepIndex--;
+  }
+  
+  saveGlobalConfig();
+  renderTimeline();
+  showEditForm();
+  renderCharPicker();
+  renderBgPicker();
+  checkUnsavedChanges();
+}
+
+/* ---- Edit Forms Rendering ---- */
+function showEditForm() {
+  // Hide all forms first
+  $("#smEmptyEdit").style.display = "none";
+  $("#smFormSay").style.display = "none";
+  $("#smFormChoices").style.display = "none";
+  $("#smFormKanji").style.display = "none";
+  $("#smFormCards").style.display = "none";
+  $("#smEditActions").style.display = "none";
+
+  if (activeStepIndex === null || !currentSteps[activeStepIndex] || !editState) {
+    $("#smEmptyEdit").style.display = "flex";
+    return;
+  }
+
+  $("#smEditActions").style.display = "flex";
+
+  const step = editState;
+  if (step.type === "say") {
+    $("#smFormSay").style.display = "block";
+    $("#smSayJp").value = step.say || "";
+    $("#smSayEn").value = step.en || "";
+  } else if (step.type === "choices") {
+    $("#smFormChoices").style.display = "block";
+    $("#smChoiceJp").value = step.jp || "";
+    $("#smChoiceEn").value = step.en || "";
+    renderChoicesFormList();
+  } else if (step.type === "kanji") {
+    $("#smFormKanji").style.display = "block";
+    $("#smKanjiChar").value = step.kanji || "";
+    const mode = step.mode || "trace";
+    $$("#smKanjiModeSeg button").forEach(b => b.classList.toggle("on", b.dataset.val === mode));
+  } else if (step.type === "cards") {
+    $("#smFormCards").style.display = "block";
+    $("#smCardsDeck").value = step.deck || "starter";
+  }
+}
+
+function renderChoicesFormList() {
+  const container = $("#smChoicesList");
+  container.innerHTML = "";
+  if (activeStepIndex === null || !editState) return;
+  const step = editState;
+  if (!step.options) step.options = [];
+
+  step.options.forEach((op, oIdx) => {
+    const card = document.createElement("div");
+    card.className = "choice-edit-card";
+    card.innerHTML = `
+      <div class="choice-edit-header">
+        <span class="choice-title">Option ${oIdx + 1}</span>
+        <button class="step-btn del" data-o-idx="${oIdx}" style="padding:2px 6px;">Remove</button>
+      </div>
+      <div class="choice-fields">
+        <input type="text" class="inp op-text" data-o-idx="${oIdx}" placeholder="Button Text (JP)" value="${escapeHtml(op.text || '')}">
+        <input type="text" class="inp op-react" data-o-idx="${oIdx}" placeholder="Reaction Speech (JP)" value="${escapeHtml(op.reaction || '')}">
+        <input type="text" class="inp op-trans" data-o-idx="${oIdx}" placeholder="Reaction Translation (EN)" value="${escapeHtml(op.translation || '')}">
+      </div>
+    `;
+
+    card.querySelector(".del").addEventListener("click", (e) => {
+      step.options.splice(oIdx, 1);
+      renderChoicesFormList();
+      checkUnsavedChanges();
+    });
+
+    card.querySelector(".op-text").addEventListener("input", (e) => {
+      step.options[oIdx].text = e.target.value;
+      checkUnsavedChanges();
+    });
+
+    card.querySelector(".op-react").addEventListener("input", (e) => {
+      step.options[oIdx].reaction = e.target.value;
+      checkUnsavedChanges();
+    });
+
+    card.querySelector(".op-trans").addEventListener("input", (e) => {
+      step.options[oIdx].translation = e.target.value;
+      checkUnsavedChanges();
+    });
+
+    container.appendChild(card);
+  });
+}
+
 function renderCharPicker() {
   const container = $("#smCharPicker");
   if (!container) return;
@@ -153,8 +411,11 @@ function renderCharPicker() {
 
     box.addEventListener("click", () => {
       selectedStartChar = item.id;
+      if (editState) {
+        editState.char = item.id;
+        checkUnsavedChanges();
+      }
       renderCharPicker();
-      saveGlobalConfig();
     });
 
     container.appendChild(box);
@@ -189,208 +450,14 @@ function renderBgPicker() {
 
     item.addEventListener("click", () => {
       selectedStartScene = id;
+      if (editState) {
+        editState.bg = id;
+        checkUnsavedChanges();
+      }
       renderBgPicker();
-      saveGlobalConfig();
     });
 
     container.appendChild(item);
-  });
-}
-
-function addStep(type) {
-  const step = DEFAULTS[type]();
-  currentSteps.push(step);
-  activeStepIndex = currentSteps.length - 1;
-  saveGlobalConfig();
-  renderTimeline();
-  showEditForm();
-}
-
-function updateActiveStep(key, val) {
-  if (activeStepIndex === null) return;
-  currentSteps[activeStepIndex][key] = val;
-  saveGlobalConfig();
-  
-  // Refresh timeline text silently
-  const textEl = $(`#stepText-${activeStepIndex}`);
-  if (textEl) {
-    textEl.textContent = getStepSnippet(currentSteps[activeStepIndex]);
-  }
-}
-
-function addChoiceOption() {
-  if (activeStepIndex === null) return;
-  const step = currentSteps[activeStepIndex];
-  if (!step.options) step.options = [];
-  if (step.options.length >= 4) return; // cap at 4 choices
-  
-  step.options.push({
-    text: "選択肢 Text",
-    reaction: "リアクション dialogue.",
-    translation: "Reaction translation."
-  });
-  
-  saveGlobalConfig();
-  renderChoicesFormList();
-}
-
-function getStepSnippet(step) {
-  if (step.type === "say") {
-    const ch = CHAR[step.who];
-    const name = ch ? ch.persona.name : "Narrator";
-    return `${name}: "${step.say || ''}"`;
-  }
-  if (step.type === "choices") return `Branch: "${step.jp || ''}"`;
-  if (step.type === "kanji") return `Kanji Spell: 「${step.kanji || ''}」 (${step.mode})`;
-  if (step.type === "cards") return `Cards Matching: Deck ${step.deck}`;
-  return "";
-}
-
-function renderTimeline() {
-  const list = $("#smTimelineList");
-  list.innerHTML = "";
-  
-  if (currentSteps.length === 0) {
-    list.innerHTML = `<div class="empty">No steps added yet. Add a step below to begin your script!</div>`;
-    return;
-  }
-
-  currentSteps.forEach((step, idx) => {
-    const item = document.createElement("div");
-    item.className = `step-item${idx === activeStepIndex ? " active" : ""}`;
-    item.innerHTML = `
-      <span class="step-badge badge-${step.type}">${step.type}</span>
-      <span class="step-text" id="stepText-${idx}">${escapeHtml(getStepSnippet(step))}</span>
-      <div class="step-actions">
-        <button class="step-btn" data-act="up" data-idx="${idx}" title="Move Up">▲</button>
-        <button class="step-btn" data-act="down" data-idx="${idx}" title="Move Down">▼</button>
-        <button class="step-btn del" data-act="del" data-idx="${idx}" title="Delete">✕</button>
-      </div>
-    `;
-
-    item.addEventListener("click", (e) => {
-      const btn = e.target.closest(".step-btn");
-      if (btn) {
-        e.stopPropagation();
-        const action = btn.dataset.act;
-        const index = parseInt(btn.dataset.idx);
-        if (action === "up") moveStep(index, -1);
-        if (action === "down") moveStep(index, 1);
-        if (action === "del") deleteStep(index);
-        return;
-      }
-      activeStepIndex = idx;
-      renderTimeline();
-      showEditForm();
-    });
-
-    list.appendChild(item);
-  });
-}
-
-function moveStep(idx, dir) {
-  const target = idx + dir;
-  if (target < 0 || target >= currentSteps.length) return;
-  const temp = currentSteps[idx];
-  currentSteps[idx] = currentSteps[target];
-  currentSteps[target] = temp;
-  if (activeStepIndex === idx) activeStepIndex = target;
-  else if (activeStepIndex === target) activeStepIndex = idx;
-  
-  saveGlobalConfig();
-  renderTimeline();
-}
-
-function deleteStep(idx) {
-  currentSteps.splice(idx, 1);
-  if (activeStepIndex === idx) activeStepIndex = null;
-  else if (activeStepIndex > idx) activeStepIndex--;
-  
-  saveGlobalConfig();
-  renderTimeline();
-  showEditForm();
-}
-
-/* ---- Edit Forms Rendering ---- */
-function showEditForm() {
-  // Hide all forms first
-  $("#smEmptyEdit").style.display = "none";
-  $("#smFormSay").style.display = "none";
-  $("#smFormChoices").style.display = "none";
-  $("#smFormKanji").style.display = "none";
-  $("#smFormCards").style.display = "none";
-
-  if (activeStepIndex === null || !currentSteps[activeStepIndex]) {
-    $("#smEmptyEdit").style.display = "flex";
-    return;
-  }
-
-  const step = currentSteps[activeStepIndex];
-  if (step.type === "say") {
-    $("#smFormSay").style.display = "block";
-    $("#smSayWho").value = step.who || "n";
-    $("#smSayJp").value = step.say || "";
-    $("#smSayEn").value = step.en || "";
-  } else if (step.type === "choices") {
-    $("#smFormChoices").style.display = "block";
-    $("#smChoiceJp").value = step.jp || "";
-    $("#smChoiceEn").value = step.en || "";
-    renderChoicesFormList();
-  } else if (step.type === "kanji") {
-    $("#smFormKanji").style.display = "block";
-    $("#smKanjiChar").value = step.kanji || "";
-    const mode = step.mode || "trace";
-    $$("#smKanjiModeSeg button").forEach(b => b.classList.toggle("on", b.dataset.val === mode));
-  } else if (step.type === "cards") {
-    $("#smFormCards").style.display = "block";
-    $("#smCardsDeck").value = step.deck || "starter";
-  }
-}
-
-function renderChoicesFormList() {
-  const container = $("#smChoicesList");
-  container.innerHTML = "";
-  if (activeStepIndex === null) return;
-  const step = currentSteps[activeStepIndex];
-  if (!step.options) step.options = [];
-
-  step.options.forEach((op, oIdx) => {
-    const card = document.createElement("div");
-    card.className = "choice-edit-card";
-    card.innerHTML = `
-      <div class="choice-edit-header">
-        <span class="choice-title">Option ${oIdx + 1}</span>
-        <button class="step-btn del" data-o-idx="${oIdx}" style="padding:2px 6px;">Remove</button>
-      </div>
-      <div class="choice-fields">
-        <input type="text" class="inp op-text" data-o-idx="${oIdx}" placeholder="Button Text (JP)" value="${escapeHtml(op.text || '')}">
-        <input type="text" class="inp op-react" data-o-idx="${oIdx}" placeholder="Reaction Speech (JP)" value="${escapeHtml(op.reaction || '')}">
-        <input type="text" class="inp op-trans" data-o-idx="${oIdx}" placeholder="Reaction Translation (EN)" value="${escapeHtml(op.translation || '')}">
-      </div>
-    `;
-
-    card.querySelector(".del").addEventListener("click", (e) => {
-      step.options.splice(oIdx, 1);
-      saveGlobalConfig();
-      renderChoicesFormList();
-    });
-
-    card.querySelector(".op-text").addEventListener("input", (e) => {
-      step.options[oIdx].text = e.target.value;
-      saveGlobalConfig();
-    });
-
-    card.querySelector(".op-react").addEventListener("input", (e) => {
-      step.options[oIdx].reaction = e.target.value;
-      saveGlobalConfig();
-    });
-
-    card.querySelector(".op-trans").addEventListener("input", (e) => {
-      step.options[oIdx].translation = e.target.value;
-      saveGlobalConfig();
-    });
-
-    container.appendChild(card);
   });
 }
 
@@ -430,6 +497,8 @@ function applyPort() {
     selectedStartScene = data.startScene || "academy";
     selectedStartChar = data.startChar || "prince";
     activeStepIndex = currentSteps.length > 0 ? 0 : null;
+    editState = currentSteps.length > 0 ? JSON.parse(JSON.stringify(currentSteps[0])) : null;
+    
     saveGlobalConfig();
     renderTimeline();
     showEditForm();
@@ -469,11 +538,6 @@ async function startPreview() {
   };
   quitBtn.onclick = handler;
 
-  // Initialize visual scene config
-  applyPreviewScene(selectedStartScene);
-  
-  previewSpriteSet(selectedStartChar);
-
   // Setup dialog tap resolver
   const dialogBox = $("#mpDialog");
   dialogBox.onclick = () => {
@@ -487,6 +551,11 @@ async function startPreview() {
     for (let i = 0; i < currentSteps.length; i++) {
       if (previewQuit) break;
       const step = currentSteps[i];
+
+      // Update background and character for each step dynamically
+      applyPreviewScene(step.bg);
+      previewSpriteSet(step.char);
+
       if (step.type === "say") {
         await playPreviewSay(step);
       } else if (step.type === "choices") {
@@ -523,7 +592,7 @@ function applyPreviewScene(id) {
 function previewSpriteSet(charId) {
   const el = $("#mpSprite");
   if (!el) return;
-  if (charId === "n") {
+  if (charId === "n" || charId === "none") {
     el.style.opacity = 0;
     return;
   }
@@ -554,16 +623,14 @@ async function playPreviewSay(step) {
   $("#mpWriterArea").style.display = "none";
   $("#mpCardsOverlay").style.display = "none";
 
-  previewSpriteSet(step.who);
-  
-  const ch = CHAR[step.who];
+  const ch = CHAR[step.char];
   const nameplate = $("#mpName");
-  if (step.who === "n") {
+  if (step.char === "n" || step.char === "none") {
     nameplate.style.display = "none";
     $("#mpSprite").style.opacity = 0.4;
   } else {
     nameplate.style.display = "block";
-    nameplate.textContent = charName(step.who);
+    nameplate.textContent = charName(step.char);
     $("#mpSprite").style.opacity = 1;
   }
 
@@ -571,7 +638,7 @@ async function playPreviewSay(step) {
   textEl.innerHTML = "";
   
   // Speak audio
-  if (step.who !== "n" && step.say) {
+  if (step.char !== "n" && step.char !== "none" && step.say) {
     speak(step.say, ch ? ch.voice : null);
   }
 
@@ -590,6 +657,7 @@ async function playPreviewSay(step) {
 
 function charName(who) {
   if (who === "teacher") return "Archmage Corvina";
+  if (who === "none" || who === "n") return "Narrator";
   const ch = CHAR[who];
   return ch ? ch.persona.name : "???";
 }
@@ -639,8 +707,8 @@ async function playPreviewChoices(step) {
     textEl.innerHTML = `「${escapeHtml(chosen.reaction || '')}」` + 
       (chosen.translation ? `<div class="en" style="margin-top:4px; font-size:13px; color:var(--ink2);">${escapeHtml(chosen.translation)}</div>` : "");
     
-    // Play speech
-    const ch = CHAR[selectedStartChar];
+    // Play reaction speech using active step character voice
+    const ch = CHAR[step.char];
     if (chosen.reaction) speak(chosen.reaction, ch ? ch.voice : null);
 
     $("#mpNext").style.visibility = "visible";

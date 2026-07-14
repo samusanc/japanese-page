@@ -79,18 +79,6 @@
       <div class="edit-form" id="smFormSay" style="display:none;">
         <span class="eyebrow">Edit Dialogue Step</span>
         <div class="form-group">
-          <label for="smSayWho">Speaker</label>
-          <select id="smSayWho" class="inp select-field">
-            <option value="prince">Prince Alberich</option>
-            <option value="knight">Sir Gareth</option>
-            <option value="earl">Earl Conrad</option>
-            <option value="archduke">Archduke Vesper</option>
-            <option value="duchess">Duchess Anastasia</option>
-            <option value="teacher">Archmage Corvina</option>
-            <option value="n">Narrator</option>
-          </select>
-        </div>
-        <div class="form-group">
           <label for="smSayJp">Dialogue (Japanese)</label>
           <textarea id="smSayJp" class="inp text-area" placeholder="e.g. 私について来なさい。"></textarea>
         </div>
@@ -153,6 +141,12 @@
           </select>
           <p class="note">Plays a quick 3-card vocabulary matching drill during the preview.</p>
         </div>
+      </div>
+
+      <!-- Save & Reset Action row -->
+      <div class="edit-actions" id="smEditActions" style="display:none;">
+        <button class="btn gold" id="smSaveStep">Save Step ✓</button>
+        <button class="btn ghost" id="smResetStep">Reset ↺</button>
       </div>
 
     </div>
