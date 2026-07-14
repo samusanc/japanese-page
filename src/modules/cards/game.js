@@ -5,6 +5,7 @@ import { showScreen } from '@core/screens.js';
 import { playRecipe } from '@core/audio/sfx.js';
 import { speak } from '@core/audio/voice.js';
 import { CARDS_HOST, CARD_DECKS, CARDS_BALANCE } from '@content/cards.js';
+import { CHAR, SCENES } from '@content/otome/index.js';
 import { entryKey, attachWeights, learnedEntries, pickReview, applyRound, toWeights } from './srs.js';
 
 /** The Royal Gamble — speed memory matching at the Gambler Prince's table.
@@ -542,17 +543,18 @@ function gameOver() {
   SND.over();
   applyRoundWeights();
   saveWeights();
+  // Mini-round: skip the Over panel, go straight back to the scene maker
+  if (G.miniRoundDone) {
+    const cb = G.miniRoundDone;
+    G.miniRoundDone = null;
+    setTimeout(cb, 400);
+    return;
+  }
   $("#cdOverLine").textContent = G.chips >= 10 ? CARDS_HOST.lines.win : CARDS_HOST.lines.lose;
   $("#cdFinalChips").textContent = G.chips;
   $("#cdFinalPeak").textContent = G.peak;
   renderChipTray($("#cdOverTray"), G.chips, false);
   showPanel("Over");
-  // Mini-round callback: notify the scene maker that the round is over
-  if (G.miniRoundDone) {
-    const cb = G.miniRoundDone;
-    G.miniRoundDone = null;
-    setTimeout(cb, 1800); // brief pause on the Over screen, then hand back
-  }
 }
 
 /* ---- ledger (progress) ---- */
@@ -578,10 +580,12 @@ function showLedger() {
 /**
  * Launch a real card table round (full UI, timer, chips, animations)
  * from the scene maker preview. Resolves onDone when the round ends.
- * @param {string} deckId - e.g. "starter"
+ * @param {string} deckId  - e.g. "starter"
  * @param {function} onDone - called when the round is over so preview can continue
+ * @param {string} [charId] - optional character id to override the backdrop portrait
+ * @param {string} [bgId]   - optional scene id to override the backdrop image
  */
-export async function playCardsMiniRound(deckId, onDone) {
+export async function playCardsMiniRound(deckId, onDone, charId, bgId) {
   // Temporarily override which decks are loaded
   const savedDeckIds = deckIds;
   deckIds = [deckId];
@@ -596,6 +600,47 @@ export async function playCardsMiniRound(deckId, onDone) {
     return;
   }
   deckIds = savedDeckIds;
+
+  // Apply step background to the cards screen
+  const cardsEl = $("#s-cards");
+  if (bgId && cardsEl) {
+    const sc = SCENES[bgId];
+    if (sc) {
+      if (sc.img) {
+        cardsEl.style.setProperty("--cd-bg", `url('${resolveAsset(sc.img)}')`);
+      } else if (sc.bg) {
+        cardsEl.style.setProperty("--cd-bg", sc.bg);
+      }
+    }
+  } else if (CARDS_HOST.bg && cardsEl) {
+    cardsEl.style.setProperty("--cd-bg", `url('${resolveAsset(CARDS_HOST.bg)}')`);
+  }
+
+  // Apply step character portrait to all dealer/host image slots
+  const imgIds = ["cdHostImg", "cdDealImg", "cdDealerImg", "cdOverImg"];
+  if (charId && charId !== "none" && charId !== "n") {
+    let imgUrl = null;
+    if (charId === "teacher") {
+      imgUrl = resolveAsset("./sprites/teacher.png");
+    } else {
+      const ch = CHAR[charId];
+      if (ch && ch.sprites && ch.sprites.default) imgUrl = resolveAsset(ch.sprites.default);
+    }
+    imgIds.forEach(id => {
+      const img = $("#" + id);
+      if (!img) return;
+      if (imgUrl) { img.src = imgUrl; img.style.display = ""; }
+      else img.style.display = "none";
+    });
+  } else {
+    // restore default CARDS_HOST portrait
+    imgIds.forEach(id => {
+      const img = $("#" + id);
+      if (!img) return;
+      if (CARDS_HOST.img) { img.src = resolveAsset(CARDS_HOST.img); img.style.display = ""; }
+      else img.style.display = "none";
+    });
+  }
 
   // Pick a small random session (4 pairs or less)
   const handSize = Math.min(4, pool.length);
@@ -613,7 +658,7 @@ export async function playCardsMiniRound(deckId, onDone) {
     reviewIdx: 0,
     busy: false,
     sel: null,
-    miniRoundDone: onDone   // ← hook: gameOver() will call this
+    miniRoundDone: onDone   // ← hook: gameOver() will call this immediately
   };
   $("#cdChips").textContent = "0";
   renderChipTray($("#cdChipTray"), 0, false);

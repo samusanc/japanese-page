@@ -951,7 +951,7 @@ async function playPreviewCards(step) {
       if (cardsScreen) cardsScreen.classList.remove("on");
       makerOverlay.classList.add("on");
       res();
-    });
+    }, step.char, step.bg);
   });
 }
 
