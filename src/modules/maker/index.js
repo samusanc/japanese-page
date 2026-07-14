@@ -13,6 +13,8 @@ import { shuffle, resolveAsset } from '@core/util.js';
 
 let currentSteps = [];
 let activeStepIndex = null;
+let selectedStartScene = "academy";
+let selectedStartChar = "prince";
 const deckCache = {};
 
 // Default step structures
@@ -43,14 +45,13 @@ export function init() {
     activeStepIndex = null;
     renderTimeline();
     showEditForm();
+    renderCharPicker();
+    renderBgPicker();
   });
 }
 
 /* ---- Builder GUI Handlers ---- */
 function initBuilderEvents() {
-  $("#smStartScene").addEventListener("change", (e) => saveGlobalConfig());
-  $("#smStartChar").addEventListener("change", (e) => saveGlobalConfig());
-
   // Add buttons
   $("#smAddSay").addEventListener("click", () => addStep("say"));
   $("#smAddChoices").addEventListener("click", () => addStep("choices"));
@@ -92,19 +93,108 @@ function initBuilderEvents() {
     try {
       const data = JSON.parse(saved);
       currentSteps = data.steps || [];
-      $("#smStartScene").value = data.startScene || "academy";
-      $("#smStartChar").value = data.startChar || "prince";
+      selectedStartScene = data.startScene || "academy";
+      selectedStartChar = data.startChar || "prince";
     } catch(e) {}
   }
+
+  renderCharPicker();
+  renderBgPicker();
 }
 
 function saveGlobalConfig() {
   const data = {
-    startScene: $("#smStartScene").value,
-    startChar: $("#smStartChar").value,
+    startScene: selectedStartScene,
+    startChar: selectedStartChar,
     steps: currentSteps
   };
   localStorage.setItem("maker_scene", JSON.stringify(data));
+}
+
+function renderCharPicker() {
+  const container = $("#smCharPicker");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const list = Object.keys(CHAR).map(id => {
+    const ch = CHAR[id];
+    return {
+      id,
+      name: ch.persona.name.split(" ")[1] || ch.persona.name,
+      img: ch.sprites.default
+    };
+  });
+
+  list.push({ id: "teacher", name: "Corvina", img: "./sprites/teacher.png" });
+  list.push({ id: "none", name: "Narrator", img: "" });
+
+  list.forEach(item => {
+    const box = document.createElement("div");
+    box.className = `sm-square-item${item.id === selectedStartChar ? " selected" : ""}`;
+    box.dataset.id = item.id;
+
+    const preview = document.createElement("div");
+    preview.className = "sm-square-preview";
+    if (item.img) {
+      preview.style.backgroundImage = `url('${resolveAsset(item.img)}')`;
+      preview.style.backgroundSize = "contain";
+      preview.style.backgroundRepeat = "no-repeat";
+      preview.style.backgroundPosition = "center bottom";
+    } else {
+      preview.style.background = "linear-gradient(135deg, #111, #222)";
+    }
+
+    const label = document.createElement("div");
+    label.className = "sm-square-label";
+    label.textContent = item.name;
+
+    box.appendChild(preview);
+    box.appendChild(label);
+
+    box.addEventListener("click", () => {
+      selectedStartChar = item.id;
+      renderCharPicker();
+      saveGlobalConfig();
+    });
+
+    container.appendChild(box);
+  });
+}
+
+function renderBgPicker() {
+  const container = $("#smBgPicker");
+  if (!container) return;
+  container.innerHTML = "";
+
+  Object.keys(SCENES).forEach(id => {
+    const sc = SCENES[id];
+    const item = document.createElement("div");
+    item.className = `sm-square-item${id === selectedStartScene ? " selected" : ""}`;
+    item.dataset.id = id;
+
+    const preview = document.createElement("div");
+    preview.className = "sm-square-preview";
+    if (sc.img) {
+      preview.style.backgroundImage = `url('${resolveAsset(sc.img)}')`;
+    } else {
+      preview.style.background = sc.bg;
+    }
+
+    const label = document.createElement("div");
+    label.className = "sm-square-label";
+    label.textContent = id;
+
+    item.appendChild(preview);
+    item.appendChild(label);
+
+    item.addEventListener("click", () => {
+      selectedStartScene = id;
+      renderBgPicker();
+      saveGlobalConfig();
+    });
+
+    container.appendChild(item);
+  });
 }
 
 function addStep(type) {
@@ -318,8 +408,8 @@ function togglePort(mode) {
   panel.style.display = "block";
   if (mode === "export") {
     const data = {
-      startScene: $("#smStartScene").value,
-      startChar: $("#smStartChar").value,
+      startScene: selectedStartScene,
+      startChar: selectedStartChar,
       steps: currentSteps
     };
     area.value = JSON.stringify(data, null, 2);
@@ -337,12 +427,14 @@ function applyPort() {
   try {
     const data = JSON.parse(raw);
     currentSteps = data.steps || [];
-    $("#smStartScene").value = data.startScene || "academy";
-    $("#smStartChar").value = data.startChar || "prince";
+    selectedStartScene = data.startScene || "academy";
+    selectedStartChar = data.startChar || "prince";
     activeStepIndex = currentSteps.length > 0 ? 0 : null;
     saveGlobalConfig();
     renderTimeline();
     showEditForm();
+    renderCharPicker();
+    renderBgPicker();
     togglePort(null);
     beep("ok");
   } catch (err) {
@@ -378,11 +470,9 @@ async function startPreview() {
   quitBtn.onclick = handler;
 
   // Initialize visual scene config
-  const startBg = $("#smStartScene").value;
-  applyPreviewScene(startBg);
+  applyPreviewScene(selectedStartScene);
   
-  const startChar = $("#smStartChar").value;
-  previewSpriteSet(startChar);
+  previewSpriteSet(selectedStartChar);
 
   // Setup dialog tap resolver
   const dialogBox = $("#mpDialog");
@@ -550,8 +640,7 @@ async function playPreviewChoices(step) {
       (chosen.translation ? `<div class="en" style="margin-top:4px; font-size:13px; color:var(--ink2);">${escapeHtml(chosen.translation)}</div>` : "");
     
     // Play speech
-    const startChar = $("#smStartChar").value;
-    const ch = CHAR[startChar];
+    const ch = CHAR[selectedStartChar];
     if (chosen.reaction) speak(chosen.reaction, ch ? ch.voice : null);
 
     $("#mpNext").style.visibility = "visible";

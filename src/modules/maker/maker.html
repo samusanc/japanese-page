@@ -13,30 +13,21 @@
     <div class="maker-panel config-panel">
       
       <!-- Starting setup -->
-      <div class="form-group row-group">
-        <div class="field">
-          <label for="smStartScene">Starting Background</label>
-          <select id="smStartScene" class="inp select-field">
-            <option value="academy">Academy Training Hall</option>
-            <option value="ballroom">Royal Ballroom</option>
-            <option value="garden">Enchanted Garden</option>
-            <option value="night">Forest at Night</option>
-            <option value="storm">Tempest Woods</option>
-            <option value="rose">Moonlit Rose Park</option>
-            <option value="study">Prince's Study</option>
-          </select>
+      <div class="sm-picker-row">
+        <!-- Character Picker -->
+        <div class="sm-picker-col">
+          <span class="eyebrow" style="font-size: 11px;">Starting Character</span>
+          <div class="sm-squares-list" id="smCharPicker">
+            <!-- Dynamically populated character squares -->
+          </div>
         </div>
-        <div class="field">
-          <label for="smStartChar">Starting Companion</label>
-          <select id="smStartChar" class="inp select-field">
-            <option value="prince">Prince Alberich</option>
-            <option value="knight">Sir Gareth</option>
-            <option value="earl">Earl Conrad</option>
-            <option value="archduke">Archduke Vesper</option>
-            <option value="duchess">Duchess Anastasia</option>
-            <option value="teacher">Archmage Corvina</option>
-            <option value="none">None / Narrator</option>
-          </select>
+        
+        <!-- Background Picker -->
+        <div class="sm-picker-col">
+          <span class="eyebrow" style="font-size: 11px;">Starting Background</span>
+          <div class="sm-squares-list" id="smBgPicker">
+            <!-- Dynamically populated background squares -->
+          </div>
         </div>
       </div>
 
