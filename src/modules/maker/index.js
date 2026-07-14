@@ -71,6 +71,7 @@ function initBuilderEvents() {
   $("#smPortClose").addEventListener("click", () => togglePort(null));
 
   // Save Step & Reset buttons
+  $("#smPlayStep").addEventListener("click", () => startSinglePreview());
   $("#smSaveStep").addEventListener("click", () => saveStepData());
   $("#smResetStep").addEventListener("click", () => resetStepData());
 
@@ -585,6 +586,58 @@ async function startPreview() {
     }
   } catch(e) {
     console.error("Preview error:", e);
+  } finally {
+    closePreview();
+  }
+}
+
+async function startSinglePreview() {
+  if (activeStepIndex === null || !editState) {
+    alert("No active step selected to preview!");
+    return;
+  }
+
+  // Set active stage overlay state
+  const overlay = $("#makerPreview");
+  overlay.classList.add("on");
+  previewQuit = false;
+
+  const quitBtn = $("#mpQuit");
+  const handler = () => {
+    previewQuit = true;
+    if (previewResolveTap) {
+      previewResolveTap();
+      previewResolveTap = null;
+    }
+    closePreview();
+  };
+  quitBtn.onclick = handler;
+
+  // Setup dialog tap resolver
+  const dialogBox = $("#mpDialog");
+  dialogBox.onclick = () => {
+    if (previewResolveTap) {
+      previewResolveTap();
+      previewResolveTap = null;
+    }
+  };
+
+  try {
+    const step = editState;
+    applyPreviewScene(step.bg);
+    previewSpriteSet(step.char);
+
+    if (step.type === "say") {
+      await playPreviewSay(step);
+    } else if (step.type === "choices") {
+      await playPreviewChoices(step);
+    } else if (step.type === "kanji") {
+      await playPreviewKanji(step);
+    } else if (step.type === "cards") {
+      await playPreviewCards(step);
+    }
+  } catch(e) {
+    console.error("Single step preview error:", e);
   } finally {
     closePreview();
   }
