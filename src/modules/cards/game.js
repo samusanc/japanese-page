@@ -547,6 +547,12 @@ function gameOver() {
   $("#cdFinalPeak").textContent = G.peak;
   renderChipTray($("#cdOverTray"), G.chips, false);
   showPanel("Over");
+  // Mini-round callback: notify the scene maker that the round is over
+  if (G.miniRoundDone) {
+    const cb = G.miniRoundDone;
+    G.miniRoundDone = null;
+    setTimeout(cb, 1800); // brief pause on the Over screen, then hand back
+  }
 }
 
 /* ---- ledger (progress) ---- */
@@ -566,6 +572,53 @@ function showLedger() {
     }).join("");
     $("#cdLedgerModal").classList.add("on");
   });
+}
+
+/* ---- scene-maker mini-round: real table, no SRS start screen ---- */
+/**
+ * Launch a real card table round (full UI, timer, chips, animations)
+ * from the scene maker preview. Resolves onDone when the round ends.
+ * @param {string} deckId - e.g. "starter"
+ * @param {function} onDone - called when the round is over so preview can continue
+ */
+export async function playCardsMiniRound(deckId, onDone) {
+  // Temporarily override which decks are loaded
+  const savedDeckIds = deckIds;
+  deckIds = [deckId];
+
+  let pool;
+  try {
+    pool = await loadPool();
+  } catch (e) {
+    toast("Couldn't load deck: " + deckId);
+    deckIds = savedDeckIds;
+    onDone();
+    return;
+  }
+  deckIds = savedDeckIds;
+
+  // Pick a small random session (4 pairs or less)
+  const handSize = Math.min(4, pool.length);
+  const session = shuffle(pool.slice()).slice(0, handSize);
+
+  G = {
+    mode: "mini",
+    pool,
+    session,
+    pairsOnTable: handSize,
+    chips: 0,
+    peak: 0,
+    round: null,
+    reviewQueue: [],
+    reviewIdx: 0,
+    busy: false,
+    sel: null,
+    miniRoundDone: onDone   // ← hook: gameOver() will call this
+  };
+  $("#cdChips").textContent = "0";
+  renderChipTray($("#cdChipTray"), 0, false);
+  showPanel("Play");
+  dealRound();
 }
 
 /* ---- wiring ---- */

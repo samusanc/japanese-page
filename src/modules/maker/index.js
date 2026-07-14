@@ -8,6 +8,7 @@ import { makeWriter, keepInk, bloomInk, strokeGuide } from '@modules/kanji/write
 import { kanjiList } from '@modules/kanji/data.js';
 import { CHAR, SCENES } from '@content/otome/index.js';
 import { shuffle, resolveAsset } from '@core/util.js';
+import { playCardsMiniRound } from '@modules/cards/game.js';
 
 /** Scene Maker: Builder and interactive preview player for custom visual novel scripts. */
 
@@ -932,138 +933,26 @@ function particleBurstPreview(box, count) {
   }
 }
 
-// 4. Cards Step
+// 4. Cards Step — uses the real Royal Gamble table with full UI/animations
 async function playPreviewCards(step) {
   if (previewQuit) return;
-  $("#mpChoices").style.display = "none";
-  $("#mpWriterArea").style.display = "none";
 
-  const overlay = $("#mpCardsOverlay");
-  const listJa = $("#mpGridJa");
-  const listEn = $("#mpGridEn");
+  // Hide the maker preview overlay while the real card table takes over
+  const makerOverlay = $("#makerPreview");
+  makerOverlay.classList.remove("on");
 
-  $("#mpCardsDeckName").textContent = `Match the Terms — ${step.deck.toUpperCase()}`;
-  listJa.innerHTML = "<div class='empty'>Loading deck…</div>";
-  listEn.innerHTML = "";
-  overlay.style.display = "flex";
-
-  let vocabList = [];
-  try {
-    vocabList = await getDeck(step.deck);
-  } catch (err) {
-    console.error("Cards fetch failed:", err);
-    vocabList = [
-      { ja: "水", es: "agua" },
-      { ja: "魚", es: "pescado" },
-      { ja: "月", es: "luna" }
-    ];
-  }
-
-  // Pick 3 random vocabulary
-  const shuffledDeck = shuffle(vocabList.slice());
-  const selected = shuffledDeck.slice(0, 3);
-
-  // Setup match states
-  const jaCards = selected.map((item, idx) => ({ id: idx, val: item.ja, type: "ja" }));
-  const enCards = selected.map((item, idx) => ({ id: idx, val: item.es, type: "en" }));
-
-  // Shuffle display positions
-  const dispJa = shuffle(jaCards.slice());
-  const dispEn = shuffle(enCards.slice());
-
-  // Render cards
-  listJa.innerHTML = "";
-  listEn.innerHTML = "";
-
-  let selectedJa = null;
-  let selectedEn = null;
-  let matchesLeft = 3;
-
-  const checkMatch = (res) => {
-    if (selectedJa !== null && selectedEn !== null) {
-      const cardJaEl = $(`[data-card-type="ja"][data-card-id="${selectedJa}"]`);
-      const cardEnEl = $(`[data-card-type="en"][data-card-id="${selectedEn}"]`);
-
-      if (selectedJa === selectedEn) {
-        // MATCH!
-        beep("ok");
-        cardJaEl.classList.add("matched");
-        cardEnEl.classList.add("matched");
-        cardJaEl.classList.remove("selected");
-        cardEnEl.classList.remove("selected");
-        matchesLeft--;
-        if (matchesLeft === 0) {
-          setTimeout(() => {
-            overlay.style.display = "none";
-            res();
-          }, 800);
-        }
-      } else {
-        // MISMATCH!
-        beep("no");
-        cardJaEl.classList.add("wrong");
-        cardEnEl.classList.add("wrong");
-        cardJaEl.classList.remove("selected");
-        cardEnEl.classList.remove("selected");
-        setTimeout(() => {
-          cardJaEl.classList.remove("wrong");
-          cardEnEl.classList.remove("wrong");
-        }, 300);
-      }
-      selectedJa = null;
-      selectedEn = null;
-    }
-  };
+  // Show the real cards screen
+  const cardsScreen = $("#s-cards");
+  if (cardsScreen) cardsScreen.classList.add("on");
 
   await new Promise(res => {
-    // Fallback if preview quit
-    previewResolveTap = res;
-
-    const renderColumn = (colEl, dispList) => {
-      dispList.forEach(item => {
-        const card = document.createElement("button");
-        card.className = "maker-card";
-        card.textContent = item.val;
-        card.dataset.cardId = item.id;
-        card.dataset.cardType = item.type;
-        
-        card.addEventListener("click", () => {
-          if (card.classList.contains("matched")) return;
-          
-          if (item.type === "ja") {
-            if (selectedJa === item.id) {
-              selectedJa = null;
-              card.classList.remove("selected");
-            } else {
-              if (selectedJa !== null) {
-                $(`[data-card-type="ja"][data-card-id="${selectedJa}"]`).classList.remove("selected");
-              }
-              selectedJa = item.id;
-              card.classList.add("selected");
-            }
-          } else {
-            if (selectedEn === item.id) {
-              selectedEn = null;
-              card.classList.remove("selected");
-            } else {
-              if (selectedEn !== null) {
-                $(`[data-card-type="en"][data-card-id="${selectedEn}"]`).classList.remove("selected");
-              }
-              selectedEn = item.id;
-              card.classList.add("selected");
-            }
-          }
-          checkMatch(res);
-        });
-        colEl.appendChild(card);
-      });
-    };
-
-    renderColumn(listJa, dispJa);
-    renderColumn(listEn, dispEn);
+    playCardsMiniRound(step.deck || "starter", () => {
+      // Round done — hide card table, restore maker preview
+      if (cardsScreen) cardsScreen.classList.remove("on");
+      makerOverlay.classList.add("on");
+      res();
+    });
   });
-
-  overlay.style.display = "none";
 }
 
 async function getDeck(id) {
