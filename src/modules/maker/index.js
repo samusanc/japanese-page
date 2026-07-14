@@ -16,6 +16,7 @@ let activeStepIndex = null;
 let editState = null; // Holds temporary uncommitted changes of the active step
 let selectedStartScene = "academy";
 let selectedStartChar = "prince";
+let blurEnabled = true;
 const deckCache = {};
 
 // Default step structures
@@ -94,6 +95,15 @@ function initBuilderEvents() {
   // Edit Step Field Listeners (Cards)
   $("#smCardsDeck").addEventListener("change", (e) => updateActiveStep("deck", e.target.value));
 
+  // Blur Toggle listener
+  const blurBtn = $("#smBlurToggle");
+  if (blurBtn) {
+    blurBtn.addEventListener("change", (e) => {
+      blurEnabled = e.target.checked;
+      saveGlobalConfig();
+    });
+  }
+
   // Load configuration from local storage if exists
   const saved = localStorage.getItem("maker_scene");
   if (saved) {
@@ -102,9 +112,11 @@ function initBuilderEvents() {
       currentSteps = data.steps || [];
       selectedStartScene = data.startScene || "academy";
       selectedStartChar = data.startChar || "prince";
+      blurEnabled = data.blurEnabled !== false;
     } catch(e) {}
   }
 
+  if (blurBtn) blurBtn.checked = blurEnabled;
   renderCharPicker();
   renderBgPicker();
 }
@@ -113,6 +125,7 @@ function saveGlobalConfig() {
   const data = {
     startScene: selectedStartScene,
     startChar: selectedStartChar,
+    blurEnabled: blurEnabled,
     steps: currentSteps
   };
   localStorage.setItem("maker_scene", JSON.stringify(data));
@@ -384,7 +397,7 @@ function renderCharPicker() {
   });
 
   list.push({ id: "teacher", name: "Corvina", img: "./sprites/teacher.png" });
-  list.push({ id: "none", name: "Narrator", img: "" });
+  list.push({ id: "none", name: "Empty / Narrator", img: "" });
 
   list.forEach(item => {
     const box = document.createElement("div");
@@ -477,6 +490,7 @@ function togglePort(mode) {
     const data = {
       startScene: selectedStartScene,
       startChar: selectedStartChar,
+      blurEnabled: blurEnabled,
       steps: currentSteps
     };
     area.value = JSON.stringify(data, null, 2);
@@ -496,10 +510,13 @@ function applyPort() {
     currentSteps = data.steps || [];
     selectedStartScene = data.startScene || "academy";
     selectedStartChar = data.startChar || "prince";
+    blurEnabled = data.blurEnabled !== false;
     activeStepIndex = currentSteps.length > 0 ? 0 : null;
     editState = currentSteps.length > 0 ? JSON.parse(JSON.stringify(currentSteps[0])) : null;
     
     saveGlobalConfig();
+    const blurBtn = $("#smBlurToggle");
+    if (blurBtn) blurBtn.checked = blurEnabled;
     renderTimeline();
     showEditForm();
     renderCharPicker();
@@ -585,7 +602,8 @@ function applyPreviewScene(id) {
   const el = $("#mpBg");
   if (el) {
     el.style.background = sc.img ? `url('${resolveAsset(sc.img)}') center/cover no-repeat` : sc.bg;
-    el.style.filter = sc.filter || "";
+    const blurAmt = blurEnabled ? "3px" : "0px";
+    el.style.filter = `blur(${blurAmt}) brightness(0.8) ${sc.filter || ""}`;
   }
 }
 
