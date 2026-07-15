@@ -357,6 +357,7 @@ function dealRound() {
         d.el.style.transition = "transform .6s cubic-bezier(.25,.8,.25,1)";
         d.el.style.transform = "translate(0,0)";
         d.el.classList.remove("face-down");
+        if (navigator.vibrate) navigator.vibrate(12); // gentle tap per card dealt
       }, i * 70);
     });
 
@@ -476,7 +477,7 @@ function mismatch(a, b) {
   G.round.mismatchedKeys.add(entryKey(a.p));
   G.round.mismatchedKeys.add(entryKey(b.p));
   [a.el, b.el].forEach(el => el.classList.add("shake"));
-  if (navigator.vibrate) navigator.vibrate(40);
+  if (navigator.vibrate) navigator.vibrate([30, 20, 30]); // double pulse on match
   setTimeout(() => {
     [a.el, b.el].forEach(el => el.classList.remove("shake", "selected"));
     G.busy = false;

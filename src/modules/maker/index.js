@@ -3,7 +3,8 @@ import html from './maker.html?raw';
 import { registerScreen } from '@core/screens.js';
 import { $, $$, escapeHtml } from '@core/dom.js';
 import { speak } from '@core/audio/voice.js';
-import { beep } from '@core/audio/sfx.js';
+import { beep, typewriterClack } from '@core/audio/sfx.js';
+import { playMusic, playAmbience } from '@core/audio/engine.js';
 import { makeWriter, keepInk, bloomInk, strokeGuide } from '@modules/kanji/writer.js';
 import { kanjiList } from '@modules/kanji/data.js';
 import { CHAR, SCENES } from '@content/otome/index.js';
@@ -22,21 +23,25 @@ const deckCache = {};
 
 // Default step structures
 const DEFAULTS = {
-  say: () => ({ type: "say", char: selectedStartChar, bg: selectedStartScene, blur: true, say: "挨拶を入力してください。", en: "Enter a greeting." }),
+  say: () => ({ type: "say", char: selectedStartChar, bg: selectedStartScene, blur: true, say: "挨拶を入力してください。", en: "Enter a greeting.", music: "continue", ambience: "continue" }),
   choices: () => ({
     type: "choices",
     char: selectedStartChar,
     bg: selectedStartScene,
     blur: true,
+    choiceMode: "free",
+    ordered: false,
+    music: "continue",
+    ambience: "continue",
     jp: "どちらを選びますか？",
     en: "Which one do you choose?",
     options: [
-      { text: "礼儀正しく答える", reaction: "よくできました。", translation: "Well done." },
-      { text: "沈黙する", reaction: "…なぜ黙っているのですか？", translation: "…Why are you silent?" }
+      { text: "礼儀正しく答える", reaction: "よくできました。", translation: "Well done.", good: true, order: 1 },
+      { text: "沈黙する", reaction: "…なぜ黙っているのですか？", translation: "…Why are you silent?", good: false, order: 2 }
     ]
   }),
-  kanji: () => ({ type: "kanji", char: selectedStartChar, bg: selectedStartScene, blur: true, kanji: "書", mode: "trace" }),
-  cards: () => ({ type: "cards", char: selectedStartChar, bg: selectedStartScene, blur: true, deck: "starter" })
+  kanji: () => ({ type: "kanji", char: selectedStartChar, bg: selectedStartScene, blur: true, kanji: "書", mode: "trace", music: "continue", ambience: "continue" }),
+  cards: () => ({ type: "cards", char: selectedStartChar, bg: selectedStartScene, blur: true, deck: "starter", music: "continue", ambience: "continue" })
 };
 
 /* ---- Screen Initialization ---- */
@@ -86,6 +91,21 @@ function initBuilderEvents() {
   $("#smChoiceEn").addEventListener("input", (e) => updateActiveStep("en", e.target.value));
   $("#smAddChoiceOption").addEventListener("click", () => addChoiceOption());
 
+  // Choices mode segment
+  $$("#smChoiceModeSeg button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      $$("#smChoiceModeSeg button").forEach(b => b.classList.toggle("on", b === btn));
+      updateActiveStep("choiceMode", btn.dataset.val);
+      renderChoicesFormList();
+    });
+  });
+
+  // Ordered toggle
+  $("#smChoiceOrdered").addEventListener("change", (e) => {
+    updateActiveStep("ordered", e.target.checked);
+    renderChoicesFormList();
+  });
+
   // Edit Step Field Listeners (Kanji)
   $("#smKanjiChar").addEventListener("input", (e) => updateActiveStep("kanji", e.target.value));
   $$("#smKanjiModeSeg button").forEach(btn => {
@@ -97,6 +117,10 @@ function initBuilderEvents() {
 
   // Edit Step Field Listeners (Cards)
   $("#smCardsDeck").addEventListener("change", (e) => updateActiveStep("deck", e.target.value));
+
+  // Audio section
+  $("#smStepMusic").addEventListener("change", (e) => updateActiveStep("music", e.target.value));
+  $("#smStepAmbience").addEventListener("change", (e) => updateActiveStep("ambience", e.target.value));
 
   // Blur Toggle listener
   const blurBtn = $("#smBlurToggle");
@@ -321,6 +345,7 @@ function showEditForm() {
   $("#smFormChoices").style.display = "none";
   $("#smFormKanji").style.display = "none";
   $("#smFormCards").style.display = "none";
+  $("#smAudioSection").style.display = "none";
   $("#smEditActions").style.display = "none";
 
   const blurContainer = $(".sm-toggle-container");
@@ -333,8 +358,14 @@ function showEditForm() {
 
   if (blurContainer) blurContainer.style.opacity = "1";
   $("#smEditActions").style.display = "flex";
+  $("#smAudioSection").style.display = "";
 
   const step = editState;
+
+  // Populate shared audio dropdowns
+  $("#smStepMusic").value = step.music || "continue";
+  $("#smStepAmbience").value = step.ambience || "continue";
+
   if (step.type === "say") {
     $("#smFormSay").style.display = "block";
     $("#smSayJp").value = step.say || "";
@@ -343,6 +374,10 @@ function showEditForm() {
     $("#smFormChoices").style.display = "block";
     $("#smChoiceJp").value = step.jp || "";
     $("#smChoiceEn").value = step.en || "";
+    // Restore choice mode segment
+    const cm = step.choiceMode || "free";
+    $$("#smChoiceModeSeg button").forEach(b => b.classList.toggle("on", b.dataset.val === cm));
+    $("#smChoiceOrdered").checked = !!step.ordered;
     renderChoicesFormList();
   } else if (step.type === "kanji") {
     $("#smFormKanji").style.display = "block";
@@ -362,6 +397,9 @@ function renderChoicesFormList() {
   const step = editState;
   if (!step.options) step.options = [];
 
+  const isGoodBad = (step.choiceMode || "free") === "good-bad";
+  const isOrdered = !!step.ordered;
+
   step.options.forEach((op, oIdx) => {
     const card = document.createElement("div");
     card.className = "choice-edit-card";
@@ -374,29 +412,32 @@ function renderChoicesFormList() {
         <input type="text" class="inp op-text" data-o-idx="${oIdx}" placeholder="Button Text (JP)" value="${escapeHtml(op.text || '')}">
         <input type="text" class="inp op-react" data-o-idx="${oIdx}" placeholder="Reaction Speech (JP)" value="${escapeHtml(op.reaction || '')}">
         <input type="text" class="inp op-trans" data-o-idx="${oIdx}" placeholder="Reaction Translation (EN)" value="${escapeHtml(op.translation || '')}">
+        ${isGoodBad ? `
+        <div class="sm-toggle-container" style="margin-top:6px;">
+          <span class="sm-toggle-label">✅ Good choice</span>
+          <label class="sm-switch">
+            <input type="checkbox" class="op-good" ${op.good ? 'checked' : ''}>
+            <span class="sm-slider"></span>
+          </label>
+        </div>` : ''}
+        ${isOrdered ? `
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+          <span style="font-size:12px;color:var(--ink2);">Tap order:</span>
+          <input type="number" class="inp op-order" min="1" max="20" value="${op.order || oIdx + 1}" style="width:60px;">
+        </div>` : ''}
       </div>
     `;
 
-    card.querySelector(".del").addEventListener("click", (e) => {
+    card.querySelector(".del").addEventListener("click", () => {
       step.options.splice(oIdx, 1);
       renderChoicesFormList();
       checkUnsavedChanges();
     });
-
-    card.querySelector(".op-text").addEventListener("input", (e) => {
-      step.options[oIdx].text = e.target.value;
-      checkUnsavedChanges();
-    });
-
-    card.querySelector(".op-react").addEventListener("input", (e) => {
-      step.options[oIdx].reaction = e.target.value;
-      checkUnsavedChanges();
-    });
-
-    card.querySelector(".op-trans").addEventListener("input", (e) => {
-      step.options[oIdx].translation = e.target.value;
-      checkUnsavedChanges();
-    });
+    card.querySelector(".op-text").addEventListener("input", (e) => { step.options[oIdx].text = e.target.value; checkUnsavedChanges(); });
+    card.querySelector(".op-react").addEventListener("input", (e) => { step.options[oIdx].reaction = e.target.value; checkUnsavedChanges(); });
+    card.querySelector(".op-trans").addEventListener("input", (e) => { step.options[oIdx].translation = e.target.value; checkUnsavedChanges(); });
+    if (isGoodBad) card.querySelector(".op-good").addEventListener("change", (e) => { step.options[oIdx].good = e.target.checked; checkUnsavedChanges(); });
+    if (isOrdered) card.querySelector(".op-order").addEventListener("input", (e) => { step.options[oIdx].order = parseInt(e.target.value) || oIdx + 1; checkUnsavedChanges(); });
 
     container.appendChild(card);
   });
@@ -590,9 +631,10 @@ async function startPreview() {
       if (previewQuit) break;
       const step = currentSteps[i];
 
-      // Update background (with step-level blur) and character dynamically
+      // Update background, character, and audio dynamically per step
       applyPreviewScene(step.bg, step.blur);
       previewSpriteSet(step.char);
+      applyPreviewAudio(step);
 
       if (step.type === "say") {
         await playPreviewSay(step);
@@ -646,6 +688,7 @@ async function startSinglePreview() {
     const step = editState;
     applyPreviewScene(step.bg, step.blur);
     previewSpriteSet(step.char);
+    applyPreviewAudio(step);
 
     if (step.type === "say") {
       await playPreviewSay(step);
@@ -665,9 +708,19 @@ async function startSinglePreview() {
 
 function closePreview() {
   $("#makerPreview").classList.remove("on");
+  playMusic(null, { fadeMs: 400 });
+  playAmbience(null, { fadeMs: 400 });
   const canvas = $("#mpWriterBox");
   if (canvas) canvas.innerHTML = '<div class="stamp" id="mpStamp">正解</div>';
   $("#mpCardsOverlay").style.display = "none";
+}
+
+/** Apply music and ambience for a step. "continue" = don't change; "none" = stop. */
+function applyPreviewAudio(step) {
+  const m = step.music;
+  if (m && m !== "continue") playMusic(m === "none" ? null : m);
+  const a = step.ambience;
+  if (a && a !== "continue") playAmbience(a === "none" ? null : a);
 }
 
 function applyPreviewScene(id, blurOverride) {
@@ -705,8 +758,47 @@ function previewSpriteSet(charId) {
 
 async function previewTap() {
   return new Promise(res => {
-    previewResolveTap = res;
+    previewResolveTap = () => {
+      if (navigator.vibrate) navigator.vibrate(18);
+      res();
+    };
   });
+}
+
+/** Typewriter animation: renders text char-by-char with clack sounds.
+ *  Tapping skips to full text instantly. */
+async function typewriterRender(textEl, rawText, enText) {
+  if (previewQuit) return;
+  $("#mpNext").style.visibility = "hidden";
+  textEl.innerHTML = "";
+
+  let skipped = false;
+  let skipResolve = null;
+  const skipPromise = new Promise(r => { skipResolve = r; });
+
+  // A tap skips the animation
+  const oldResolve = previewResolveTap;
+  previewResolveTap = () => { skipped = true; skipResolve(); };
+
+  const chars = [...rawText]; // Unicode-safe split
+  const CLACK_EVERY = 2; // clack every N chars to avoid spamming
+  for (let i = 0; i < chars.length; i++) {
+    if (previewQuit || skipped) break;
+    textEl.textContent += chars[i];
+    if (i % CLACK_EVERY === 0) typewriterClack();
+    // Race: either wait ~35ms per char or skip signal
+    await Promise.race([
+      new Promise(r => setTimeout(r, 35)),
+      skipPromise
+    ]);
+  }
+
+  // Always show full text when done/skipped
+  textEl.innerHTML = escapeHtml(rawText) + enText;
+  $("#mpNext").style.visibility = "visible";
+
+  // Restore normal tap resolver
+  previewResolveTap = oldResolve;
 }
 
 // 1. Dialogue Step
@@ -730,22 +822,19 @@ async function playPreviewSay(step) {
 
   const textEl = $("#mpText");
   textEl.innerHTML = "";
-  
+
   // Speak audio
   if (step.char !== "n" && step.char !== "none" && step.say) {
     speak(step.say, ch ? ch.voice : null);
   }
 
-  // Simple typewrite simulation
   const rawText = step.say || "";
   const enText = step.en ? `<div class="en" style="margin-top:4px; font-size:13px; color:var(--ink2);">${escapeHtml(step.en)}</div>` : "";
-  
-  $("#mpNext").style.visibility = "hidden";
-  
-  // Fast render
-  textEl.innerHTML = escapeHtml(rawText) + enText;
-  $("#mpNext").style.visibility = "visible";
-  
+
+  // Char-by-char typewriter with clack sounds; tap skips to full text
+  await typewriterRender(textEl, rawText, enText);
+  if (previewQuit) return;
+
   await previewTap();
 }
 
@@ -766,9 +855,11 @@ async function playPreviewChoices(step) {
   $("#mpSprite").style.opacity = 0.5;
 
   const textEl = $("#mpText");
-  textEl.innerHTML = escapeHtml(step.jp || "何と答える？") + 
-    (step.en ? `<div class="en" style="margin-top:4px; font-size:13px; color:var(--ink2);">${escapeHtml(step.en)}</div>` : "");
-  
+  const rawPrompt = step.jp || "何と答える？";
+  const enText = step.en ? `<div class="en" style="margin-top:4px; font-size:13px; color:var(--ink2);">${escapeHtml(step.en)}</div>` : "";
+  await typewriterRender(textEl, rawPrompt, enText);
+  if (previewQuit) return;
+
   $("#mpNext").style.visibility = "hidden";
 
   const chEl = $("#mpChoices");
@@ -776,38 +867,90 @@ async function playPreviewChoices(step) {
   chEl.style.display = "flex";
 
   const options = step.options || [];
-  
-  const pickedIdx = await new Promise(res => {
-    options.forEach((op, opIdx) => {
-      const btn = document.createElement("button");
-      btn.className = "choice";
-      btn.textContent = op.text || "Option";
-      btn.addEventListener("click", () => {
-        res(opIdx);
+  const isGoodBad = (step.choiceMode || "free") === "good-bad";
+  const isOrdered = !!step.ordered;
+
+  if (isOrdered) {
+    // ---- ORDERED SEQUENCE MODE ----
+    const sorted = [...options].sort((a, b) => (a.order || 0) - (b.order || 0));
+    let nextExpected = 0;
+
+    await new Promise(res => {
+      const btns = [];
+      options.forEach((op) => {
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.textContent = op.text || "Option";
+        const correctIdx = sorted.indexOf(op);
+        btn.addEventListener("click", () => {
+          if (navigator.vibrate) navigator.vibrate(25);
+          if (correctIdx === nextExpected) {
+            beep("ok");
+            btn.classList.add("matched");
+            btn.disabled = true;
+            nextExpected++;
+            if (nextExpected === sorted.length) setTimeout(res, 400);
+          } else {
+            beep("no");
+            btn.classList.add("wrong");
+            setTimeout(() => btn.classList.remove("wrong"), 350);
+            if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+          }
+        });
+        btns.push(btn);
+        chEl.appendChild(btn);
       });
-      chEl.appendChild(btn);
+      previewResolveTap = () => res();
     });
-    // Fallback if quit
-    previewResolveTap = () => res(-1);
-  });
+  } else {
+    // ---- FREE / GOOD-BAD MODE ----
+    const pickedIdx = await new Promise(res => {
+      options.forEach((op, opIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.textContent = op.text || "Option";
+        btn.addEventListener("click", () => {
+          if (navigator.vibrate) navigator.vibrate(25);
+          if (isGoodBad) {
+            if (op.good) {
+              beep("ok");
+              btn.classList.add("matched");
+              particleBurstPreview(btn, 8);
+              setTimeout(() => res(opIdx), 350);
+            } else {
+              beep("no");
+              btn.classList.add("wrong");
+              if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+              setTimeout(() => { btn.classList.remove("wrong"); res(opIdx); }, 450);
+            }
+          } else {
+            res(opIdx);
+          }
+        });
+        chEl.appendChild(btn);
+      });
+      previewResolveTap = () => res(-1);
+    });
+
+    chEl.style.display = "none";
+    if (previewQuit || pickedIdx === -1) return;
+
+    // React
+    const chosen = options[pickedIdx];
+    if (chosen && (chosen.reaction || chosen.translation)) {
+      $("#mpSprite").style.opacity = 1;
+      const reactionText = `「${escapeHtml(chosen.reaction || '')}」`;
+      const reactionEn = chosen.translation ? `<div class="en" style="margin-top:4px; font-size:13px; color:var(--ink2);">${escapeHtml(chosen.translation)}</div>` : "";
+      const ch = CHAR[step.char];
+      if (chosen.reaction) speak(chosen.reaction, ch ? ch.voice : null);
+      await typewriterRender(textEl, `「${chosen.reaction || ''}」`, reactionEn);
+      if (previewQuit) return;
+      await previewTap();
+      return;
+    }
+  }
 
   chEl.style.display = "none";
-  if (previewQuit || pickedIdx === -1) return;
-
-  // React
-  const chosen = options[pickedIdx];
-  if (chosen && (chosen.reaction || chosen.translation)) {
-    $("#mpSprite").style.opacity = 1;
-    textEl.innerHTML = `「${escapeHtml(chosen.reaction || '')}」` + 
-      (chosen.translation ? `<div class="en" style="margin-top:4px; font-size:13px; color:var(--ink2);">${escapeHtml(chosen.translation)}</div>` : "");
-    
-    // Play reaction speech using active step character voice
-    const ch = CHAR[step.char];
-    if (chosen.reaction) speak(chosen.reaction, ch ? ch.voice : null);
-
-    $("#mpNext").style.visibility = "visible";
-    await previewTap();
-  }
 }
 
 // 3. Kanji Drawing Step

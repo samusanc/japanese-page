@@ -38,3 +38,8 @@ export function beep(type) {
   const r = BUILTIN[type];
   if (r) playRecipe(r);
 }
+
+/** Very short mechanical tick for typewriter character-by-character animation. */
+export function typewriterClack() {
+  playRecipe([{ f: 1200, at: 0, dur: 0.018, gain: 0.045, wave: "triangle" }]);
+}

@@ -108,6 +108,22 @@
           <label for="smChoiceEn">Prompt Question (Translation)</label>
           <input type="text" id="smChoiceEn" class="inp text-field" placeholder="e.g. How do you respond?">
         </div>
+
+        <!-- Choice Mode Controls -->
+        <div class="form-group sm-choice-modes">
+          <label>Choice Behaviour</label>
+          <div class="seg" id="smChoiceModeSeg" style="margin-top:6px;">
+            <button data-val="free" class="on">Free</button>
+            <button data-val="good-bad">Good / Bad</button>
+          </div>
+          <div class="sm-toggle-container" style="margin-top:8px;">
+            <span class="sm-toggle-label">Ordered Sequence</span>
+            <label class="sm-switch">
+              <input type="checkbox" id="smChoiceOrdered">
+              <span class="sm-slider"></span>
+            </label>
+          </div>
+        </div>
         
         <div class="choices-editor">
           <span class="sub-eyebrow" style="margin-top: 10px; display:block;">Option Buttons</span>
@@ -148,9 +164,35 @@
             <option value="intermediate1">Intermediate 1</option>
             <option value="intermediate2">Intermediate 2</option>
           </select>
-          <p class="note">Plays a quick 3-card vocabulary matching drill during the preview.</p>
+          <p class="note">Plays a quick 4-card vocabulary matching drill during the preview.</p>
         </div>
       </div>
+
+      <!-- Shared Audio Section (shown for all step types) -->
+      <details class="sm-audio-section" id="smAudioSection" style="display:none;">
+        <summary class="sm-audio-summary">🎵 Step Audio</summary>
+        <div class="sm-audio-body">
+          <div class="form-group">
+            <label for="smStepMusic">Music</label>
+            <select id="smStepMusic" class="inp select-field">
+              <option value="continue">Continue from previous</option>
+              <option value="none">— Silence —</option>
+              <option value="academy">Academy</option>
+              <option value="waltz">Waltz</option>
+              <option value="tension">Tension</option>
+              <option value="love">Love Theme</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="smStepAmbience">Ambience</label>
+            <select id="smStepAmbience" class="inp select-field">
+              <option value="continue">Continue from previous</option>
+              <option value="none">— Silence —</option>
+              <!-- Ambience tracks will appear here when registered -->
+            </select>
+          </div>
+        </div>
+      </details>
 
       <!-- Save & Reset Action row -->
       <div class="edit-actions" id="smEditActions" style="display:none;">
@@ -195,20 +237,14 @@
       <button class="hintbtn skipbtn" id="mpSkip" style="margin-top:6px;">⏩ Skip Kanji</button>
     </div>
 
-    <!-- Custom Cards Matching Grid Overlay -->
+    <!-- Custom Cards Matching Grid Overlay (legacy fallback, kept for safety) -->
     <div class="maker-cards-overlay" id="mpCardsOverlay" style="display:none;">
       <div class="maker-cards-wrap card">
         <span class="eyebrow" id="mpCardsDeckName">Match the terms</span>
-        
         <div class="maker-cards-grid">
-          <div class="cards-column" id="mpGridJa">
-            <!-- Japanese cards -->
-          </div>
-          <div class="cards-column" id="mpGridEn">
-            <!-- English/Spanish cards -->
-          </div>
+          <div class="cards-column" id="mpGridJa"></div>
+          <div class="cards-column" id="mpGridEn"></div>
         </div>
-        
         <p class="note" style="margin-top: 10px;">Select a Japanese word, then tap its translation to pair them.</p>
       </div>
     </div>
