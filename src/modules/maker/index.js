@@ -133,6 +133,20 @@ function initBuilderEvents() {
     });
   }
 
+  // Vibration test listeners
+  $("#smVibTap").addEventListener("click", () => {
+    if (navigator.vibrate) navigator.vibrate(18);
+  });
+  $("#smVibChoice").addEventListener("click", () => {
+    if (navigator.vibrate) navigator.vibrate(25);
+  });
+  $("#smVibMatch").addEventListener("click", () => {
+    if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+  });
+  $("#smVibTick").addEventListener("click", () => {
+    if (navigator.vibrate) navigator.vibrate(12);
+  });
+
   // Load configuration from local storage if exists
   const saved = LS.get("maker:scene");
   if (saved) {
