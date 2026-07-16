@@ -884,96 +884,137 @@ async function playPreviewChoices(step) {
   chEl.style.display = "flex";
 
   const options = step.options || [];
-  const isGoodBad = (step.choiceMode || "free") === "good-bad";
-  const isOrdered = !!step.ordered;
+  let selected = []; // Array of selected option indices
+  let N = 1;
+  let correctIndices = [];
 
   if (isOrdered) {
-    // ---- ORDERED SEQUENCE MODE ----
     const allSorted = [...options].sort((a, b) => (a.order || 0) - (b.order || 0));
     const firstDisabledIdx = allSorted.findIndex(op => op.good === false);
     const sorted = firstDisabledIdx !== -1 ? allSorted.slice(0, firstDisabledIdx) : allSorted;
-    let nextExpected = 0;
-
-    await new Promise(res => {
-      if (sorted.length === 0) {
-        res();
-        return;
-      }
-      const btns = [];
-      options.forEach((op) => {
-        const btn = document.createElement("button");
-        btn.className = "choice";
-        btn.textContent = op.text || "Option";
-        const correctIdx = sorted.indexOf(op);
-        btn.addEventListener("click", () => {
-          if (navigator.vibrate) navigator.vibrate(25);
-          if (correctIdx === nextExpected) {
-            beep("ok");
-            btn.classList.add("matched");
-            btn.disabled = true;
-            nextExpected++;
-            if (nextExpected === sorted.length) setTimeout(res, 400);
-          } else {
-            beep("no");
-            btn.classList.add("wrong");
-            setTimeout(() => btn.classList.remove("wrong"), 350);
-            if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
-          }
-        });
-        btns.push(btn);
-        chEl.appendChild(btn);
-      });
-      previewResolveTap = () => res();
-    });
-  } else {
-    // ---- FREE / GOOD-BAD MODE ----
-    const pickedIdx = await new Promise(res => {
-      options.forEach((op, opIdx) => {
-        const btn = document.createElement("button");
-        btn.className = "choice";
-        btn.textContent = op.text || "Option";
-        btn.addEventListener("click", () => {
-          if (navigator.vibrate) navigator.vibrate(25);
-          if (isGoodBad) {
-            if (op.good) {
-              beep("ok");
-              btn.classList.add("matched");
-              particleBurstPreview(btn, 8);
-              setTimeout(() => res(opIdx), 350);
-            } else {
-              beep("no");
-              btn.classList.add("wrong");
-              if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
-              setTimeout(() => { btn.classList.remove("wrong"); res(opIdx); }, 450);
-            }
-          } else {
-            res(opIdx);
-          }
-        });
-        chEl.appendChild(btn);
-      });
-      previewResolveTap = () => res(-1);
-    });
-
-    chEl.style.display = "none";
-    if (previewQuit || pickedIdx === -1) return;
-
-    // React
-    const chosen = options[pickedIdx];
-    if (chosen && (chosen.reaction || chosen.translation)) {
-      $("#mpSprite").style.opacity = 1;
-      const reactionText = `「${escapeHtml(chosen.reaction || '')}」`;
-      const reactionEn = chosen.translation ? `<div class="en" style="margin-top:4px; font-size:13px; color:var(--ink2);">${escapeHtml(chosen.translation)}</div>` : "";
-      const ch = CHAR[step.char];
-      if (chosen.reaction) speak(chosen.reaction, ch ? ch.voice : null);
-      await typewriterRender(textEl, `「${chosen.reaction || ''}」`, reactionEn);
-      if (previewQuit) return;
-      await previewTap();
-      return;
-    }
+    N = sorted.length;
+    correctIndices = sorted.map(op => options.indexOf(op));
+  } else if (isGoodBad) {
+    const goodOptions = options.filter(op => op.good !== false);
+    N = Math.max(1, goodOptions.length);
+    correctIndices = goodOptions.map(op => options.indexOf(op));
   }
 
+  if (N === 0) {
+    chEl.style.display = "none";
+    return;
+  }
+
+  const pickedIdx = await new Promise(res => {
+    const btns = [];
+    options.forEach((op, opIdx) => {
+      const btn = document.createElement("button");
+      btn.className = "choice";
+      btn.innerHTML = `<span class="choice-badge"></span><span class="choice-text">${escapeHtml(op.text || "Option")}</span>`;
+      
+      btn.addEventListener("click", () => {
+        if (navigator.vibrate) navigator.vibrate(25);
+
+        // Free mode: immediately pick and resolve
+        if (!isOrdered && !isGoodBad) {
+          res(opIdx);
+          return;
+        }
+
+        // Toggle selection
+        const selIdx = selected.indexOf(opIdx);
+        if (selIdx !== -1) {
+          selected.splice(selIdx, 1);
+          btn.classList.remove("selected");
+          updateBadges();
+        } else {
+          if (selected.length < N) {
+            selected.push(opIdx);
+            btn.classList.add("selected");
+            updateBadges();
+
+            if (selected.length === N) {
+              setTimeout(() => {
+                verifySelection(res);
+              }, 250);
+            }
+          }
+        }
+      });
+      btns.push(btn);
+      chEl.appendChild(btn);
+    });
+
+    function updateBadges() {
+      btns.forEach((btn, idx) => {
+        const badge = btn.querySelector(".choice-badge");
+        if (!badge) return;
+        const selIdx = selected.indexOf(idx);
+        if (selIdx !== -1) {
+          badge.textContent = isOrdered ? (selIdx + 1) : "✓";
+        } else {
+          badge.textContent = "";
+        }
+      });
+    }
+
+    function verifySelection(resolveCallback) {
+      let isCorrect = true;
+      if (isOrdered) {
+        for (let i = 0; i < N; i++) {
+          if (selected[i] !== correctIndices[i]) {
+            isCorrect = false;
+            break;
+          }
+        }
+      } else {
+        isCorrect = selected.every(idx => correctIndices.includes(idx));
+      }
+
+      if (isCorrect) {
+        beep("ok");
+        selected.forEach(idx => {
+          btns[idx].classList.remove("selected");
+          btns[idx].classList.add("matched");
+          particleBurstPreview(btns[idx], 8);
+        });
+        setTimeout(() => {
+          resolveCallback(selected[0]);
+        }, 550);
+      } else {
+        beep("no");
+        if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+        selected.forEach(idx => {
+          btns[idx].classList.remove("selected");
+          btns[idx].classList.add("wrong");
+        });
+        setTimeout(() => {
+          selected.forEach(idx => {
+            btns[idx].classList.remove("wrong");
+          });
+          selected = [];
+          updateBadges();
+        }, 450);
+      }
+    }
+
+    previewResolveTap = () => res(-1);
+  });
+
   chEl.style.display = "none";
+  if (previewQuit || pickedIdx === -1) return;
+
+  // React
+  const chosen = options[pickedIdx];
+  if (chosen && (chosen.reaction || chosen.translation)) {
+    $("#mpSprite").style.opacity = 1;
+    const reactionEn = chosen.translation ? `<div class="en" style="margin-top:4px; font-size:13px; color:var(--ink2);">${escapeHtml(chosen.translation)}</div>` : "";
+    const ch = CHAR[step.char];
+    if (chosen.reaction) speak(chosen.reaction, ch ? ch.voice : null);
+    await typewriterRender(textEl, `「${chosen.reaction || ''}」`, reactionEn);
+    if (previewQuit) return;
+    await previewTap();
+  }
 }
 
 // 3. Kanji Drawing Step

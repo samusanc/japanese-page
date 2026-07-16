@@ -624,3 +624,38 @@
   50%       { transform: translateX(6px); }
   80%       { transform: translateX(-4px); }
 }
+
+/* ---- Choice Selection & Badges ---- */
+.vn-choices .choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vn-choices .choice.selected {
+  background: rgba(207, 165, 122, 0.18) !important;
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+  box-shadow: 0 0 12px rgba(207, 165, 122, 0.3) !important;
+}
+.vn-choices .choice-badge {
+  display: none;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background: var(--gold);
+  color: #120D1F;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.vn-choices .choice.selected .choice-badge {
+  display: inline-flex;
+}
+
