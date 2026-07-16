@@ -884,6 +884,8 @@ async function playPreviewChoices(step) {
   chEl.style.display = "flex";
 
   const options = step.options || [];
+  const isGoodBad = (step.choiceMode || "free") === "good-bad";
+  const isOrdered = !!step.ordered;
   let selected = []; // Array of selected option indices
   let N = 1;
   let correctIndices = [];
