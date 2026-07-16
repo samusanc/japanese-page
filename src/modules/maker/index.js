@@ -246,7 +246,9 @@ function addChoiceOption() {
   editState.options.push({
     text: "選択肢 Text",
     reaction: "リアクション dialogue.",
-    translation: "Reaction translation."
+    translation: "Reaction translation.",
+    good: true,
+    order: editState.options.length + 1
   });
   
   renderChoicesFormList();
@@ -413,6 +415,7 @@ function renderChoicesFormList() {
 
   const isGoodBad = (step.choiceMode || "free") === "good-bad";
   const isOrdered = !!step.ordered;
+  const showGoodCheckbox = isGoodBad || isOrdered;
 
   step.options.forEach((op, oIdx) => {
     const card = document.createElement("div");
@@ -426,11 +429,11 @@ function renderChoicesFormList() {
         <input type="text" class="inp op-text" data-o-idx="${oIdx}" placeholder="Button Text (JP)" value="${escapeHtml(op.text || '')}">
         <input type="text" class="inp op-react" data-o-idx="${oIdx}" placeholder="Reaction Speech (JP)" value="${escapeHtml(op.reaction || '')}">
         <input type="text" class="inp op-trans" data-o-idx="${oIdx}" placeholder="Reaction Translation (EN)" value="${escapeHtml(op.translation || '')}">
-        ${isGoodBad ? `
+        ${showGoodCheckbox ? `
         <div class="sm-toggle-container" style="margin-top:6px;">
           <span class="sm-toggle-label">✅ Good choice</span>
           <label class="sm-switch">
-            <input type="checkbox" class="op-good" ${op.good ? 'checked' : ''}>
+            <input type="checkbox" class="op-good" ${op.good !== false ? 'checked' : ''}>
             <span class="sm-slider"></span>
           </label>
         </div>` : ''}
@@ -450,7 +453,7 @@ function renderChoicesFormList() {
     card.querySelector(".op-text").addEventListener("input", (e) => { step.options[oIdx].text = e.target.value; checkUnsavedChanges(); });
     card.querySelector(".op-react").addEventListener("input", (e) => { step.options[oIdx].reaction = e.target.value; checkUnsavedChanges(); });
     card.querySelector(".op-trans").addEventListener("input", (e) => { step.options[oIdx].translation = e.target.value; checkUnsavedChanges(); });
-    if (isGoodBad) card.querySelector(".op-good").addEventListener("change", (e) => { step.options[oIdx].good = e.target.checked; checkUnsavedChanges(); });
+    if (showGoodCheckbox) card.querySelector(".op-good").addEventListener("change", (e) => { step.options[oIdx].good = e.target.checked; checkUnsavedChanges(); });
     if (isOrdered) card.querySelector(".op-order").addEventListener("input", (e) => { step.options[oIdx].order = parseInt(e.target.value) || oIdx + 1; checkUnsavedChanges(); });
 
     container.appendChild(card);
@@ -886,10 +889,16 @@ async function playPreviewChoices(step) {
 
   if (isOrdered) {
     // ---- ORDERED SEQUENCE MODE ----
-    const sorted = [...options].sort((a, b) => (a.order || 0) - (b.order || 0));
+    const allSorted = [...options].sort((a, b) => (a.order || 0) - (b.order || 0));
+    const firstDisabledIdx = allSorted.findIndex(op => op.good === false);
+    const sorted = firstDisabledIdx !== -1 ? allSorted.slice(0, firstDisabledIdx) : allSorted;
     let nextExpected = 0;
 
     await new Promise(res => {
+      if (sorted.length === 0) {
+        res();
+        return;
+      }
       const btns = [];
       options.forEach((op) => {
         const btn = document.createElement("button");
